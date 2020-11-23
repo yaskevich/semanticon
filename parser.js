@@ -11,7 +11,7 @@ const csv = require('async-csv');
 
 const fileName = "df_annotation_sample_fin1.csv";
 
-const mapping = {
+const mappingRuEn = {
   'ДФ': "phrase",
   'требуется продолжение': "isNeedExt",
   'основная семантика': "semantics1",
@@ -50,10 +50,11 @@ catch(e) {
 // console.log(csvArr[0]);
 
 const fieldRow = csvArr.shift();
-const dict = fieldRow.map(x => mapping[x]);
+const dict = fieldRow.map(x => mappingRuEn[x]);
 // console.log(dict);
 
 const dump = {};
+const mappingEnRu = Object.assign({}, ...Object.entries(mappingRuEn).map(([a,b]) => ({ [b]: a })))
 
 
 csvArr.forEach(function(item, i, arr) {
@@ -61,18 +62,53 @@ csvArr.forEach(function(item, i, arr) {
   // console.log(item[0]);
   // console.log("=============================");
   item.forEach(function(item2, i2, arr2) {
-	const field = dict[i2];
-	// console.log(`${field}■${item2}`);
-	if(item2) {
-		dump.hasOwnProperty(field)? dump[field].push(item2): dump[field] = [item2];		
-	}
+	const fieldEn = dict[i2];
+	const fieldRu = fieldRow[i2];
+	
+	
+	// console.log(`${fieldEn}■${item2}`);
+	// if(item2) {
+		// dump.hasOwnProperty(fieldEn)? dump[fieldEn].push(item2): dump[fieldEn] = [item2];		
+		if (dump.hasOwnProperty(fieldEn)) {
+			const place  = dump[fieldEn]["values"].indexOf(item2);
+			if (place === -1){
+				dump[fieldEn]["values"].push(item2);
+				dump[fieldEn]["counts"].push(1);
+			} else {
+				// if (fieldEn  == "phrase") {
+					// // console.log(dump);
+					// console.log("●"+item2);
+					// console.log(dump[fieldEn]);
+					// console.log(item2, place, dump[fieldEn]["counts"][place]);
+				// }			
+				dump[fieldEn]["counts"][place] +=1;
+				// if (fieldEn  == "phrase") {
+					// console.log(item2, place, dump[fieldEn]["counts"][place]);
+				// }
+			}
+		} else {
+			dump[fieldEn] = { "counts" : [1], "values": [item2] };				
+		}
+	// }
 });
 
 
 
 });
 
-console.log(dump);
+// console.log(dump);
+
+dict.forEach(function(item, i, arr) {
+	console.log("=============================");
+	console.log("=============================");
+	console.log(item, "||", mappingEnRu[item]);
+	console.log("=============================");
+	dump[item]["counts"].forEach(function(item2, i2, arr2) {
+		const unit = dump[item]["values"][i2] || '■';
+		console.log(`${unit}\t${item2}`);
+	});
+	
+});
 
 	
 })();
