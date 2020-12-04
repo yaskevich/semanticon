@@ -12,7 +12,7 @@ const csv = require('async-csv');
 const fileName = "df_annotation_sample_fin1.csv";
 
 const mappingRuEn = {
-  'ДФ': "phrase",
+  'ДФ': "unit",
   'требуется продолжение': "isNeedExt",
   'основная семантика': "semantics1",
   'дополнительная семантика': "semantics2",
@@ -56,6 +56,24 @@ const dict = fieldRow.map(x => mappingRuEn[x]);
 const dump = {};
 const mappingEnRu = Object.assign({}, ...Object.entries(mappingRuEn).map(([a,b]) => ({ [b]: a })))
 
+const wordsArr = [];
+const semantics1 = [];
+
+// CREATE TABLE test1 (a boolean, b text);
+// INSERT INTO test1 VALUES (TRUE, 'sic est');
+// INSERT INTO test1 VALUES (FALSE, 'non est');
+
+function vectorize(strPhrase) {
+	return strPhrase.split(/\s|(?=\-)/g)
+		.map(function(d) {
+			let indx  = wordsArr.indexOf(d);
+			if (indx === -1) {
+				indx = wordsArr.length;
+				wordsArr.push(d)		
+			}
+			return indx;
+	});
+}
 
 csvArr.forEach(function(item, i, arr) {
   // alert( i + ": " + item + " (массив:" + arr + ")" );
@@ -65,50 +83,64 @@ csvArr.forEach(function(item, i, arr) {
 	const fieldEn = dict[i2];
 	const fieldRu = fieldRow[i2];
 	
-	
-	// console.log(`${fieldEn}■${item2}`);
-	// if(item2) {
-		// dump.hasOwnProperty(fieldEn)? dump[fieldEn].push(item2): dump[fieldEn] = [item2];		
-		if (dump.hasOwnProperty(fieldEn)) {
-			const place  = dump[fieldEn]["values"].indexOf(item2);
-			if (place === -1){
-				dump[fieldEn]["values"].push(item2);
-				dump[fieldEn]["counts"].push(1);
+	console.log(fieldEn);
+	if(fieldEn  === "unit") {
+		const arrPhrases =  item2.split("|");
+		// console.log(arrPhrases);
+		arrPhrases.map (x => vectorize(x));
+	} else if(fieldEn  === "isNeedExt") {
+		console.log(item2?1:0);
+	}
+	else {
+		console.log(item2);
+	}
+		
+		
+		// console.log(`${fieldEn}■${item2}`);
+		// if(item2) {
+			// dump.hasOwnProperty(fieldEn)? dump[fieldEn].push(item2): dump[fieldEn] = [item2];		
+			if (dump.hasOwnProperty(fieldEn)) {
+				const place  = dump[fieldEn]["values"].indexOf(item2);
+				if (place === -1){
+					dump[fieldEn]["values"].push(item2);
+					dump[fieldEn]["counts"].push(1);
+				} else {
+					// if (fieldEn  == "phrase") {
+						// // console.log(dump);
+						// console.log("●"+item2);
+						// console.log(dump[fieldEn]);
+						// console.log(item2, place, dump[fieldEn]["counts"][place]);
+					// }			
+					dump[fieldEn]["counts"][place] +=1;
+					// if (fieldEn  == "phrase") {
+						// console.log(item2, place, dump[fieldEn]["counts"][place]);
+					// }
+				}
 			} else {
-				// if (fieldEn  == "phrase") {
-					// // console.log(dump);
-					// console.log("●"+item2);
-					// console.log(dump[fieldEn]);
-					// console.log(item2, place, dump[fieldEn]["counts"][place]);
-				// }			
-				dump[fieldEn]["counts"][place] +=1;
-				// if (fieldEn  == "phrase") {
-					// console.log(item2, place, dump[fieldEn]["counts"][place]);
-				// }
+				dump[fieldEn] = { "counts" : [1], "values": [item2] };				
 			}
-		} else {
-			dump[fieldEn] = { "counts" : [1], "values": [item2] };				
-		}
-	// }
-});
-
-
+		// }
+	});
+fsf()
 
 });
 
 // console.log(dump);
 
+let out = "";
 dict.forEach(function(item, i, arr) {
-	console.log("=============================");
-	console.log("=============================");
-	console.log(item, "||", mappingEnRu[item]);
-	console.log("=============================");
+	out+="=============================\n";
+	out+="=============================\n";
+	out+= item +  "||" + mappingEnRu[item] + "\n";
+	out+="=============================\n";
 	dump[item]["counts"].forEach(function(item2, i2, arr2) {
 		const unit = dump[item]["values"][i2] || '■';
-		console.log(`${unit}\t${item2}`);
+		out+= `${unit}\t${item2}\n`;
 	});
 	
 });
+
+fs.writeFileSync( "agg.log", out, "utf8");
 
 	
 })();
