@@ -15,11 +15,11 @@ const fileName = "df_annotation_sample_fin1.csv";
 
 const mappingRuEn = {
   'ДФ': "unit",
-  'требуется продолжение': "isNeedExt",
+  'требуется продолжение': "extrequired",
   'основная семантика': "semantics1",
-  'дополнительная семантика': "semantics2",
+  'дополнительная семантика': "semantics",
   'речевой акт 1 (для трехчастных)': "act1",
-  'тип речевого акта (собеседник)': "actType",
+  'тип речевого акта (собеседник)': "actclass",
   'о ситуации': "situation",
   'структура': "parts",
   'интонация' : "intonation",
@@ -40,18 +40,17 @@ const mappingRuEn = {
 const sql = `CREATE TABLE phrases (
 	id SERIAL PRIMARY KEY,
 	unit jsonb, 
-	isNeedExt boolean not null default false,
-	semantics1 integer not null,
-	semantics2 jsonb,
-	act1 integer[], 
-	actType integer[] not null,
+	extrequired boolean not null default false,
+	semantics jsonb,
+	act1 jsonb, 
+	actclass jsonb,
 	situation text,
 	parts boolean not null default false,
 	intonation integer,
-	extension integer[],
+	extension jsonb,
 	mods text,
-	gest integer[],
-	organ integer[],
+	gest jsonb,
+	organ jsonb,
 	translations text,
 	examples text,
 	audio text,
@@ -171,8 +170,20 @@ async function checkFeature(fld, content){
 }
 
 
+async function checkFeatureArray(fld, content) {
+	const thisArr = content.split("|");
+	const thisArrIds = [];
+	for (let s=0; s < thisArr.length; s++) {
+		if (thisArr[s]) {
+			thisArrIds.push(await checkFeature(fld, thisArr[s]));
+		}
+	}
+	return JSON.stringify(thisArrIds);
+}
+
 for (const row of csvArr) {	
 	let values = [];
+	let semantics1 = "";
 	for (let i=0; i < row.length; i++) {
 		const data  = row[i];
 		const fieldEn = dict[i];
@@ -209,23 +220,55 @@ for (const row of csvArr) {
 			values.push(JSON.stringify(unitsArrVector));
 			// console.log(unitsArrVector);
 			// process.exit();
-		} else if(fieldEn  === "isNeedExt") {
+		} else if(fieldEn  === "extrequired") {
 			values.push(data?1:0);
 		} else if(fieldEn  === "semantics1") {
-			const result = await checkFeature(fieldEn, data);
-			values.push(result);
-		} else if(fieldEn === "semantics2") {
+			semantics1 = data;
+			// const result = await checkFeature(fieldEn, data);
+			// values.push(result);
+		} else if(fieldEn === "semantics") {
 			// console.log(data);
-			const semArr = data.split("|");
+			const semantics2 = semantics1 + "|" + data;
+			const semArr = semantics2.split("|");
 			const semArrIds = [];
 			for (let s=0; s < semArr.length; s++) {
-				// console.log("|"+semArr[s]+">>("+data+")");
 				if (semArr[s]) {
 					semArrIds.push(await checkFeature(fieldEn, semArr[s]));
 				}
 			}
 			values.push(JSON.stringify(semArrIds));
-		} else {
+		} else if(fieldEn === "act1") {
+			const result = await checkFeatureArray(fieldEn, data);
+			values.push(result);
+		} else if(fieldEn === "actclass") {
+			// empty = error!!!
+			if(!data) {
+				console.log(fieldEn, "is empty!");
+			}
+			const result = await checkFeatureArray(fieldEn, data);
+			values.push(result);
+		} else if(fieldEn === "situation") {
+			values.push(data);
+		} else if(fieldEn === "parts") {
+			// !!! empty I treat as two-parts !!!
+			// parts boolean not null default false,
+			values.push(data==="трехчастная"?1:0);
+		} else if(fieldEn === "intonation") {
+			const result = await checkFeature(fieldEn, data);
+			values.push(result);
+		}else if(fieldEn === "extension") {
+			const result = await checkFeatureArray(fieldEn, data);
+			values.push(result);
+		} else if(fieldEn === "mods") {
+			values.push(data);
+		} else if(fieldEn === "gest") {
+			const result = await checkFeatureArray(fieldEn, data);
+			values.push(result);
+		} else if(fieldEn === "organ") {
+			const result = await checkFeatureArray(fieldEn, data);
+			values.push(result);
+		}
+		else {
 			// console.log(data);
 		}
 		
@@ -254,7 +297,15 @@ for (const row of csvArr) {
 
 // let vals = [values[0]];
 try {
-  const ex  = await pool.query(`INSERT INTO phrases(unit, isNeedExt, semantics1, semantics2, actType) VALUES($1::jsonb, $2, $3, $4, '{1}') RETURNING *`, values);
+  const ins = `INSERT INTO phrases
+				(
+				unit, extrequired, semantics, act1, actclass, 
+				situation, parts, intonation, extension, mods, gest, organ
+				) 
+				VALUES($1::jsonb, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+				RETURNING *`;
+	
+  const ex  = await pool.query(ins, values);
   // console.log("111", ex);
 } catch (err) {
   console.log(err.stack)
