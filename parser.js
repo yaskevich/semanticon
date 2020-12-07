@@ -10,6 +10,7 @@ const pool = new Pool();
 // global objects
 const tokenIds = {};
 const featureIds = {};
+const phraseIds = {};
 //
 
 const mappingRuEn = {
