@@ -1,4 +1,5 @@
 'use strict';
+'use strict';
 
 import fs from 'fs'
 import path from 'path'
@@ -6,7 +7,7 @@ import csv from 'async-csv'
 import pg from 'pg';
 const { Pool } = pg;
 const pool = new Pool();
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 dotenv.config();
 
 import { fileURLToPath } from 'url';
@@ -154,7 +155,7 @@ async function processFile(fileName) {
         let csvArr  = [];
 
         try {
-            csvArr = await csv.parse(csvString, {delimiter: ";"});
+            csvArr = await csv.parse(csvString, {delimiter: ","});
         }
         catch(e) {
             console.log(e.message);
