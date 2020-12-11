@@ -16,19 +16,23 @@ pool.query("select units.id, units.pid from units left join phrases on units.pid
 				pool.query("select pid, phrase->0 as phrase from phrases", (err, res) => {
 				if (!err){
 						// console.log(res.rows);
+						const phrases = res.rows;
 						const index = res.rows.reduce((obj, item) => (obj[item.pid.toString()] = item.phrase, obj) ,{});
-						console.log(index);
-						for(let i=0; i<data.length; i++){
-							const entry = data[i];
+						// console.log(index);
+						// .join(" ").replace(/ (?=-)/, '')
+				const kek  = phrases.map(x => ({ "pid": x["pid"], "phrase": x["phrase"].map(y=> dict[y]).join(" ").replace(/ (?=-)/, '')}));
+							console.log(kek);
+						for(let i=0; i<phrases .length; i++){
+							// const entry = phrases[i];
 							// console.log(entry["id"]);
-							const phrase = index[entry["pid"]];
+							// const phrase = index[entry["pid"]];
 							// for (let x=0; x<phrase.length; x++){
 								// console.log("!", phrase[x]);
 								
 							// }
-							
-							const kek  = phrase.map(x => dict[x]).join(" ").replace(/ (?=-)/, '');
-							console.log(entry["pid"], kek);
+							// console.log("!",entry);
+							// const kek  = phrase.map(x => dict[x]).join(" ").replace(/ (?=-)/, '');
+							// console.log(entry["pid"], kek);
 						}
 					}
 				  pool.end()
