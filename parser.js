@@ -1,11 +1,20 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const csv = require('async-csv');
-require('dotenv').config();
-const { Pool } = require('pg');
+import fs from 'fs'
+import path from 'path'
+import csv from 'async-csv'
+import pg from 'pg';
+const { Pool } = pg;
 const pool = new Pool();
+import dotenv from 'dotenv'
+dotenv.config();
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 // global objects
 const tokenIds = {};
@@ -38,11 +47,11 @@ const mappingRuEn = {
 };
 
 const schemes = {
- "phrases": `CREATE TABLE phrases (id SERIAL PRIMARY KEY, phrase jsonb)`,
+ "phrases": `CREATE TABLE phrases (pid SERIAL PRIMARY KEY, phrase jsonb)`,
  "tokens": `CREATE TABLE tokens (id SERIAL PRIMARY KEY, token text UNIQUE)`,
  "units": `CREATE TABLE units (
     id SERIAL PRIMARY KEY,
-    unit jsonb, 
+    pid integer not null,
     extrequired boolean not null default false,
     semantics jsonb,
     act1 jsonb, 
@@ -61,7 +70,10 @@ const schemes = {
     style integer,
     comment text,
     construction text,
-    link text
+    link text,
+	CONSTRAINT fk_phrases
+      FOREIGN KEY(pid) 
+	  REFERENCES phrases(pid)
 	)`,	
 	"features":
 	`CREATE TABLE features (
@@ -73,17 +85,13 @@ const schemes = {
 	)`
 };
 
+const phrasesInsert = `INSERT INTO phrases (phrase) VALUES($1) RETURNING pid`;
 const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
-
-const unitsInsert = `INSERT INTO units
-                    (
-                    unit, extrequired, semantics, act1, actclass, 
-                    situation, parts, intonation, extension, mods, gest, organ
-                    ) 
-                    VALUES($1::jsonb, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
+					actclass, situation, parts, intonation, extension, mods, gest, organ)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                     RETURNING *`;
-
 
 async function checkFeature(fld, content){
      // select semantics1, semantics2->0 from units;
@@ -159,8 +167,11 @@ async function processFile(fileName) {
         const mappingEnRu = Object.assign({}, ...Object.entries(mappingRuEn).map(([a,b]) => ({ [b]: a })));
 		
 		for (let table in schemes){
-			await pool.query('DROP table IF EXISTS ' + table);
-			await pool.query(schemes[table]);
+			// jshint: The body of a for in should be wrapped in an if statement...
+			if (Reflect.getOwnPropertyDescriptor(schemes, table)) {
+				await pool.query('DROP table IF EXISTS ' + table + ' CASCADE');
+				await pool.query(schemes[table]);
+			}
 		}
 
         for (const row of csvArr) {
@@ -171,8 +182,16 @@ async function processFile(fileName) {
                 const fieldEn = dict[i];
                 // const fieldRu = fieldRow[i];
                 if(fieldEn  === "unit") {
-                    const result = await vectorizeTokens(data);
-                    values.push(result);
+                    const vector = await vectorizeTokens(data);
+					if (!Reflect.getOwnPropertyDescriptor(phraseIds, vector)) {
+						try {
+							const result  = await pool.query(phrasesInsert, [vector]);
+							phraseIds[vector] = result.rows[0].pid;
+						} catch (e){
+							console.error(e.detail);
+						}
+					}
+                    values.push(phraseIds[vector]);
                 } else if(fieldEn  === "extrequired") {
                     values.push(data?1:0);
                 } else if(fieldEn  === "semantics1") {
