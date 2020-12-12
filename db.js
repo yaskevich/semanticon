@@ -38,7 +38,11 @@ export default {
         // pool.end();
         return phraseMap;
     },
-	async getUnits (pid){
+	async getFeatures(){
+		const res = await pool.query('select id, ru FROM features');
+        return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));;
+	}, 
+	async getUnits(pid){
 		const res = await pool.query('select * FROM units where pid=$1', [pid]);
         return res.rows;
 	}

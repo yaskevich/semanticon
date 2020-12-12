@@ -113,10 +113,17 @@ let users = [
 	
 	app.get("/api/data/:id", async(req, res) =>  {
 		const pid  = parseInt(req.params.id, 10);
+		console.log(`query for ${pid}`);
 		const data  = pid ? await db.getUnits(pid) : [];
 		return res.json(data);
 	});	
 		
+	app.get("/api/features", async(req, res) =>  {
+	   const data = await db.getFeatures();
+	  console.log("data", data);
+	  return res.json(data);
+	});
+	
 	app.get("/api/data", async(req, res) =>  {
 	   const data = await db.getDataFromDB();
 	  // console.log("data", data);
@@ -135,7 +142,7 @@ let users = [
 	  let user = users.find(user => {
 		return user.id === req.session.passport.user;
 	  });
-	  console.log([user, req.session]);
+	  console.log([user, req.session]);р
 	  res.send({ user: user });
 	});
 
