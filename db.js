@@ -22,7 +22,7 @@ export default {
             "phrase": x["phrase"].map(y => dict[y]).join(" ").replace(/ (?=-)/, '')
         }));
 
-        for (let i = 0; i < phrases.length; i++) {
+        // for (let i = 0; i < phrases.length; i++) {
             // const entry = phrases[i];
             // console.log(entry["id"]);
             // const phrase = index[entry["pid"]];
@@ -33,7 +33,7 @@ export default {
             // console.log("!",entry);
             // const phraseMap  = phrase.map(x => dict[x]).join(" ").replace(/ (?=-)/, '');
             // console.log(entry["pid"], phraseMap);
-        }
+        // }
 
         // pool.end();
         return phraseMap;
@@ -42,4 +42,4 @@ export default {
 		const res = await pool.query('select * FROM units where pid=$1', [pid]);
         return res.rows;
 	}
-}
+};

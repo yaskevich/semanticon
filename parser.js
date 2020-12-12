@@ -1,9 +1,8 @@
 'use strict';
-'use strict';
 
-import fs from 'fs'
-import path from 'path'
-import csv from 'async-csv'
+import fs from 'fs';
+import path from 'path';
+import csv from 'async-csv';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -17,7 +16,6 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 
 // global objects
 const tokenIds = {};

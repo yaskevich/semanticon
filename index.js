@@ -1,6 +1,6 @@
 'use strict';
 
-import path from 'path';
+// import path from 'path';
 import express from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
@@ -11,11 +11,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 import db from './db.js';
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+// import { fileURLToPath } from 'url';
+// import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 const LocalStrategy = passportLocal.Strategy;
 
@@ -48,29 +48,30 @@ let users = [
 
 		(username, password, done) => {
 		  let user = users.find((user) => {
-			return user.email === username && user.password === password
-		  })
+			return user.email === username && user.password === password;
+		  });
 
 		  if (user) {
-			done(null, user)
+			done(null, user);
 		  } else {
-			done(null, false, { message: 'Incorrect username or password'})
+			done(null, false, { message: 'Incorrect username or password'});
 		  }
 		}
 	  )
 	);
 
 	passport.serializeUser((user, done) => {
-	  done(null, user.id)
+	  done(null, user.id);
 	});
 
 	passport.deserializeUser((id, done) => {
 	  let user = users.find((user) => {
-		return user.id === id
-	  })
-	  done(null, user)
+		return user.id === id;
+	  });
+	  done(null, user);
 	});
 	
+	app.use(compression());
 	app.use(session({
 	  secret: process.env.SESSION_SECRET || Math.random().toString(36).substring(2),
 	  resave: false,
@@ -96,6 +97,9 @@ let users = [
 
 		req.login(user, err => {
 		  res.send("Logged in");
+		  if (err) {
+			console.log(err);
+		  }
 		});
 	  })(req, res, next);
 });
@@ -121,18 +125,18 @@ let users = [
 
 	const authMiddleware = (req, res, next) => {
 	  if (!req.isAuthenticated()) {
-		res.status(401).send('You are not authenticated')
+		res.status(401).send('You are not authenticated');
 	  } else {
-		return next()
+		return next();
 	  }
 	};
 
 	app.get("/api/user", authMiddleware, (req, res) => {
 	  let user = users.find(user => {
-		return user.id === req.session.passport.user
+		return user.id === req.session.passport.user;
 	  });
-	  console.log([user, req.session])
-	  res.send({ user: user })
+	  console.log([user, req.session]);
+	  res.send({ user: user });
 	});
 
 	app.all("/", (req,res) => {
