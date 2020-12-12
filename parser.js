@@ -4,11 +4,13 @@
 import fs from 'fs'
 import path from 'path'
 import csv from 'async-csv'
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 import pg from 'pg';
 const { Pool } = pg;
 const pool = new Pool();
-import dotenv from 'dotenv';
-dotenv.config();
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
