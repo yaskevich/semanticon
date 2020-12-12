@@ -15,24 +15,10 @@ export default {
     item: Object
   },
   methods: {
-    async say(x) {
-      // console.log(x);
-      const load = async () => {
-      try {
-            const getData = await fetch(
-              "/api/data/" + x
-            );
-            const resp = await getData.json();
-            // return resp;
-            console.log(resp.length);
-          } catch (e) {
-            console.log(e);
-          }
-      };
-      await load();
-    }
+    // async say(x) {
+    //   console.log(x);
+    // }
   }
-
 };
 </script>
 

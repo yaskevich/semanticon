@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { unref } from "vue";
+import queryLibrary from "../modules/queries";
 export default {
   name: "Phrase",
   props: {
@@ -13,6 +15,8 @@ export default {
   },
   methods: {
     async say() {
+      const { featuresList } = queryLibrary();
+      console.log(unref(featuresList));
       const x = this.$route.params.id||1;
       console.log(x);
       const load = async () => {
