@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import About from '../components/About.vue'
 import External from '../components/External.vue'
-import Unit from '../components/Unit.vue'
+import Phrase from '../components/Phrase.vue'
 
 const routes = [
   {
@@ -27,7 +27,7 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: External
   },
-   { path: '/phrase/:id', component: Unit }
+   { path: '/phrase/:id', component: Phrase, name: 'Phrase', props: true }
 ]
 
 const router = createRouter({

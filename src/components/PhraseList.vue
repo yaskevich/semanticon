@@ -1,6 +1,8 @@
 <template>
   <div v-if="error">{{ error }}</div>
+  
   <AsyncItemData v-else v-for="item in phraseslist" :key="item.pid" :item="item" />
+
 </template>
 
 <script>
