@@ -1,8 +1,6 @@
 <template>
-  <div v-if="error">{{ error }}</div>
-
-  <AsyncItemData v-else v-for="item in phraseslist" :key="item.pid" :item="item" />
-
+  <div v-if="errors.phrases">{{ errors.phrases }}</div>
+  <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" />
 </template>
 
 <script>
@@ -19,13 +17,10 @@ const AsyncItemData = defineAsyncComponent({
 
 export default {
   name: "PhraseList",
-
   async setup() {
-    const { phraseslist, error, load } = queryLibrary();
-
-    await load();
-
-    return { phraseslist, error };
+    const { data, errors, loadData } = queryLibrary();
+    await loadData("phrases", "/api/data");
+    return { data, errors };
   },
   components: {
     AsyncItemData

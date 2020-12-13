@@ -1,17 +1,15 @@
-
-   <template v-if="dataReady">
-    <div id="nav">
-      <router-link to="/">Главная</router-link> |
-      <router-link to="/about">О проекте</router-link> |
-      <router-link to="/kek">Разное</router-link> |
-      <router-link to="/login">Войти</router-link>
-    </div>
-    <router-view/>
-  </template>
-  <template v-else>
-    загрузка...
-  </template>
-
+<template v-if="dataReady">
+  <div id="nav">
+    <router-link to="/">Главная</router-link> |
+    <router-link to="/about">О проекте</router-link> |
+    <router-link to="/kek">Разное</router-link> |
+    <router-link to="/login">Войти</router-link>
+  </div>
+  <router-view/>
+</template>
+<template v-else>
+  загрузка...
+</template>
 
 <script>
 import { ref } from "vue";
@@ -22,23 +20,16 @@ export default {
 
    setup() {
     onBeforeMount(async() => {
-      const { featuresError, loadFeatures } = queryLibrary();
-      await loadFeatures();
-      if (featuresError.value) {
-          console.log("error", featuresError);
-      }
+      const { errors, loadData } = queryLibrary();
+      await loadData("features", "/api/features");
 
+      if (errors.features && errors.features.value) {
+          console.log("error", errors.features);
+      }
       console.log('mounted!')
    })
     console.log("setup");
     let dataReady = ref(false);
-    //
-    // const { featuresError, loadFeatures } = queryLibrary();
-    // //
-    // await loadFeatures();
-    // dataReady.value = true;
-
-    // return { featuresList, error };
     return {
       dataReady,
       // featuresError

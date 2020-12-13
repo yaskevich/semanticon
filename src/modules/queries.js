@@ -1,47 +1,33 @@
-import { reactive, toRefs} from "vue";
+// eslint-disable-next-line no-unused-vars
+import { reactive, toRefs, unref} from "vue";
 
 const state = reactive({
-  error: null,
-  phraseslist: null,
-  loaded: false,
-  loading: false,
-
-  featuresError: null,
-  featuresList: null,
-  featuresLoaded: false,
-  featuresLoading: false,
-
+  // error: null,
+  // phraseslist: null,
+  // loaded: false,
+  // loading: false,
+  isLoaded: {},
+  errors:  {},
+  data: {}
 });
 
 export default function queryLibrary() {
-  const load = async () => {
-    if (!state.loaded) {
+  const loadData = async (key, endpoint) => {
+    if (!state.isLoaded[key]) {
       try {
-        const getApiData = await fetch(
-          "/api/data"
-        );
-        // console.log();
-        state.phraseslist = await getApiData.json();
-        state.loaded = true;
+        const getApiData = await fetch(endpoint);
+        const datum = await getApiData.json();
+        console.log("get", endpoint);
+        state.data[key] =  datum;
+        // console.log(key, unref(state.data[key]));
+        // console.log(key, datum);
+        // console.log(key, unref(state.data));
+        state.isLoaded[key] = true;
       } catch (e) {
-        state.error = e;
-      }
-    }
-  };
-  const loadFeatures = async () => {
-    if (!state.featuresLoaded) {
-      try {
-        const getApiData = await fetch(
-          "/api/features"
-        );
-        state.featuresList = await getApiData.json();
-        // console.log("feats!", unref(state.featuresList));
-        state.featuresLoaded = true;
-      } catch (e) {
-        state.featuresError = e;
+        state.errors[key] = e;
       }
     }
   };
 
-  return { ...toRefs(state), load, loadFeatures };
+  return { ...toRefs(state), loadData };
 }
