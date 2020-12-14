@@ -5,27 +5,30 @@
     </h4>
     <div>
         <template v-for="(value, name) in item" >
-        <div v-if="value && value.length && name!=='id'" :key="name">
+        <div v-if="value && value.length && name!=='id'" :key="name" class="item">
           <span v-if="Array.isArray(value)">
-            <span class="desc">{{name}}: </span>
+            <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
             <span v-for="a in value" :key="a">
-              {{ data.features[a] }}&nbsp;
+              <!-- <Chip :label="data.features[a]" /> -->
+              <Tag class="p-mr-2" severity="warning" :value="data.features[a]" rounded></Tag>
             </span>
           </span>
-          <span v-else><span class="desc">{{name}}: </span>{{ value }}</span>
+          <span v-else><span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>{{ value }}</span>
         </div>
       </template>
+      <Divider/>
     </div>
   </div>
 </template>
 <script>
+
 export default {
   name: "Unit",
   props: {
     item: Object,
     index: String,
     data: Object
-  },
+  }
 };
 </script>
 
@@ -36,5 +39,8 @@ export default {
 }
 .desc {
   font-weight:bold;
+}
+.item {
+  margin-bottom: .5rem;
 }
 </style>
