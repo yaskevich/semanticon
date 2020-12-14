@@ -1,5 +1,6 @@
-<template v-if="dataReady">
-  <div id="nav" class="p-component ">
+<template >
+  <div v-if="dataReady">
+  <div id="nav" class="p-component">
     <router-link to="/">Главная</router-link> |
     <router-link to="/about">О проекте</router-link> |
     <router-link to="/home">{{$primevue.config.locale.hi}}</router-link> |
@@ -10,10 +11,11 @@
   </div>
   <div id="footer" class="p-component">
      &copy; 2020—2021, «Дискурсивные формулы». НИУ ВШЭ, Школа лингвистики.
-    </div>
-</template>
-<template v-else>
-  загрузка...
+  </div>
+  </div>
+  <div class="p-component" v-else>
+    загрузка...
+  </div>
 </template>
 
 <script>
@@ -31,6 +33,7 @@ export default {
       if (errors.features && errors.features.value) {
           console.log("error", errors.features);
       }
+      dataReady.value = true;
       console.log('mounted!')
    })
     console.log("setup");
