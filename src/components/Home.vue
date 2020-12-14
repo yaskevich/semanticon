@@ -1,5 +1,5 @@
 <template>
-<div>kek</div>
+<div>Nil admirari</div>
 
 </template>
 

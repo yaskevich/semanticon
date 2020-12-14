@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import About from '../components/About.vue'
-import External from '../components/External.vue'
-import Phrase from '../components/Phrase.vue'
+import PhraseListScreen from '../components/PhraseListScreen.vue'
+import UnitListScreen from '../components/UnitListScreen.vue'
 
 const routes = [
   {
-    path: '/kek',
+    path: '/home',
     name: 'Home',
     component: Home
   },
@@ -21,13 +21,13 @@ const routes = [
   },
   {
     path: '/',
-    name: 'External',
+    name: 'PhraseListScreen',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: External
+    component: PhraseListScreen
   },
-   { path: '/phrase/:id', component: Phrase, name: 'Phrase', props: true }
+   { path: '/phrase/:id', component: UnitListScreen, name: 'Phrase', props: true }
 ]
 
 const router = createRouter({

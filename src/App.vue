@@ -2,7 +2,7 @@
   <div id="nav">
     <router-link to="/">Главная</router-link> |
     <router-link to="/about">О проекте</router-link> |
-    <router-link to="/kek">Разное</router-link> |
+    <router-link to="/home">Разное</router-link> |
     <router-link to="/login">Войти</router-link>
   </div>
   <router-view/>

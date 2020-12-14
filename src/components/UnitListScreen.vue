@@ -1,9 +1,9 @@
 <template>
-  <div class="phraselist p-d-flex p-flex-column p-jc-center">
+  <div class="unitlist p-d-flex p-flex-column p-jc-center">
     <div v-if="error">Parent: {{ error }}</div>
     <Suspense>
       <template #default>
-        <PhraseList />
+        <unitList />
       </template>
       <template #fallback>
         <div>Загрузка...</div>
@@ -13,11 +13,10 @@
 </template>
 
 <script>
-import PhraseList from "./PhraseList.vue";
-// eslint-disable-next-line no-unused-vars
+import UnitList from "./UnitList.vue";
 import { ref, onErrorCaptured } from "vue";
 export default {
-  name: "Phraselist",
+  name: "UnitListScreen",
   setup() {
     const error = ref(null);
     onErrorCaptured(e => {
@@ -26,13 +25,13 @@ export default {
     return { error };
   },
   components: {
-    PhraseList
+    UnitList
   }
 };
 </script>
 
 <style>
-.phraselist {
+.unitlist {
 
 }
 </style>

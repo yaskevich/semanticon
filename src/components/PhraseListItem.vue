@@ -1,14 +1,10 @@
 <template>
-
     <router-link :to="{ name: 'Phrase', params: { id: item.pid } }" tag="li" class="nounderline">
       <Button v-bind:label="item.phrase" class="p-button-link" />
     </router-link>
-
 </template>
 
 <script>
-// { name: 'phrase', params: { id: 123 }}
-// <Button v-bind:label="item.phrase" class="p-button-link" @click="say(item.pid)" />
 export default {
   name: "PhraseListItem",
   props: {
