@@ -1,11 +1,16 @@
 <template v-if="dataReady">
-  <div id="nav">
+  <div id="nav" class="p-component ">
     <router-link to="/">Главная</router-link> |
     <router-link to="/about">О проекте</router-link> |
-    <router-link to="/home">Разное</router-link> |
+    <router-link to="/home">{{$primevue.config.locale.hi}}</router-link> |
     <router-link to="/login">Войти</router-link>
   </div>
-  <router-view/>
+  <div id="content">
+    <router-view/>
+  </div>
+  <div id="footer" class="p-component">
+     &copy; 2020—2021, «Дискурсивные формулы». НИУ ВШЭ, Школа лингвистики.
+    </div>
 </template>
 <template v-else>
   загрузка...
@@ -22,7 +27,7 @@ export default {
     onBeforeMount(async() => {
       const { errors, loadData } = queryLibrary();
       await loadData("features", "/api/features");
-
+      // document.title = $primevue.config.locale.hi;
       if (errors.features && errors.features.value) {
           console.log("error", errors.features);
       }
@@ -41,18 +46,39 @@ export default {
 
 
 <style>
+body {
+
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  /* display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: rgb(240, 240, 240);
+  justify-content: center;
+  align-items: center; */
+  display: flex;
+    flex-direction: column;
+    min-height: 97vh;
+   max-width: 100vh;
+   margin: auto;
 
+}
 #nav {
-  padding: 30px;
+  padding: 2rem;
+  /* display: flex;
+  flex-direction: row;
+  justify-content: center;
+  display: inline-block; */
+  /* height: 100px; */
+  /* width: 100%; */
+  background-color: rgb(200, 200, 200);
 }
 
+#content {
+  /* min-height:80vh; */
+  flex: 1;
+}
 #nav a {
   font-weight: bold;
   color: #2c3e50;
@@ -60,5 +86,10 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+#footer {
+  background-color:pink;
+  margin-top:auto;
 }
 </style>

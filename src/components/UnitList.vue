@@ -1,6 +1,8 @@
 <template>
-  <div class="">
-    <div>Фраза №{{$route.params.id}}</div>
+  <div class="p-component">
+    <!-- <Button label="ok" class="p-button" @click="say()" /> -->
+
+    <div class="phrase">Фраза №{{$route.params.id}}</div>
     <div v-if="errors[id]">{{ errors[id] }}</div>
     <AsyncUnit v-else v-for="(item, index) in data[id]" :key="item.id" :item="item" :index="data[id].length>1?String(index+1):''" :data="data"/>
    </div>
@@ -34,6 +36,11 @@ export default {
     await loadData(id, "/api/data/"+id);
     return { data, errors, id };
   },
+  methods: {
+    // say() {
+    //   this.$primevue.config.locale.hi = 'Всякое';
+    // }
+  },
   components: {
     AsyncUnit
   }
@@ -41,4 +48,7 @@ export default {
 </script>
 
 <style>
+.phrase {
+  color: red;
+}
 </style>

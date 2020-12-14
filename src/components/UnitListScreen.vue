@@ -1,5 +1,5 @@
 <template>
-  <div class="unitlist p-d-flex p-flex-column p-jc-center">
+  <div class="unitlist">
     <div v-if="error">Parent: {{ error }}</div>
     <Suspense>
       <template #default>
@@ -32,6 +32,7 @@ export default {
 
 <style>
 .unitlist {
-
+background-color:lightyellow;
+padding: 2rem;
 }
 </style>
