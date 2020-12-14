@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello p-component">
     <h1>{{ msg }}</h1>
   </div>
 </template>

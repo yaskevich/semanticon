@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home p-component">
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Дискурсивные формулы"/>
     <div class="div-container">

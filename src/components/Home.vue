@@ -1,6 +1,5 @@
 <template>
-<div>Nil admirari</div>
-
+  <div class="p-component">Nil admirari</div>
 </template>
 
 <script>
