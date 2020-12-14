@@ -1,5 +1,5 @@
 <template >
-  <div v-if="dataReady">
+  <div id="main" v-if="dataReady">
   <div id="nav" class="p-component">
     <router-link to="/">Главная</router-link> |
     <router-link to="/about">О проекте</router-link> |
@@ -13,7 +13,7 @@
      &copy; 2020—2021, «Дискурсивные формулы». НИУ ВШЭ, Школа лингвистики.
   </div>
   </div>
-  <div class="p-component" v-else>
+  <div v-else>
     загрузка...
   </div>
 </template>
@@ -60,12 +60,15 @@ body {
   background-color: rgb(240, 240, 240);
   justify-content: center;
   align-items: center; */
+
+
+}
+#main {
   display: flex;
     flex-direction: column;
     min-height: 97vh;
    max-width: 100vh;
    margin: auto;
-
 }
 #nav {
   padding: 2rem;
