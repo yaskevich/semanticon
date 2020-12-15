@@ -10,15 +10,52 @@ const state = reactive({
   errors:  {},
   data: {}
 });
-
+import axios from "axios"
+import router from "../router"
 export default function queryLibrary() {
+  const getUser = () => {
+    if (!state.isLoaded["user"]) {
+      axios.get("/api/user")
+          .then((response) => {
+              // console.log(response)
+              state.data["user"] = response.data.user
+          })
+          .catch((errors) => {
+              console.log(errors)
+              // router.push("/")
+          })
+    }
+  }
+    const doLogin = (email, password) => {
+    if (!state.isLoaded["user"]) {
+      let payload = {
+              email: email,
+              password: password
+          }
+          axios.post("/api/login", payload)
+              .then((response) => {
+                  state.isLoaded["user"] = true;
+                  state.data["user"] = response.data.user;
+                  console.log("Logged in", response.data.user);
+                  router.push("/dashboard")
+              })
+              .catch((errors) => {
+                  console.log("Cannot log in")
+                  console.log(errors);
+              })
+      }
+  }
   const loadData = async (key, endpoint) => {
     if (!state.isLoaded[key]) {
       try {
         const getApiData = await fetch(endpoint);
         const datum = await getApiData.json();
         console.log("get", endpoint);
-        state.data[key] =  datum;
+        if (key === "features"){
+          state.data = datum;
+        } else {
+          state.data[key] =  datum;
+        }
         // console.log(key, unref(state.data[key]));
         // console.log(key, datum);
         // console.log(key, unref(state.data));
@@ -29,5 +66,5 @@ export default function queryLibrary() {
     }
   };
 
-  return { ...toRefs(state), loadData };
+  return { ...toRefs(state), loadData, doLogin, getUser };
 }

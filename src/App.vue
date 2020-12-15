@@ -4,7 +4,8 @@
     <router-link to="/">Главная</router-link> |
     <router-link to="/about">О проекте</router-link> |
     <router-link to="/home">{{$primevue.config.locale.hi}}</router-link> |
-    <router-link to="/login">Войти</router-link>
+    <router-link v-if="info.user" to="/login">Войти</router-link>
+    <router-link v-else to="/logout">Выйти</router-link>
   </div>
   <div id="content">
     <router-view/>
@@ -26,13 +27,15 @@ export default {
   name: "App",
 
    setup() {
+    let info = {};
     onBeforeMount(async() => {
-      const { errors, loadData } = queryLibrary();
+      const { errors, loadData, data } = queryLibrary();
       await loadData("features", "/api/features");
       // document.title = $primevue.config.locale.hi;
       if (errors.features && errors.features.value) {
           console.log("error", errors.features);
       }
+      info = data;
       dataReady.value = true;
       console.log('mounted!')
    })
@@ -40,6 +43,7 @@ export default {
     let dataReady = ref(false);
     return {
       dataReady,
+      info
       // featuresError
     };
   }

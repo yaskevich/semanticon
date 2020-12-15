@@ -2,13 +2,15 @@
     <div class="p-component">
         <!-- <h2>Dashboard</h2> -->
         <h3>Пользователь</h3>
-        <p>Имя: {{ user.name }}</p>
+        <p>Имя: {{ data.user.name }}</p>
     </div>
 </template>
 <script>
-    import axios from "axios"
-    import router from "../router"
+import queryLibrary from "../modules/queries";
+    // import axios from "axios"
+    // import router from "../router"
 	// import { reactive } from "vue"
+    // import { unref } from "vue"
     export default {
         setup() {
             // const datum = reactive({
@@ -16,6 +18,10 @@
             // });
             //
             // return { datum };
+            const { data, getUser } = queryLibrary();
+            getUser();
+            // console.log("user", unref(data));
+            return { data }
           },
         name: "Login",
         data() {
@@ -25,24 +31,9 @@
                 }
             }
         },
-        methods: {
-            getUserData: function() {
-                let self = this
-                axios.get("/api/user")
-                    .then((response) => {
-                        // console.log(response)
-                        // console.log(self)
-                        // self.$set(this, "user", response.data.user)
-                        self.user = response.data.user
-                    })
-                    .catch((errors) => {
-                        console.log(errors)
-                        router.push("/")
-                    })
-            }
-        },
+
         mounted() {
-            this.getUserData()
+            console.log("dashboard mounted");
         }
     }
 </script>

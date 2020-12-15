@@ -1,5 +1,5 @@
 <template>
-    <div class="p-component">    
+    <div class="p-component">
         <h2>Login</h2>
         <form v-on:submit="login">
             <input type="text" name="email" /><br>
@@ -10,32 +10,17 @@
 </template>
 
 <script>
-    import router from "../router"
-    import axios from "axios"
+    import queryLibrary from "../modules/queries";
     export default {
         name: "Login",
         methods: {
             login: (e) => {
                 e.preventDefault()
+                const { doLogin } = queryLibrary();
                 let email = "user@email.com"
                 let password = "password"
-                let login = () => {
-                    let data = {
-                        email: email,
-                        password: password
-                    }
-                    axios.post("/api/login", data)
-                        .then((response) => {
-                            console.log("Logged in")
-							console.log(response);
-                            router.push("/dashboard")
-                        })
-                        .catch((errors) => {
-                            console.log("Cannot log in")
-							console.log(errors);
-                        })
-                }
-                login()
+                doLogin(email, password);
+                // login();
             }
         }
     }
