@@ -22,14 +22,14 @@ const LocalStrategy = passportLocal.Strategy;
 let users = [
   {
     id: 1,
-    name: "Jude",
+    name: "Саша",
     email: "user@email.com",
     password: "password"
   },
   {
     id: 2,
-    name: "Emma",
-    email: "emma@email.com",
+    name: "Женя",
+    email: "user2@email.com",
     password: "password2"
   }
 ];
@@ -96,7 +96,8 @@ let users = [
 		}
 
 		req.login(user, err => {
-		  res.send("Logged in");
+		  // res.send("Logged in");
+		  res.json({ user: getUser(req) });
 		  if (err) {
 			console.log(err);
 		  }
@@ -119,12 +120,13 @@ let users = [
 	});	
 		
 	app.get("/api/features", async(req, res) =>  {
-	   const data = await db.getFeatures();
-	  console.log("data", data);
+	  const data = await db.getFeatures();
+	  // console.log("data", data);
 	  return res.json(data);
 	});
 	
 	app.get("/api/data", async(req, res) =>  {
+		console.log("→ data");
 	   const data = await db.getDataFromDB();
 	  // console.log("data", data);
 	  return res.json(data);
@@ -137,13 +139,14 @@ let users = [
 		return next();
 	  }
 	};
-
-	app.get("/api/user", authMiddleware, (req, res) => {
-	  let user = users.find(user => {
-		return user.id === req.session.passport.user;
+	function getUser(request) {
+		return users.find(user => {
+			// console.log([user, req.session]);
+			return user.id === request.session.passport.user;
 	  });
-	  console.log([user, req.session]);р
-	  res.send({ user: user });
+	}
+	app.get("/api/user", authMiddleware, (req, res) => {
+	  res.send({ user: getUser(req) });
 	});
 
 	app.all("/", (req,res) => {
