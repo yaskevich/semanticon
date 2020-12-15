@@ -1,14 +1,11 @@
 <template>
   <div class="unit">
     <div style='float:right;'>
-
-    <Button v-bind:icon="data.user ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="data.user ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" />
+      <Button v-bind:icon="data.user ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="data.user ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" />
   </div>
     <h4>Значение
       <span v-if="index">{{index}}</span>
     </h4>
-
-
     <div>
         <template v-for="(value, name) in item" >
         <div v-if="value && value.length && name!=='id'" :key="name" class="item">
@@ -47,6 +44,7 @@ export default {
   font-weight:bold;
 }
 .item {
-  margin-bottom: .5rem;
+  /* margin-bottom: .5rem; */
+  line-height:2;
 }
 </style>
