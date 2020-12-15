@@ -128,8 +128,14 @@ let users = [
 		
 	app.get("/api/features", async(req, res) =>  {
 	  const data = await db.getFeatures();
+	  const tokens = await db.getTokens();
 	  // console.log("data", data);
-	  return res.json({"features":data, "user": req.isAuthenticated()?getUser(req):{}});
+	  return res.json({"features":data, "tokens":tokens, "user": req.isAuthenticated()?getUser(req):{}});
+	});
+
+	app.get("/api/tokens", async(req, res) =>  {
+		console.log("tokens");
+	  	 return res.json(await db.getTokens());
 	});
 	
 	app.get("/api/data", async(req, res) =>  {

@@ -45,5 +45,11 @@ export default {
 	async getUnits(pid){
 		const res = await pool.query('select * FROM units where pid=$1', [pid]);
         return res.rows;
+	},
+	async getTokens() {		
+		const res = await pool.query("select * from tokens");
+        const dict = res.rows.reduce((obj, item) => (obj[item.id.toString()] = item.token, obj), {});
+		// console.log("dict", dict);
+		return dict;
 	}
 };
