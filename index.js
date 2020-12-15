@@ -17,6 +17,13 @@ import db from './db.js';
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
 
+function getUser(request) {
+	return users.find(user => {
+		// console.log([user, req.session]);
+		return user.id === request.session.passport.user;
+  });
+}
+
 const LocalStrategy = passportLocal.Strategy;
 
 let users = [
@@ -122,7 +129,7 @@ let users = [
 	app.get("/api/features", async(req, res) =>  {
 	  const data = await db.getFeatures();
 	  // console.log("data", data);
-	  return res.json(data);
+	  return res.json({"features":data, "user": req.isAuthenticated()?getUser(req):{}});
 	});
 	
 	app.get("/api/data", async(req, res) =>  {
@@ -139,12 +146,7 @@ let users = [
 		return next();
 	  }
 	};
-	function getUser(request) {
-		return users.find(user => {
-			// console.log([user, req.session]);
-			return user.id === request.session.passport.user;
-	  });
-	}
+
 	app.get("/api/user", authMiddleware, (req, res) => {
 	  res.send({ user: getUser(req) });
 	});
