@@ -16,11 +16,10 @@ import store from "@/modules/store";
 
 export default function queryLibrary() {
   const getUser = () => {
-    if (!state.isLoaded["user"]) {
+    if (!store.isAuth) {
       axios.get("/api/user")
           .then((response) => {
-              // console.log(response)
-              state.data["user"] = response.data.user
+              store.actions.set("user", response.data.user);
           })
           .catch((errors) => {
               console.log(errors)
@@ -30,40 +29,30 @@ export default function queryLibrary() {
   }
   const doLogout = () => {
     axios.get("/api/logout")
-        .then((response) => {
-          // state.isLoaded["user"] = false;
-          delete state.isLoaded["user"];
-          state.data["user"] = undefined;
-          // state.isLoaded["user"] = undefined;
+        // .then((response) => {
+        .then(() => {
           store.actions.set("user", {});
-          console.log(response);
-
-            // router.push("/")
-            // router.go('/');
-
+          // console.log(response);
+          // router.push("/")
+          // router.go('/');
         })
         .catch((errors) => {
             console.log(errors)
         })
   }
     const doLogin = (email, password) => {
-    if (!state.isLoaded["user"]) {
+    if (!store.isAuth) {
       let payload = {
               email: email,
               password: password
           }
           axios.post("/api/login", payload)
               .then((response) => {
-                  state.isLoaded["user"] = true;
-                  store.actions.set("user", response.data.user);
-                  state.data["user"] = response.data.user;
-                  console.log("Logged in", response.data.user);
                   store.actions.set("user", response.data.user);
                   router.push("/dashboard")
               })
               .catch((errors) => {
-                  console.log("Cannot log in")
-                  console.log(errors);
+                  console.log("Cannot log in", errors)
               })
       }
   }
@@ -77,16 +66,11 @@ export default function queryLibrary() {
           // console.log("FEATURES", Object.keys(datum.user).length);
           state.data = datum;
           if (Object.keys(datum.user).length){
-            // console.log("user ok loaded");
-            state.isLoaded["user"] = true;
             store.actions.set("user", datum.user);
           }
         } else {
           state.data[key] =  datum;
         }
-        // console.log(key, unref(state.data[key]));
-        // console.log(key, datum);
-        // console.log(key, unref(state.data));
         state.isLoaded[key] = true;
       } catch (e) {
         state.errors[key] = e;
