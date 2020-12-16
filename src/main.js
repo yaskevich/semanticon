@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
 import App from './App.vue'
+import store from "./modules/store";
 import router from './router'
 
 import 'primeflex/primeflex.css';
@@ -33,6 +34,7 @@ const pvLocale = {
       organ: "активный орган"
     }
 }
+app.provide("store", store);
 app.use(PrimeVue, {
     locale: pvLocale
 });

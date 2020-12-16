@@ -1,10 +1,12 @@
 <template>
   <div class="p-component">
     <!-- <Button label="ok" class="p-button" @click="say()" /> -->
-    <h3>{{$route.params.phrase}} (№{{$route.params.id}})</h3>
+    <h3>{{$route.params.phrase}}
+       <!-- (№{{$route.params.id}}) -->
+    </h3>
     <Divider/>
     <div v-if="errors[id]">{{ errors[id] }}</div>
-    <AsyncUnit v-else v-for="(item, index) in data[id]" :key="item.id" :item="item" :index="data[id].length>1?String(index+1):''" :data="data"/>
+    <AsyncUnit v-else v-for="(item, index) in data[id]" :key="item.id" :item="item" :index="data[id].length>1?String(index+1):''" :data="data" :auth="isLoggedIn"/>
    </div>
 </template>
 
@@ -33,9 +35,13 @@ export default {
     // const id = unref(phraseId);
     const id = router.params.id;
     console.log("id", id);
-    const { data, errors, loadData } = queryLibrary();
+    const { data, errors, loadData, isLoaded } = queryLibrary();
     await loadData(id, "/api/data/"+id);
-    return { data, errors, id };
+    let isLoggedIn  = Boolean(Reflect.getOwnPropertyDescriptor(isLoaded.value, "user"));
+    // {value: true, writable: true, enumerable: true, configurable: true}
+    // console.log("isloaded", isLoaded.value.user);
+    console.log("isLoggedIn", isLoggedIn);
+    return { data, errors, id, isLoggedIn };
   },
   methods: {
     // say() {

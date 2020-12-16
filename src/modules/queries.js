@@ -12,6 +12,8 @@ const state = reactive({
 });
 import axios from "axios"
 import router from "../router"
+import store from "@/modules/store";
+
 export default function queryLibrary() {
   const getUser = () => {
     if (!state.isLoaded["user"]) {
@@ -26,6 +28,24 @@ export default function queryLibrary() {
           })
     }
   }
+  const doLogout = () => {
+    axios.get("/api/logout")
+        .then((response) => {
+          // state.isLoaded["user"] = false;
+          delete state.isLoaded["user"];
+          state.data["user"] = undefined;
+          // state.isLoaded["user"] = undefined;
+          store.actions.set("user", {});
+          console.log(response);
+
+            // router.push("/")
+            // router.go('/');
+
+        })
+        .catch((errors) => {
+            console.log(errors)
+        })
+  }
     const doLogin = (email, password) => {
     if (!state.isLoaded["user"]) {
       let payload = {
@@ -35,8 +55,10 @@ export default function queryLibrary() {
           axios.post("/api/login", payload)
               .then((response) => {
                   state.isLoaded["user"] = true;
+                  store.actions.set("user", response.data.user);
                   state.data["user"] = response.data.user;
                   console.log("Logged in", response.data.user);
+                  store.actions.set("user", response.data.user);
                   router.push("/dashboard")
               })
               .catch((errors) => {
@@ -52,7 +74,13 @@ export default function queryLibrary() {
         const datum = await getApiData.json();
         console.log("get", endpoint);
         if (key === "features"){
+          // console.log("FEATURES", Object.keys(datum.user).length);
           state.data = datum;
+          if (Object.keys(datum.user).length){
+            // console.log("user ok loaded");
+            state.isLoaded["user"] = true;
+            store.actions.set("user", datum.user);
+          }
         } else {
           state.data[key] =  datum;
         }
@@ -66,5 +94,5 @@ export default function queryLibrary() {
     }
   };
 
-  return { ...toRefs(state), loadData, doLogin, getUser };
+  return { ...toRefs(state), loadData, doLogin, doLogout, getUser };
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="unit">
     <div style='float:right;'>
-      <Button v-bind:icon="data.user ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="data.user ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" />
+      <Button v-bind:icon="auth ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="auth ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" />
   </div>
     <h4>Значение
       <span v-if="index">{{index}}</span>
@@ -30,7 +30,8 @@ export default {
   props: {
     item: Object,
     index: String,
-    data: Object
+    data: Object,
+    auth: Boolean
   }
 };
 </script>

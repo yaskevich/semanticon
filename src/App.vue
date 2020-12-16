@@ -4,14 +4,15 @@
     <router-link to="/">Главная</router-link> |
     <router-link to="/about">О проекте</router-link> |
     <router-link to="/home">{{$primevue.config.locale.hi}}</router-link> |
-    <router-link v-if="info.user" to="/login">Войти</router-link>
-    <router-link v-else to="/logout">Выйти</router-link>
+    <router-link v-if="Object.keys(state.config.user).length" to="/logout">Выйти</router-link>
+    <router-link v-else to="/login">Войти</router-link>
   </div>
   <div id="content">
-    <router-view/>
+    <router-view />
   </div>
   <div id="footer" class="p-component">
      &copy; 2020—2021, «Дискурсивные формулы». НИУ ВШЭ, Школа лингвистики.
+      <!-- <pre>store.state: {{ state }}</pre> -->
   </div>
   </div>
   <div v-else>
@@ -20,43 +21,41 @@
 </template>
 
 <script>
-import { ref } from "vue";
+// eslint-disable-next-line no-unused-vars
+import { ref, unref } from "vue";
+import { inject } from "vue";
 import {onBeforeMount} from 'vue'
 import queryLibrary from "./modules/queries";
+
 export default {
   name: "App",
 
    setup() {
-    let info = {};
+    const store = inject("store");
     onBeforeMount(async() => {
-      const { errors, loadData, data } = queryLibrary();
+      const { errors, loadData } = queryLibrary();
       await loadData("features", "/api/features");
       // document.title = $primevue.config.locale.hi;
       if (errors.features && errors.features.value) {
           console.log("error", errors.features);
       }
-      info = data;
       dataReady.value = true;
-      console.log('mounted!')
+      console.log('app → mounted!')
    })
-    console.log("setup");
+    console.log("app → setup");
     let dataReady = ref(false);
     return {
       dataReady,
-      info
+      state: store.state,
       // featuresError
     };
-  }
-
+  },
 };
 </script>
 
-
 <style>
 body {
-
 }
-
 #app {
   /* display: flex;
   flex-direction: row;
@@ -64,8 +63,6 @@ body {
   background-color: rgb(240, 240, 240);
   justify-content: center;
   align-items: center; */
-
-
 }
 #main {
   display: flex;
@@ -84,7 +81,6 @@ body {
   /* width: 100%; */
   background-color: rgb(200, 200, 200);
 }
-
 #content {
   /* min-height:80vh; */
   flex: 1;
@@ -93,11 +89,9 @@ body {
   font-weight: bold;
   color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
   color: #42b983;
 }
-
 #footer {
   background-color:pink;
   margin-top:auto;
