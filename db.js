@@ -43,8 +43,9 @@ export default {
         return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));;
 	}, 
 	async getUnits(pid){
-		const res = await pool.query('select * FROM units where pid=$1', [pid]);
-        return res.rows;
+		const units = await pool.query('select * FROM units where pid=$1', [pid]);
+		const phrases = await pool.query('select * FROM phrases where pid=$1', [pid]);
+        return { "units": units.rows, "phrase": phrases.rows[0]["phrase"]};
 	},
 	async getTokens() {		
 		const res = await pool.query("select * from tokens");
