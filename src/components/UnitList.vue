@@ -1,12 +1,27 @@
 <template>
   <div class="p-component">
     <!-- <Button label="ok" class="p-button" @click="say()" /> -->
-    <h3>{{$route.params.phrase}}
-       <!-- (№{{$route.params.id}}) -->
+    <h3>
+      <span v-for="(item, index) in data[id].phrase[0]" :key="index">
+        {{ data.tokens[item] }}&#8239;
+      </span>
     </h3>
+    <!-- (№{{$route.params.id}}) -->
+    <!-- <pre>{{data[id]}}</pre> -->
+    <div class="variants">
+      <span v-for="(variant, index) in data[id].phrase.slice(1)" :key="index">
+        <span v-for="(value, key) in variant" :key="key" class="variant">
+            &#8239;{{ data.tokens[value] }}
+        </span>
+        <span v-if="index+2 < data[id].phrase.length"> •</span>
+      </span>
+    </div>
+
+
     <Divider/>
+    <!-- <pre>{{data[id]}}</pre> -->
     <div v-if="errors[id]">{{ errors[id] }}</div>
-    <AsyncUnit v-else v-for="(item, index) in data[id]" :key="item.id" :item="item" :index="data[id].length>1?String(index+1):''" :data="data" :auth="isAuth"/>
+    <AsyncUnit v-else v-for="(item, index) in data[id].units" :key="item.id" :item="item" :index="data[id].length>1?String(index+1):''" :data="data" :auth="isAuth()"/>
    </div>
 </template>
 
@@ -32,9 +47,10 @@ export default {
     // const phraseId = computed(() => router.params.id);
     // const id = unref(phraseId);
     const id = router.params.id;
+    console.log(id);
     const { data, errors, loadData } = queryLibrary();
     await loadData(id, "/api/data/"+id);
-    return { data, errors, id, isAuth: store.isAuth };
+    return { data, errors, id, isAuth: store.actions.isAuth };
   },
   components: {
     AsyncUnit
@@ -45,5 +61,11 @@ export default {
 <style>
 .phrase {
   color: red;
+}
+.variant{
+  color: gray;
+}
+.variants{
+  margin-top:-1rem;
 }
 </style>

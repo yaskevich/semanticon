@@ -16,7 +16,7 @@ import store from "@/modules/store";
 
 export default function queryLibrary() {
   const getUser = () => {
-    if (!store.isAuth) {
+    if (!store.actions.isAuth()) {
       axios.get("/api/user")
           .then((response) => {
               store.actions.set("user", response.data.user);
@@ -41,7 +41,7 @@ export default function queryLibrary() {
         })
   }
     const doLogin = (email, password) => {
-    if (!store.isAuth) {
+    if (!store.actions.isAuth()) {
       let payload = {
               email: email,
               password: password

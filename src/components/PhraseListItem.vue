@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="{ name: 'Phrase', params: { id: item.pid, phrase: item.phrase } }" tag="li" class="nounderline">
+    <router-link :to="{ name: 'Phrase', params: { id: item.pid } }" tag="li" class="nounderline">
       <Button v-bind:label="item.phrase" class="p-button-link" />
     </router-link>
 </template>
@@ -10,11 +10,6 @@ export default {
   props: {
     item: Object
   },
-  methods: {
-    // async say(x) {
-    //   console.log(x);
-    // }
-  }
 };
 </script>
 

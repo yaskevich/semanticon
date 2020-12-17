@@ -4,7 +4,7 @@
     <router-link to="/">Главная</router-link> |
     <router-link to="/about">О проекте</router-link> |
     <router-link to="/home">{{$primevue.config.locale.hi}}</router-link> |
-    <router-link v-if="isAuth" to="/logout">Выйти</router-link>
+    <router-link v-if="isAuth()" to="/logout">Выйти</router-link>
     <router-link v-else to="/login">Войти</router-link>
   </div>
   <div id="content">
@@ -12,7 +12,8 @@
   </div>
   <div id="footer" class="p-component">
      &copy; 2020—2021, «Дискурсивные формулы». НИУ ВШЭ, Школа лингвистики.
-      <!-- <pre>store.state: {{ state }}</pre> -->
+      <!-- <pre>store.state: {{ state }}</pre>
+      <pre>store.state: {{ isAuth() }}</pre> -->
   </div>
   </div>
   <div v-else>
@@ -44,9 +45,11 @@ export default {
    })
     console.log("app → setup");
     let dataReady = ref(false);
+    console.log(store.actions.isAuth());
     return {
       dataReady,
-      isAuth: store.isAuth,
+      isAuth: store.actions.isAuth,
+      state: store.state,
       // featuresError
     };
   },

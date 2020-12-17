@@ -1,4 +1,5 @@
-import { reactive, readonly } from "vue";
+// eslint-disable-next-line no-unused-vars
+import { reactive, readonly, computed } from "vue";
 
 const state = reactive({
   msg: ["hi"],
@@ -10,8 +11,10 @@ const state = reactive({
 
 export default {
   state: readonly(state),
-  isAuth: Boolean(Object.keys(state.config.user).length),
   actions: {
+    isAuth() {
+      return Boolean(Object.keys(state.config.user).length);
+    },
     add(item) {
       state.msg.push(item);
     },
