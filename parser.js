@@ -206,7 +206,7 @@ async function processFile(fileName) {
                 } else if(fieldEn === "actclass") {
                     // empty = error!!!
                     if(!data) {
-                        console.log(fieldEn, "is empty!");
+                        console.log("ERROR:", fieldEn, "is empty!");
                     }
                     const result = await checkFeatureArray(fieldEn, data);
                     values.push(result);
@@ -221,8 +221,50 @@ async function processFile(fileName) {
                     values.push(result);
                 } else if(fieldEn === "mods") {
                     values.push(data);
+                } else if(fieldEn === "translations") {
+					const cleaned = data.replace(/\|/g, '');
+					let arr  = cleaned.split(/(?<=]])\s*/g);
+
+					if (cleaned.length) {
+						for (let ii=0; ii<arr.length; ii++){
+							const transPlusLang  = arr[ii].split("[[")
+								if (transPlusLang.length!==2) {
+									console.error(`ERROR: ${fieldEn} ■ ${data}`);
+								} else {
+									// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
+									const langRussian = transPlusLang[1].replace(/\.?\]\]$/, '');
+									// 
+									// nn or nb?
+									const langCodes = {
+										"тадж": "tgk",
+										"англ": "eng",
+										"фин": "fin",
+										"бур": "bua",
+										"ивр": "heb",
+										"ит": "ita",
+										"слвн": "slv"
+									}
+									if (Reflect.getOwnPropertyDescriptor(langCodes, langRussian)){
+										// console.log(langRussian, langCodes[langRussian]);
+									} else {
+										console.error(langRussian);
+									}
+									
+								}
+								// transPlusLang
+							// console.log("\t",);
+							// 
+							
+						}						
+						
+					}
+                    // values.push(data);
                 } else {
                     // console.log(data);
+					// console.error(fieldEn);
+					
+					// 
+					// process.exit();
                 }
                 
                 // aggregate data for debugging
