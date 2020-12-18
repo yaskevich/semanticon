@@ -19,9 +19,22 @@ const __dirname = dirname(__filename);
 
 // global objects
 const tokenIds = {};
+const transIds = {};
 const featureIds = {};
 const phraseIds = {};
 //
+// https://www.loc.gov/standards/iso639-2/php/code_list.php
+const langCodes = {
+	"тадж": "tgk",
+	"англ": "eng",
+	"фин": "fin",
+	"бур": "bua",
+	"ивр": "heb",
+	"ит": "ita",
+	"слвн": "slv",
+	"русский": "rus"
+}; // nno | nob
+
 
 const mappingRuEn = {
   'ДФ': "unit",
@@ -64,7 +77,7 @@ const schemes = {
     mods text,
     gest jsonb,
     organ jsonb,
-    translations text,
+    translations jsonb,
     examples text,
     audio text,
     video text,
@@ -83,15 +96,23 @@ const schemes = {
 		ru text not null,
 		en text,
 		UNIQUE (groupid, ru)
+	)`,
+	"translations":
+	`CREATE TABLE translations (
+		id SERIAL PRIMARY KEY,
+		excerpt text not null,
+		lang text not null,
+		UNIQUE (excerpt, lang)
 	)`
 };
 
 const phrasesInsert = `INSERT INTO phrases (phrase) VALUES($1) RETURNING pid`;
 const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
+const transInsert = `INSERT INTO translations (excerpt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
 const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
-					actclass, situation, parts, intonation, extension, mods, gest, organ)
-                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+					actclass, situation, parts, intonation, extension, mods, gest, organ, translations)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
                     RETURNING *`;
 
 async function checkFeature(fld, content){
@@ -146,6 +167,86 @@ async function vectorizeTokens(content){
     }
     // console.timeEnd();
     return JSON.stringify(unitsArrVector);
+}
+
+async function processTranslations(fld, content){
+	const cleaned = content.replace(/\|/g, '');
+	let arr  = cleaned.split(/(?<=]])\s*/g);
+	const thisArrTransIds = [];
+	if (cleaned.length) {
+		for (let ii=0; ii<arr.length; ii++){
+			const transPlusLang  = arr[ii].split("[[");
+				if (transPlusLang.length!==2) {
+					console.error(`ERROR: ${fld} <DOES NOT MATCH> ${content}`);
+				} else {
+					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
+					const [trans, langRu] = transPlusLang;
+					const langRussian = langRu.replace(/\.?\]\]$/, '');
+					
+					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
+					if (pdLang){
+						if (pdLang.value === "rus") {
+							console.error(`ERROR: ${fld} <RUSSIAN> ${content}`);
+						}
+						const pdTrans = Reflect.getOwnPropertyDescriptor(transIds, trans);
+						if (!pdTrans) {
+							try {
+								const result  = await pool.query(transInsert, [trans, pdLang.value]);
+								transIds[trans] = result.rows[0].id;
+							} catch (e) {
+								console.error(e);
+							}
+						} 
+						thisArrTransIds.push(transIds[trans]);
+					} else {
+						console.error("ERROR", fld, "<NOT IN LANG LIST>",langRussian, "■",content);
+					}
+				}
+		}						
+	}
+	return JSON.stringify(thisArrTransIds);
+}
+
+async function processExamples(fld, content){
+	const cleaned = content.replace(/\|/g, '');
+	let arr  = cleaned.split(/(?<=]])\s*/g);
+	const thisArrTransIds = [];
+	if (cleaned.length) {
+		for (let ii=0; ii<arr.length; ii++){
+			const transPlusLang  = arr[ii].split("[[");
+				if (transPlusLang.length!==2) {
+					console.error(`ERROR: ${fld} <DOES NOT MATCH> ${content}`);
+					console.error(arr);
+				} else {
+					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
+					const [trans, langRu] = transPlusLang;
+					const langRussian = langRu.replace(/\.?\]\]$/, '');
+					console.log("--------------------------------");
+					console.log("[text]", trans);
+					console.log("lang",langRussian);	
+					
+					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
+					if (pdLang){
+						// if (pdLang.value === "rus") {
+							// console.error(`ERROR: ${fld} <RUSSIAN> ${content}`);
+						// }
+						const pdTrans = Reflect.getOwnPropertyDescriptor(transIds, trans);
+						if (!pdTrans) {
+							// try {
+								// const result  = await pool.query(transInsert, [trans, pdLang.value]);
+								// transIds[trans] = result.rows[0].id;
+							// } catch (e) {
+								// console.error(e);
+							// }
+						} 
+						thisArrTransIds.push(transIds[trans]);
+					} else {
+						console.error("ERROR", fld, "<NOT IN LANG LIST>",langRussian, "■",content);
+					}
+				}
+		}						
+	}
+	return JSON.stringify(thisArrTransIds);
 }
 
 async function processFile(fileName) {
@@ -206,7 +307,7 @@ async function processFile(fileName) {
                 } else if(fieldEn === "actclass") {
                     // empty = error!!!
                     if(!data) {
-                        console.log("ERROR:", fieldEn, "is empty!");
+                        console.error("ERROR:", fieldEn, "<EMPTY>");
                     }
                     const result = await checkFeatureArray(fieldEn, data);
                     values.push(result);
@@ -222,43 +323,11 @@ async function processFile(fileName) {
                 } else if(fieldEn === "mods") {
                     values.push(data);
                 } else if(fieldEn === "translations") {
-					const cleaned = data.replace(/\|/g, '');
-					let arr  = cleaned.split(/(?<=]])\s*/g);
-
-					if (cleaned.length) {
-						for (let ii=0; ii<arr.length; ii++){
-							const transPlusLang  = arr[ii].split("[[")
-								if (transPlusLang.length!==2) {
-									console.error(`ERROR: ${fieldEn} ■ ${data}`);
-								} else {
-									// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
-									const langRussian = transPlusLang[1].replace(/\.?\]\]$/, '');
-									// 
-									// nn or nb?
-									const langCodes = {
-										"тадж": "tgk",
-										"англ": "eng",
-										"фин": "fin",
-										"бур": "bua",
-										"ивр": "heb",
-										"ит": "ita",
-										"слвн": "slv"
-									}
-									if (Reflect.getOwnPropertyDescriptor(langCodes, langRussian)){
-										// console.log(langRussian, langCodes[langRussian]);
-									} else {
-										console.error(langRussian);
-									}
-									
-								}
-								// transPlusLang
-							// console.log("\t",);
-							// 
-							
-						}						
-						
-					}
-                    // values.push(data);
+					const result  = await processTranslations(fieldEn, data);
+                    values.push(result);
+                } else if(fieldEn === "examples") {
+					const result  = await processExamples(fieldEn, data);
+                    // values.push(result);					
                 } else {
                     // console.log(data);
 					// console.error(fieldEn);
