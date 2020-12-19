@@ -38,9 +38,13 @@ export default {
         // pool.end();
         return phraseMap;
     },
+	async getPhrases(){
+		const res = await pool.query(' select * from phrases');
+        return res.rows;
+	}, 
 	async getFeatures(){
 		const res = await pool.query('select id, ru FROM features');
-        return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));;
+        return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));
 	}, 
 	async getUnits(pid){
 		const units = await pool.query('select * FROM units where pid=$1', [pid]);
@@ -49,8 +53,21 @@ export default {
 	},
 	async getTokens() {		
 		const res = await pool.query("select * from tokens");
-        const dict = res.rows.reduce((obj, item) => (obj[item.id.toString()] = item.token, obj), {});
+		const data = res.rows;
+		// console.log(res.rows);
+		 // { id: 78, token: 'погоди' },
+		// let i = 0;
+		// let arr  = [];
+        // const dict = res.rows.reduce((obj, item) => (arr.push(item.token), obj[item.id.toString()] = i++, obj), {});
 		// console.log("dict", dict);
+		// console.log("dict", i);
+		// '177': 'ух',
+		const dict = {"keys":[],"values":[]};
+		for (let i=0; i<data.length; i++){
+			dict.keys.push(data[i].id);
+			dict.values.push(data[i].token);
+		}
+		// console.log(dict);
 		return dict;
 	}
 };
