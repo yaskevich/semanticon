@@ -16,6 +16,8 @@ import Tag from 'primevue/tag';
 // import Chip from 'primevue/chip';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
+import AutoComplete from 'primevue/autocomplete';
+
 const app = createApp(App);
 const pvLocale = {
     hi: 'Расширенный поиск',
@@ -44,6 +46,7 @@ app.use(router);
 document.title = pvLocale.title;
 
 app.component('InputText', InputText);
+app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);
 app.component('Toast', Toast);
 app.component('Divider', Divider);

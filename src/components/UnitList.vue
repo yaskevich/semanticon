@@ -6,15 +6,14 @@
     </pre> -->
     <h3>
       <span v-for="(item, index) in data[id].phrase[0]" :key="index">
-        {{ data.tokens[item] }}&#8239;
+        {{ data.tokens.values[data.tokens.keys.indexOf(item)] }}&#8239;
       </span>
     </h3>
     <!-- (№{{$route.params.id}}) -->
     <!-- <pre>{{data[id]}}</pre> -->
     <div class="variants">
       <span v-for="(variant, index) in data[id].phrase.slice(1)" :key="index">
-        <span v-for="(value, key) in variant" :key="key" class="variant">
-            &#8239;{{ data.tokens[value] }}
+        <span v-for="(value, key) in variant" :key="key" class="variant">{{data.tokens.values[data.tokens.keys.indexOf(value)].charAt(0)==='-'?'':' '}}{{ data.tokens.values[data.tokens.keys.indexOf(value)] }}
         </span>
         <span v-if="index+2 < data[id].phrase.length"> •</span>
       </span>

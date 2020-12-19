@@ -1,6 +1,6 @@
 <template >
   <div id="main" v-if="dataReady">
-  <div id="nav" class="p-component">
+  <div id="nav" class="p-component" style="text-align: center;">
     <router-link to="/">Главная</router-link> |
     <router-link to="/home">{{$primevue.config.locale.hi}}</router-link> |
     <router-link to="/about">О проекте</router-link>
