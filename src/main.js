@@ -18,7 +18,7 @@ import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 const app = createApp(App);
 const pvLocale = {
-    hi: 'Разное',
+    hi: 'Расширенный поиск',
     title: "Дискурсивные формулы",
     phrase: {
       extrequired : "требуется продолжение",
@@ -28,6 +28,7 @@ const pvLocale = {
       situation: "о ситуации",
       parts: "структура",
       intonation: "интонация",
+      translations: "переводные аналоги",
       extension: "продолжение",
       mods: "модификации",
       gest: "жестикуляция",

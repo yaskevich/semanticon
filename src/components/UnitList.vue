@@ -1,6 +1,9 @@
 <template>
   <div class="p-component">
     <!-- <Button label="ok" class="p-button" @click="say()" /> -->
+    <!-- <pre>
+      {{data[id]}}
+    </pre> -->
     <h3>
       <span v-for="(item, index) in data[id].phrase[0]" :key="index">
         {{ data.tokens[item] }}&#8239;

@@ -8,7 +8,7 @@
     </h4>
     <div>
         <template v-for="(value, name) in item" >
-        <div v-if="value && value.length && !['id', 'phrase'].includes(name)" :key="name" class="item">
+        <div v-if="value && value.length && !['id', 'phrase', 'translations'].includes(name)" :key="name" class="item">
           <span v-if="Array.isArray(value)">
             <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
             <span v-for="a in value" :key="a">

@@ -9,7 +9,7 @@ import Dashboard from '../components/Dashboard.vue'
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home
   },
@@ -23,7 +23,7 @@ const routes = [
     component: About
   },
   {
-    path: '/',
+    path: '/home',
     name: 'PhraseListScreen',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
