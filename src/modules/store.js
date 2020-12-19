@@ -21,5 +21,8 @@ export default {
     set(key, value) {
       state.config[key] = value;
     },
+    init(value) {
+      state.config = value;
+    },
   }
 };

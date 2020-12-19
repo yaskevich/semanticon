@@ -65,11 +65,13 @@ export default function queryLibrary() {
         if (key === "features"){
           // console.log("FEATURES", Object.keys(datum.user).length);
           state.data = datum;
+          store.actions.init(datum);
           if (Object.keys(datum.user).length){
             store.actions.set("user", datum.user);
           }
         } else {
           state.data[key] =  datum;
+          // store.actions.set(key, datum);
         }
         state.isLoaded[key] = true;
       } catch (e) {
