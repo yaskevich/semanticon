@@ -10,7 +10,10 @@
 import store from "@/modules/store";
 export default {
   name: "SearchResults",
-  props: ['result', 'num'],
+  props: {
+    result: Array,
+    num: Number
+  },
   setup(){
     return { data: store.state.config};
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="home p-component">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Дискурсивные формулы"/>
+    <h2>Дискурсивные формулы</h2>
     <div class="div-container">
       <h3>Введите свой e-mail</h3>
       <form @submit.prevent="greet">
@@ -20,7 +20,6 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from './HelloWorld.vue'
 
 export default {
   name: 'Home',
@@ -37,7 +36,6 @@ export default {
       }
   },
   components: {
-    HelloWorld
   }
 }
 </script>

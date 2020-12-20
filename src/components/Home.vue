@@ -18,9 +18,7 @@
 			</template>
 	</AutoComplete>
 		<div v-for="(value, key) in wow" :key="key">
-			<!-- {{key}} -->
-		<SearchResults :result="value" :num="key"/>
-
+		<SearchResults :result="value" :num="Number(key)"/>
 	</div>
 	</div>
 </div>
