@@ -6,8 +6,6 @@
         {{tokens.values[tokens.keys.indexOf(value)].charAt(0)==='-'?'':'&nbsp;'}}{{ tokens.values[tokens.keys.indexOf(value)] }}
       </span>
     </Button>
-
-
     </router-link>
   </div>
 </template>

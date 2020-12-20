@@ -32,6 +32,7 @@ export default {
 
 <style>
 .phraselist {
-  
+  /* margin:1rem; */
+  padding:1rem;
 }
 </style>

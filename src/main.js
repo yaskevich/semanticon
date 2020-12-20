@@ -17,6 +17,8 @@ import Tag from 'primevue/tag';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
+import Panel from 'primevue/panel';
+
 
 const app = createApp(App);
 const pvLocale = {
@@ -42,6 +44,7 @@ app.use(PrimeVue, {
     locale: pvLocale
 });
 app.use(ToastService);
+app.use(Panel);
 app.use(router);
 document.title = pvLocale.title;
 

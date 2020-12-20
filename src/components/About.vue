@@ -1,12 +1,18 @@
 <template>
   <div class="home p-component">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <h2>Дискурсивные формулы</h2>
+    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
+    <div class="head">
+      <h2>Дискурсивные формулы</h2>
+    </div>
+    <div class="p-shadow-1 item">Это модно и современно! Также это подходит тем, кто чтит традиции.</div>
+    <div class="p-shadow-2 item">Откройте для себя Вашу дискурсивную формулу успеха!</div>
+    <div class="p-shadow-3 item">Успейте подписаться на нашу закрытую новостную рассылку:</div>
+
     <div class="div-container">
       <h3>Введите свой e-mail</h3>
       <form @submit.prevent="greet">
         <InputText type="text" v-model="text"/>
-        <Button type="submit" label="Submit"/>
+        <Button type="submit" label="Отправить"/>
         <div class="msg">{{message}}</div>
       </form>
     </div>
@@ -41,27 +47,11 @@ export default {
 </script>
 
 <style scoped>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 60px;
+.item{
+  margin:2rem;
+  padding:1rem;
 }
-
-.msg {
-  margin-top: 1rem;
-}
-
-.app-container {
-  text-align: center;
-}
-
-body #app .p-button {
-  margin-left: .2em;
-}
-
-form {
-  margin-top: 2em;
+.head {
+  text-align:center;
 }
 </style>
