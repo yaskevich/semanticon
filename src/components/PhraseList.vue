@@ -1,29 +1,19 @@
 <template>
-  <div v-if="errors.phrases">{{ errors.phrases }}</div>
-  <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" />
+  <!-- <div v-if="errors.phrases">{{ errors.phrases }}</div> -->
+  <!-- <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" /> -->
+  <PhraseListItem v-for="item in phrases" :key="item.pid" :tokens="tokens" :item="item" />
 </template>
-
 <script>
-import { defineAsyncComponent } from "vue";
-import Loading from "./Loading.vue";
-import queryLibrary from "../modules/queries";
-
-const AsyncItemData = defineAsyncComponent({
-  loader: () => import("./PhraseListItem.vue" /* webpackChunkName: "phrasedata" */),
-  loadingComponent: Loading,
-  delay: 200,
-  suspensible: false
-});
+import store from "@/modules/store";
+import PhraseListItem from "./PhraseListItem.vue";
 
 export default {
   name: "PhraseList",
-  async setup() {
-    const { data, errors, loadData } = queryLibrary();
-    await loadData("phrases", "/api/data");
-    return { data, errors };
+  setup() {
+    return { phrases: store.state.config.phrases, tokens: store.state.config.tokens,};
   },
   components: {
-    AsyncItemData
+    PhraseListItem
   }
 };
 </script>
