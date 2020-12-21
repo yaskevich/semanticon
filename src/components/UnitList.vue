@@ -23,7 +23,7 @@
     <Divider/>
     <!-- <pre>{{data[id]}}</pre> -->
     <div v-if="errors[id]">{{ errors[id] }}</div>
-    <AsyncUnit v-else v-for="(item, index) in data[id].units" :key="item.id" :item="item" :index="data[id].length>1?String(index+1):''" :data="data" :auth="isAuth()"/>
+    <AsyncUnit v-else v-for="(item, index) in data[id].units" :key="item.id" :item="item" :index="data[id].units.length>1?String(index+1):''" :data="data" :auth="isAuth()"/>
    </div>
 </template>
 

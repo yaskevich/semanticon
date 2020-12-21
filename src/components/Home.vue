@@ -27,6 +27,7 @@
 <script>
 import store from "@/modules/store";
 import SearchResults from "./SearchResults.vue";
+// import router from "../router"
 // eslint-disable-next-line no-unused-vars
 import { unref, ref, computed } from "vue";
 export default {
@@ -65,18 +66,86 @@ export default {
 			// 		console.log("pid", m, results[m], expr);
 			// }
 			matches.value = results;
+      // router.push("/results")
 		};
 		const search = (e) => {
-				console.log("query", e.query);
-				const str = e.query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-				token.value = str;
+			console.log("query", `|${e.query}|`);
+			const queries = e.query
+				.split(' ') // что-то!
+				.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''))
+				.filter(x => x);
 
-				const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
-				const result = datum.tokens.values.filter(x => x.includes(str));
-				// console.log(result);
-				const filtered  =  result.map(x=> ({"name": x, "indx": datum.tokens.values.indexOf(x), "arr": x.split(re)}));
-				// console.log(filtered);
-				searchVariants.value = filtered;
+			console.log("split", queries);
+			// const str = e.query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			const str = e.query.replace(/[.*+?^${}()|[\]\\]/g, '');
+			token.value = queries.join(' ');
+
+			const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
+			// queries.some(sub => x.includes(sub))
+			// const result = datum.tokens.values.filter(x => queries.some(sub => x.includes(sub)));
+			const result = datum.tokens.values.filter(x => x.includes(str));
+
+			const filtered2 = new Array(queries.length).fill(null).map(()=>[]);
+			// const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
+			for(let i=0; i<datum.tokens.values.length; i++){
+				for(let ii=0; ii<queries.length; ii++){
+					//
+					if (datum.tokens.values[i].includes(queries[ii])){
+							// console.log(i, datum.tokens.values[i], ii, queries[ii]);
+							// const tkn  = datum.tokens.values[i];
+							filtered2[ii].push(
+								// {
+								// 	"name": tkn,
+								// 	"indx": i,
+								// 	"id": datum.tokens.keys[i],
+								// 	"arr": tkn.split(res[ii])
+								// }
+								datum.tokens.keys[i]
+							);
+					}
+				}
+				// datum.tokens.values[i]
+			}
+			// console.log(result);
+			console.log(filtered2);
+
+
+			const ph = datum.phrases;
+			// console.log(JSON.stringify(ph));
+			const results = {};
+			for(let i=0; i<ph.length; i++){
+				const pArr = ph[i].phrase;
+				// console.log(ph[i].pid);
+				for(let ii=0; ii<pArr.length; ii++){ // every expression for a phrase
+					// console.log(JSON.stringify(pArr[ii]));
+					// target.every(v => arr.includes(v))
+					let ll = 0;
+					for (let iii=0; iii<filtered2.length; iii++){
+						let rr = pArr[ii].filter(x => filtered2[iii].some(y => x === y));
+						if (rr.length) {
+							ll++;
+						}
+					}
+					if(ll === filtered2.length) {
+						results[ph[i].pid] = pArr[ii];
+						break;
+					}
+
+				}
+			}
+			console.log("results", results);
+			console.log(JSON.stringify(results));
+			let text  = '';
+			for (let a in results){
+				text += results[a].map(x=> datum.tokens.values[datum.tokens.keys.indexOf(x)]).join(' ') + "\n";
+			}
+			console.log(text);
+
+			//
+
+			const filtered  =  result.map(x=> ({"name": x, "indx": datum.tokens.values.indexOf(x), "arr": x.split(re)}));
+			console.log(JSON.stringify(filtered));
+			searchVariants.value = filtered;
 		};
 
 		return { getSelection, search, datum, searchVariants, token, matches };
