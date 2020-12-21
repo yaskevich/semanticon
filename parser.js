@@ -19,6 +19,7 @@ const __dirname = dirname(__filename);
 
 // global objects
 const tokenIds = {};
+const exprIds = {};
 const transIds = {};
 const featureIds = {};
 const phraseIds = {};
@@ -62,6 +63,7 @@ const mappingRuEn = {
 
 const schemes = {
  "phrases": `CREATE TABLE phrases (pid SERIAL PRIMARY KEY, phrase jsonb)`,
+ "exprs": `CREATE TABLE exprs (eid SERIAL PRIMARY KEY, expr jsonb UNIQUE)`,
  "tokens": `CREATE TABLE tokens (id SERIAL PRIMARY KEY, token text UNIQUE)`,
  "units": `CREATE TABLE units (
     id SERIAL PRIMARY KEY,
@@ -106,6 +108,7 @@ const schemes = {
 	)`
 };
 
+const exprsInsert = `INSERT INTO exprs (expr) VALUES($1) RETURNING eid`;
 const phrasesInsert = `INSERT INTO phrases (phrase) VALUES($1) RETURNING pid`;
 const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const transInsert = `INSERT INTO translations (excerpt, lang) VALUES($1, $2) RETURNING id`;
@@ -148,11 +151,13 @@ async function vectorizeTokens(content){
     // those chains of loops are to force code to run PG queries sequentially
     const unitsArr = content.split("|");
     const unitsArrVector = [];
-    for (let i2=0; i2 < unitsArr.length; i2++) {
-        const tokensArr = unitsArr[i2].split(/\s|(?=-)/g);
+	const exprsArr = [];
+	
+    for (let i=0; i < unitsArr.length; i++) {
+        const tokensArr = unitsArr[i].split(/\s|(?=-)/g);
         const tokensArrVector = [];
         for (let t=0; t < tokensArr.length; t++) {
-            const tkn = tokensArr[t];
+            const tkn = tokensArr[t].trim();
             if (!Reflect.getOwnPropertyDescriptor(tokenIds, tkn)) {
                 try {
                     const result  = await pool.query(tokensInsert, [tkn]);
@@ -163,10 +168,22 @@ async function vectorizeTokens(content){
             }
             tokensArrVector.push(tokenIds[tkn]);
         }
+		
+		const exprSerialized = JSON.stringify(tokensArrVector);
+		if (!Reflect.getOwnPropertyDescriptor(exprIds, exprSerialized)) {
+			try {
+				const result  = await pool.query(exprsInsert, [exprSerialized]);
+				exprIds[exprSerialized] = result.rows[0].eid;
+			} catch (e){
+				console.error(e.detail);
+			}					
+		}
+		// console.error(unitsArr[i], exprIds[exprSerialized]);
+		exprsArr.push(exprIds[exprSerialized])
         unitsArrVector.push(tokensArrVector);
     }
     // console.timeEnd();
-    return JSON.stringify(unitsArrVector);
+    return [JSON.stringify(unitsArrVector), exprsArr[0], JSON.stringify(exprsArr)];
 }
 
 async function processTranslations(fld, content){
@@ -215,14 +232,16 @@ async function processExamples(fld, content){
 		for (let ii=0; ii<arr.length; ii++){
 			const transPlusLang  = arr[ii].split("[[");
 				if (transPlusLang.length!==2) {
-					console.error(`ERROR: ${fld} <DOES NOT MATCH> ${content}`);
-					console.error(arr);
+					console.error(`ERROR: ${fld} <DOES NOT MATCH> ${content}: '${transPlusLang}'`);
+					// console.error(arr);
 				} else {
 					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
 					const [trans, langRu] = transPlusLang;
 					const langRussian = langRu.replace(/\.?\]\]$/, '');
 					console.log("--------------------------------");
-					console.log("[text]", trans);
+					// console.log("[text]", trans);
+					const textPlusSource  = trans.split("[");
+					console.log("[text]", textPlusSource);
 					console.log("lang",langRussian);	
 					
 					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
@@ -284,7 +303,9 @@ async function processFile(fileName) {
                 const fieldEn = dict[i];
                 // const fieldRu = fieldRow[i];
                 if(fieldEn  === "unit") {
-                    const vector = await vectorizeTokens(data);
+                    const vectorResults = await vectorizeTokens(data);
+					console.error(vectorResults[1]);
+					const vector = vectorResults[0];
 					if (!Reflect.getOwnPropertyDescriptor(phraseIds, vector)) {
 						try {
 							const result  = await pool.query(phrasesInsert, [vector]);

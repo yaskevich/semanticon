@@ -143,12 +143,12 @@ let users = [
 	  	 return res.json(await db.getTokens());
 	});
 	
-	app.get("/api/data", async(req, res) =>  {
-		console.log("→ data");
-	   const data = await db.getDataFromDB();
-	  // console.log("data", data);
-	  return res.json(data);
-	});
+	// app.get("/api/data", async(req, res) =>  {
+		// console.log("→ data");
+	   // const data = await db.getDataFromDB();
+	  // // console.log("data", data);
+	  // return res.json(data);
+	// });
 
 	const authMiddleware = (req, res, next) => {
 	  if (!req.isAuthenticated()) {
