@@ -30,7 +30,7 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: PhraseListScreen
   },
-   { path: '/phrase/:id', component: UnitListScreen, name: 'Phrase', props: true },
+   { path: '/expr/:id', component: UnitListScreen, name: 'Phrase', props: true },
    {
      path: '/login',
      name: 'Login',

@@ -1,9 +1,9 @@
 <template>
     <div class="p-component phrase-list-item">
-    <router-link :to="{ name: 'Phrase', params: { id: item.pid } }" tag="li" class="nounderline">
+    <router-link :to="{ name: 'Phrase', params: { id: eid } }" tag="li" class="nounderline">
       <Button class="p-button-link" >
-      <span v-for="(value, key) in item.phrase[0]" :key="key">
-        {{tokens.values[tokens.keys.indexOf(value)].charAt(0)==='-'?'':'&nbsp;'}}{{ tokens.values[tokens.keys.indexOf(value)] }}
+      <span v-for="(value, key) in data.exprs[eid]" :key="key">
+        {{data.tokens.values[data.tokens.keys.indexOf(value)].charAt(0)==='-'?'':'&nbsp;'}}{{ data.tokens.values[data.tokens.keys.indexOf(value)] }}
       </span>
     </Button>
     </router-link>
@@ -14,8 +14,8 @@
 export default {
   name: "PhraseListItem",
   props: {
-    item: Object,
-    tokens: Object
+    eid: Number,
+    data: Object
   },
 };
 </script>
