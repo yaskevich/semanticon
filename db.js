@@ -42,6 +42,10 @@ export default {
 		const res = await pool.query(' select * from phrases');
         return res.rows;
 	}, 
+	async getIndex(){
+		const res = await pool.query('select units.id, units.pid, phrase->0 as eid1 from units inner join phrases on units.pid=phrases.pid');
+        return res.rows;
+	}, 
 	async getFeatures(){
 		const res = await pool.query('select id, ru FROM features');
         return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));
@@ -51,17 +55,26 @@ export default {
 		const phrases = await pool.query('select * FROM phrases where pid=$1', [pid]);
         return { "units": units.rows, "phrase": phrases.rows[0]["phrase"]};
 	},
+	async getExprs(){
+		const res = await pool.query('select * from exprs');
+		const data = res.rows;
+        // return data;
+		
+		
+		const dict = data.reduce((obj, item) => (obj[item.eid.toString()] = item.expr, obj), {});
+		return dict;
+		
+		// const dict = {"keys":[],"values":[]};
+		// for (let i=0; i<data.length; i++){
+			// dict.keys.push(data[i].eid);
+			// dict.values.push(data[i].expr);
+		// }
+		// return dict;
+	},
 	async getTokens() {		
 		const res = await pool.query("select * from tokens");
+		
 		const data = res.rows;
-		// console.log(res.rows);
-		 // { id: 78, token: 'погоди' },
-		// let i = 0;
-		// let arr  = [];
-        // const dict = res.rows.reduce((obj, item) => (arr.push(item.token), obj[item.id.toString()] = i++, obj), {});
-		// console.log("dict", dict);
-		// console.log("dict", i);
-		// '177': 'ух',
 		const dict = {"keys":[],"values":[]};
 		for (let i=0; i<data.length; i++){
 			dict.keys.push(data[i].id);

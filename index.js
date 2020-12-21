@@ -130,11 +130,26 @@ let users = [
 	  const data = await db.getFeatures();
 	  const tokens = await db.getTokens();
 	  const phrases = await db.getPhrases();
+	  const exprs = await db.getExprs();
+	  const idx = await db.getIndex();
+	  
+	  const idx2 = {};
+	  for (let i=0; i<idx.length; i++){
+		  const it = idx[i];		  
+		  const eid = it.eid1.toString();
+		  delete it["eid1"];
+		  const pid = it.pid.toString();
+		  delete it["pid"];
+		  Reflect.getOwnPropertyDescriptor(idx2, eid) ? idx2[eid].push(it): idx2[eid]=[it];
+	  }
+	  
 	  // console.log("data", data);
 	  return res.json({
-			"features":data, 
-			"tokens":tokens,
-			"phrases":phrases,
+			"features": data, 
+			"tokens": tokens,
+			"exprs": exprs,
+			"index": idx2,
+			"phrases": phrases,
 			"user": req.isAuthenticated()?getUser(req):{}});
 	});
 
