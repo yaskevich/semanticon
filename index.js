@@ -120,43 +120,32 @@ let users = [
 	});
 	
 	app.get("/api/data/:id", async(req, res) =>  {
-		const pid  = parseInt(req.params.id, 10);
-		console.log(`query for ${pid}`);
-		const data  = pid ? await db.getUnits(pid) : [];
+		const id  = parseInt(req.params.id, 10);
+		console.log(`query for ${id}`);
+		const data  = id ? await db.getUnits(id) : [];
 		return res.json(data);
 	});	
 		
 	app.get("/api/features", async(req, res) =>  {
-	  const data = await db.getFeatures();
+	  const features = await db.getFeatures();
 	  const tokens = await db.getTokens();
-	  const phrases = await db.getPhrases();
+	  // const phrases = await db.getPhrases();
 	  const exprs = await db.getExprs();
 	  const idx = await db.getIndex();
-	  
-	  const idx2 = {};
-	  for (let i=0; i<idx.length; i++){
-		  const it = idx[i];		  
-		  const eid = it.eid1.toString();
-		  delete it["eid1"];
-		  const pid = it.pid.toString();
-		  delete it["pid"];
-		  Reflect.getOwnPropertyDescriptor(idx2, eid) ? idx2[eid].push(it): idx2[eid]=[it];
-	  }
-	  
 	  // console.log("data", data);
 	  return res.json({
-			"features": data, 
-			"tokens": tokens,
+			"toc": idx,
 			"exprs": exprs,
-			"index": idx2,
-			"phrases": phrases,
+			"features": features, 
+			"tokens": tokens,			
+			// "phrases": phrases,
 			"user": req.isAuthenticated()?getUser(req):{}});
 	});
 
-	app.get("/api/tokens", async(req, res) =>  {
-		console.log("tokens");
-	  	 return res.json(await db.getTokens());
-	});
+	// app.get("/api/tokens", async(req, res) =>  {
+		// console.log("tokens");
+	  	 // return res.json(await db.getTokens());
+	// });
 	
 	// app.get("/api/data", async(req, res) =>  {
 		// console.log("→ data");

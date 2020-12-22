@@ -22,19 +22,6 @@ export default {
             "phrase": x["phrase"].map(y => dict[y]).join(" ").replace(/ (?=-)/, '')
         }));
 
-        // for (let i = 0; i < phrases.length; i++) {
-            // const entry = phrases[i];
-            // console.log(entry["id"]);
-            // const phrase = index[entry["pid"]];
-            // for (let x=0; x<phrase.length; x++){
-            // console.log("!", phrase[x]);
-
-            // }
-            // console.log("!",entry);
-            // const phraseMap  = phrase.map(x => dict[x]).join(" ").replace(/ (?=-)/, '');
-            // console.log(entry["pid"], phraseMap);
-        // }
-
         // pool.end();
         return phraseMap;
     },
@@ -44,16 +31,43 @@ export default {
 	}, 
 	async getIndex(){
 		const res = await pool.query('select units.id, units.pid, phrase->0 as eid1 from units inner join phrases on units.pid=phrases.pid');
-        return res.rows;
+		const data = {};
+		  for (let i=0; i<res.rows.length; i++){
+			  const it = res.rows[i];		  
+			  const eid = it.eid1.toString();
+			  const pid = it.pid.toString();
+			  const id  = it.id.toString();
+			  
+			  if (Reflect.getOwnPropertyDescriptor(data, eid)) {
+				if (Reflect.getOwnPropertyDescriptor(data[eid], pid)) {
+					data[eid][pid].push(id);
+				} else {
+					data[eid][pid] = [id];
+				}
+			  } else {
+				  data[eid] = {[pid]: [id]};
+			  }
+		  }
+		  return data;
 	}, 
 	async getFeatures(){
 		const res = await pool.query('select id, ru FROM features');
         return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));
 	}, 
-	async getUnits(pid){
-		const units = await pool.query('select * FROM units where pid=$1', [pid]);
-		const phrases = await pool.query('select * FROM phrases where pid=$1', [pid]);
-        return { "units": units.rows, "phrase": phrases.rows[0]["phrase"]};
+	async getUnits(id){
+		// const units = await pool.query('select * FROM units where pid=$1', [pid]);
+		// const phrases = await pool.query('select * FROM phrases where pid=$1', [pid]);
+        // return { "units": units.rows, "phrase": phrases.rows[0]["phrase"]};
+		const res = await pool.query('select units.*, phrase, phrase->0 as eid1 from units inner join phrases on units.pid=phrases.pid where phrase->0=$1', [id]);
+		const data = res.rows; // remove empty features?
+		data.map(x => Object.keys(x).forEach((key) => (x[key] == null || Array.isArray(x[key]) && !x[key].length) && delete x[key]));
+		
+		const results  = data.reduce(function(results, data) {
+			(results[data.pid] = results[data.pid] || []).push(data);
+			return results;
+		}, {});
+		
+		return results;
 	},
 	async getExprs(){
 		const res = await pool.query('select * from exprs');
