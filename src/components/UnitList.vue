@@ -15,9 +15,12 @@
           <span v-if="index+2 < data.exprs[variant].length"> •</span>
         </span>
     </div>
-        {{value}}        
-        <AsyncUnit v-for="(item, index) in value" :key="index" :uid="uid" :index="value.length>1?String(index+1):''" :data="data" :auth="isAuth()"/>
-        <Divider/>
+        <!-- {{value}} -->
+        <AsyncUnit v-for="(uid, index) in value" :key="index" :uid="uid" :num="value.length>1?String(index+1):''" :data="data"
+        :last="value.length-1==index" :unit="data[$route.params.id][uid]" :auth="isAuth()"/>
+        <Divider align="center">
+            <span class="p-tag">■</span>
+        </Divider>
       </div>
 
     </div>

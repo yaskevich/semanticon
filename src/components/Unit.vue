@@ -3,11 +3,12 @@
     <div style='float:right;'>
       <Button v-bind:icon="auth ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="auth ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" />
   </div>
-    <h4>Значение {{$route.params.id}}
-      <span v-if="index">{{index}}</span>
+    <h4>Значение
+      <!-- {{$route.params.id}} -->
+      <span v-if="num">{{num}}</span>
     </h4>
     <div>
-        <template v-for="(value, name) in item" >
+        <template v-for="(value, name) in unit" >
         <div v-if="value && value.length && !['id', 'phrase', 'translations'].includes(name)" :key="name" class="item">
           <span v-if="Array.isArray(value)">
             <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
@@ -19,7 +20,7 @@
           <span v-else><span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>{{ value }}</span>
         </div>
       </template>
-      <Divider/>
+      <Divider v-if="!last" type="dashed"/>
     </div>
   </div>
 </template>
@@ -28,10 +29,12 @@
 export default {
   name: "Unit",
   props: {
-    uid: Object,
-    index: String,
+    uid: String,
+    num: String,
     data: Object,
-    auth: Boolean
+    auth: Boolean,
+    unit: Object,
+    last: Boolean
   }
 };
 </script>
