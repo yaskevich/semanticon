@@ -58,6 +58,7 @@ export default function queryLibrary() {
   }
   const loadData = async (key, endpoint) => {
     if (!state.isLoaded[key]) {
+      // console.log("← API", endpoint);
       try {
         const getApiData = await fetch(endpoint);
         const datum = await getApiData.json();
@@ -70,8 +71,9 @@ export default function queryLibrary() {
             store.actions.set("user", datum.user);
           }
         } else {
-          state.data[key] =  datum;
-          // store.actions.set(key, datum);
+          console.log("working query");
+          // state.data[key] =  datum;
+          store.actions.page(key, datum);
         }
         state.isLoaded[key] = true;
       } catch (e) {

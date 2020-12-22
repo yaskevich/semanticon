@@ -5,7 +5,8 @@ const state = reactive({
   msg: ["hi"],
   config: {
     "user": {},
-    "features": {}
+    "features": {},
+    "pages": null,
   }
 });
 
@@ -17,6 +18,14 @@ export default {
     },
     add(item) {
       state.msg.push(item);
+    },
+    page(key, datum){
+      state.config[key] = datum;
+      // console.log(key, datum);
+      // console.log("STORE", key, state.config.pages);
+      // state.config.pages[key] = datum;
+      // Object.assign(state.config.page, {[key]: datum});
+      // console.log("store", state);
     },
     set(key, value) {
       state.config[key] = value;

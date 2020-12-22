@@ -3,7 +3,7 @@
     <div style='float:right;'>
       <Button v-bind:icon="auth ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="auth ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" />
   </div>
-    <h4>Значение
+    <h4>Значение {{$route.params.id}}
       <span v-if="index">{{index}}</span>
     </h4>
     <div>
@@ -28,7 +28,7 @@
 export default {
   name: "Unit",
   props: {
-    item: Object,
+    uid: Object,
     index: String,
     data: Object,
     auth: Boolean

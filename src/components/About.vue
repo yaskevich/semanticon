@@ -8,8 +8,8 @@
     <div class="p-shadow-2 item">Откройте для себя Вашу дискурсивную формулу успеха!</div>
     <div class="p-shadow-3 item">Успейте подписаться на нашу закрытую новостную рассылку:</div>
 
-    <div class="div-container">
-      <h3>Введите свой e-mail</h3>
+    <div class="div-container form-container">
+      <h4>Введите свой e-mail</h4>
       <form @submit.prevent="greet">
         <InputText type="text" v-model="text"/>
         <Button type="submit" label="Отправить"/>
@@ -53,5 +53,8 @@ export default {
 }
 .head {
   text-align:center;
+}
+.form-container{
+  margin-bottom:1rem;
 }
 </style>
