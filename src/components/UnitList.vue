@@ -10,10 +10,10 @@
     <!-- <div v-for="(value, name, ind) in data.toc[$route.params.id]" :key="value" class="p-component"> <span :title="'Фраза ' + name">Группа {{ind+1}}</span> -->
     <div v-if="data[$route.params.id][value[0]]['phrase'].length != 1">Варианты:
         <span v-for="(variant, index) in data[$route.params.id][value[0]]['phrase'].slice(1)" :key="index">
-           <span v-for="(value, key) in data.exprs[variant]" :key="key" class="variant">{{data.tokens.values[data.tokens.keys.indexOf(value)].charAt(0)==='-'?'':' '}}{{ data.tokens.values[data.tokens.keys.indexOf(value)] }}
+          <span v-if="index"> •</span>
+          <span v-for="(value, key) in data.exprs[variant]" :key="key" class="variant">{{data.tokens.values[data.tokens.keys.indexOf(value)].charAt(0)==='-'?'':' '}}{{ data.tokens.values[data.tokens.keys.indexOf(value)] }}
           </span>
-          <span v-if="index+2 < data.exprs[variant].length"> •</span>
-        </span>
+          </span>
     </div>
         <!-- {{value}} -->
         <AsyncUnit v-for="(uid, index) in value" :key="index" :uid="uid" :num="value.length>1?String(index+1):''" :data="data"
@@ -22,9 +22,7 @@
             <span class="p-tag">■</span>
         </Divider>
       </div>
-
     </div>
-
 </template>
 
 <script>
