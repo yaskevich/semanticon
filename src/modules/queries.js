@@ -71,7 +71,7 @@ export default function queryLibrary() {
             store.actions.set("user", datum.user);
           }
         } else {
-          console.log("working query");
+          // console.log("working query");
           // state.data[key] =  datum;
           store.actions.page(key, datum);
         }

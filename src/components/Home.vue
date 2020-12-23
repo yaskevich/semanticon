@@ -44,28 +44,24 @@ export default {
 			const id = datum.tokens.keys[indx];
 			// console.log("index", indx);
 			// console.log("id", id);
-			const ph = datum.phrases;
+			const exprs = datum.exprs;
 			// console.log(JSON.stringify(ph));
-			const results = {};
-			for(let i=0; i<ph.length; i++){
-				const pArr = ph[i].phrase;
-				// console.log(ph[i].pid);
-				for(let ii=0; ii<pArr.length; ii++){
-					// console.log(JSON.stringify(pArr[ii]));
-					if (pArr[ii].includes(id)){
-							// console.log(ph[i].pid, id, "in", pArr[ii]);
-							results[ph[i].pid] = pArr[ii];
-							break;
-					}
+			const results = [];
+			for (let [key, value] of Object.entries(exprs)) {
+				if (value.includes(id)){
+					// console.log(id, key);
+					results.push({[key]:value})
 				}
 			}
-			// console.log(results);
+			console.log(results);
 			// console.log("=============================");
 			// for (let m in results) {
 			// 		const expr = results[m].map(x => datum.tokens.values[datum.tokens.keys.indexOf(x)]);
 			// 		console.log("pid", m, results[m], expr);
 			// }
-			matches.value = results;
+
+			// matches.value = results;
+			
       // router.push("/results")
 		};
 		const search = (e) => {
@@ -110,36 +106,36 @@ export default {
 			console.log(filtered2);
 
 
-			const ph = datum.phrases;
-			// console.log(JSON.stringify(ph));
-			const results = {};
-			for(let i=0; i<ph.length; i++){
-				const pArr = ph[i].phrase;
-				// console.log(ph[i].pid);
-				for(let ii=0; ii<pArr.length; ii++){ // every expression for a phrase
-					// console.log(JSON.stringify(pArr[ii]));
-					// target.every(v => arr.includes(v))
-					let ll = 0;
-					for (let iii=0; iii<filtered2.length; iii++){
-						let rr = pArr[ii].filter(x => filtered2[iii].some(y => x === y));
-						if (rr.length) {
-							ll++;
-						}
-					}
-					if(ll === filtered2.length) {
-						results[ph[i].pid] = pArr[ii];
-						break;
-					}
-
-				}
-			}
-			console.log("results", results);
-			console.log(JSON.stringify(results));
-			let text  = '';
-			for (let a in results){
-				text += results[a].map(x=> datum.tokens.values[datum.tokens.keys.indexOf(x)]).join(' ') + "\n";
-			}
-			console.log(text);
+			// const ph = datum.phrases;
+			// // console.log(JSON.stringify(ph));
+			// const results = {};
+			// for(let i=0; i<ph.length; i++){
+			// 	const pArr = ph[i].phrase;
+			// 	// console.log(ph[i].pid);
+			// 	for(let ii=0; ii<pArr.length; ii++){ // every expression for a phrase
+			// 		// console.log(JSON.stringify(pArr[ii]));
+			// 		// target.every(v => arr.includes(v))
+			// 		let ll = 0;
+			// 		for (let iii=0; iii<filtered2.length; iii++){
+			// 			let rr = pArr[ii].filter(x => filtered2[iii].some(y => x === y));
+			// 			if (rr.length) {
+			// 				ll++;
+			// 			}
+			// 		}
+			// 		if(ll === filtered2.length) {
+			// 			results[ph[i].pid] = pArr[ii];
+			// 			break;
+			// 		}
+			//
+			// 	}
+			// }
+			// console.log("results", results);
+			// console.log(JSON.stringify(results));
+			// let text  = '';
+			// for (let a in results){
+			// 	text += results[a].map(x=> datum.tokens.values[datum.tokens.keys.indexOf(x)]).join(' ') + "\n";
+			// }
+			// console.log(text);
 
 			//
 
