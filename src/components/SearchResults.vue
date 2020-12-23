@@ -1,9 +1,9 @@
 <template>
   <div class="p-shadow-12 p-component result-item">
-    <router-link :to="{ name: 'Phrase', params: { id: num } }" tag="li" class="nounderline">
+    <router-link :to="{ name: 'Phrase', params: { id: datum.eid1 } }" tag="li" class="nounderline">
       <Button class="p-button-link">
-        <span v-for="(v, k) in data.exprs[eid]" :key="k">
-          {{data.tokens.values[data.tokens.keys.indexOf(v)].charAt(0)==='-'?'':'&nbsp;'}}{{ data.tokens.values[data.tokens.keys.indexOf(v)] }}
+        <span v-for="(v, k) in data.exprs[datum[datum.main]]" :key="k">
+          {{data.tokens.values[data.tokens.keys.indexOf(v)].charAt(0)==='-'?'':'&nbsp;'}}{{ data.tokens.values[data.tokens.keys.indexOf(v)]}}
         </span>
     </Button>
     </router-link>
@@ -15,7 +15,7 @@
 export default {
   name: "SearchResults",
   props: {
-    eid: Number,
+    datum: Object,
     num: Number,
     data: Object
   }

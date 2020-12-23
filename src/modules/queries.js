@@ -57,7 +57,6 @@ export default function queryLibrary() {
       }
   }
   const loadData = async (key, endpoint) => {
-    if (!state.isLoaded[key]) {
       // console.log("← API", endpoint);
       try {
         const getApiData = await fetch(endpoint);
@@ -73,13 +72,17 @@ export default function queryLibrary() {
         } else {
           // console.log("working query");
           // state.data[key] =  datum;
-          store.actions.page(key, datum);
+          // make query only if not exists!!!
+          if (state.data[key]) {
+            console.log(key, "exists");
+          } else {
+           store.actions.page(key, datum);
+          }
         }
-        state.isLoaded[key] = true;
       } catch (e) {
         state.errors[key] = e;
       }
-    }
+
   };
 
   return { ...toRefs(state), loadData, doLogin, doLogout, getUser };

@@ -18,7 +18,7 @@
 			</template>
 	</AutoComplete>
 		<div v-for="(value, key) in matches" :key="key">
-		<SearchResults :eid="value" :num="Number(key)" :data="data"/>
+		<SearchResults :datum="value" :num="Number(key)" :data="data"/>
 	</div>
 	</div>
 </div>
@@ -42,21 +42,27 @@ export default {
 			// console.log(e.value.indx, data.tokens.keys[e.value.indx]);
 			const indx = e.value.indx;
 			const id = data.tokens.keys[indx];
-			// console.log("index", indx);
-			// console.log("id", id);
 			const exprs = data.exprs;
 			const results = [];
+
 			for (let [key, value] of Object.entries(exprs)) {
 				if (value.includes(id)){
 					const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == key ? i : []);
 					const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
-					// console.log("index", titles, "for", key, value);
-					if (!results.includes(titles[0])){
-						results.push(titles[0]);
-					}
+					console.log("index", titles, "for", key, value);
+					console.log(data.exprs[titles[0]], id);
+					const variant = {
+						"eid1": titles[0],
+						"eid": key,
+						"main" : !data.exprs[titles[0]].includes(id)? "eid" : "eid1"
+					};
+					if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+							results.push(variant);
+						}
 				}
 			}
-			console.log("results", results);
+			// console.log("results", JSON.stringify(results));
+			console.log("=>", JSON.stringify(results));
 			matches.value = results;
       // router.push("/results")
 		};
