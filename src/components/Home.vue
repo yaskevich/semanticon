@@ -18,7 +18,7 @@
 			</template>
 	</AutoComplete>
 		<div v-for="(value, key) in matches" :key="key">
-		<SearchResults :result="value" :num="Number(key)"/>
+		<SearchResults :eid="value" :num="Number(key)" :data="data"/>
 	</div>
 	</div>
 </div>
@@ -33,35 +33,31 @@ import { unref, ref, computed } from "vue";
 export default {
 	name: "Search",
 	setup(){
-		const datum = store.state.config;
+		const data = store.state.config;
 		let searchVariants = ref(null);
 		let token =  ref(null);
 		let matches = ref({});
 
 		const getSelection = (e) => {
-			// console.log(e.value.indx, datum.tokens.keys[e.value.indx]);
+			// console.log(e.value.indx, data.tokens.keys[e.value.indx]);
 			const indx = e.value.indx;
-			const id = datum.tokens.keys[indx];
+			const id = data.tokens.keys[indx];
 			// console.log("index", indx);
 			// console.log("id", id);
-			const exprs = datum.exprs;
-			// console.log(JSON.stringify(ph));
+			const exprs = data.exprs;
 			const results = [];
 			for (let [key, value] of Object.entries(exprs)) {
 				if (value.includes(id)){
-					// console.log(id, key);
-					results.push({[key]:value})
+					const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == key ? i : []);
+					const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
+					// console.log("index", titles, "for", key, value);
+					if (!results.includes(titles[0])){
+						results.push(titles[0]);
+					}
 				}
 			}
-			console.log(results);
-			// console.log("=============================");
-			// for (let m in results) {
-			// 		const expr = results[m].map(x => datum.tokens.values[datum.tokens.keys.indexOf(x)]);
-			// 		console.log("pid", m, results[m], expr);
-			// }
-
-			// matches.value = results;
-			
+			console.log("results", results);
+			matches.value = results;
       // router.push("/results")
 		};
 		const search = (e) => {
@@ -78,35 +74,35 @@ export default {
 
 			const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
 			// queries.some(sub => x.includes(sub))
-			// const result = datum.tokens.values.filter(x => queries.some(sub => x.includes(sub)));
-			const result = datum.tokens.values.filter(x => x.includes(str));
+			// const result = data.tokens.values.filter(x => queries.some(sub => x.includes(sub)));
+			const result = data.tokens.values.filter(x => x.includes(str));
 
 			const filtered2 = new Array(queries.length).fill(null).map(()=>[]);
 			// const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
-			for(let i=0; i<datum.tokens.values.length; i++){
+			for(let i=0; i<data.tokens.values.length; i++){
 				for(let ii=0; ii<queries.length; ii++){
 					//
-					if (datum.tokens.values[i].includes(queries[ii])){
-							// console.log(i, datum.tokens.values[i], ii, queries[ii]);
-							// const tkn  = datum.tokens.values[i];
+					if (data.tokens.values[i].includes(queries[ii])){
+							// console.log(i, data.tokens.values[i], ii, queries[ii]);
+							// const tkn  = data.tokens.values[i];
 							filtered2[ii].push(
 								// {
 								// 	"name": tkn,
 								// 	"indx": i,
-								// 	"id": datum.tokens.keys[i],
+								// 	"id": data.tokens.keys[i],
 								// 	"arr": tkn.split(res[ii])
 								// }
-								datum.tokens.keys[i]
+								data.tokens.keys[i]
 							);
 					}
 				}
-				// datum.tokens.values[i]
+				// data.tokens.values[i]
 			}
 			// console.log(result);
 			console.log(filtered2);
 
 
-			// const ph = datum.phrases;
+			// const ph = data.phrases;
 			// // console.log(JSON.stringify(ph));
 			// const results = {};
 			// for(let i=0; i<ph.length; i++){
@@ -133,18 +129,18 @@ export default {
 			// console.log(JSON.stringify(results));
 			// let text  = '';
 			// for (let a in results){
-			// 	text += results[a].map(x=> datum.tokens.values[datum.tokens.keys.indexOf(x)]).join(' ') + "\n";
+			// 	text += results[a].map(x=> data.tokens.values[data.tokens.keys.indexOf(x)]).join(' ') + "\n";
 			// }
 			// console.log(text);
 
 			//
 
-			const filtered  =  result.map(x=> ({"name": x, "indx": datum.tokens.values.indexOf(x), "arr": x.split(re)}));
+			const filtered  =  result.map(x=> ({"name": x, "indx": data.tokens.values.indexOf(x), "arr": x.split(re)}));
 			console.log(JSON.stringify(filtered));
 			searchVariants.value = filtered;
 		};
 
-		return { getSelection, search, datum, searchVariants, token, matches };
+		return { getSelection, search, data, searchVariants, token, matches };
 	},
 	components: {
 		SearchResults
