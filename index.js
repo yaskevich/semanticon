@@ -132,8 +132,10 @@ let users = [
 	  // const phrases = await db.getPhrases();
 	  const exprs = await db.getExprs();
 	  const idx = await db.getIndex();
+	  const titles = await db.getTitles();
 	  // console.log("data", data);
 	  return res.json({
+			"titles": titles,
 			"toc": idx,
 			"exprs": exprs,
 			"features": features, 

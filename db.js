@@ -50,6 +50,19 @@ export default {
 		  }
 		  return data;
 	}, 
+	async getTitles(){
+		const res = await pool.query('select phrase->0 as eid1, phrase from units inner join phrases on units.pid=phrases.pid;');
+		const eid1 = [], eids = [];
+		
+		for (let i=0; i<res.rows.length; i++){
+			const item = res.rows[i];
+			for (let ii=0; ii<item["phrase"].length; ii++){
+				eids.push(item.phrase[ii]);
+				eid1.push(item["eid1"]);
+			}
+		}		
+        return {"eid1": eid1, "exprs": eids};
+	},
 	async getFeatures(){
 		const res = await pool.query('select id, ru FROM features');
         return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));
@@ -62,12 +75,13 @@ export default {
 		const data = res.rows; // remove empty features?
 		data.map(x => Object.keys(x).forEach((key) => (x[key] == null || Array.isArray(x[key]) && !x[key].length) && delete x[key]));
 		
-		const results  = data.reduce(function(results, data) {
-			(results[data.pid] = results[data.pid] || []).push(data);
-			return results;
-		}, {});
+		// const results  = data.reduce(function(results, data) {
+			// (results[data.pid] = results[data.pid] || []).push(data);
+			// return results;
+		// }, {});
 		
-		return results;
+		// return results;
+		return Object.fromEntries(data.map(item => [item.id, item]));
 	},
 	async getExprs(){
 		const res = await pool.query('select * from exprs');
