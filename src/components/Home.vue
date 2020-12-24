@@ -49,8 +49,8 @@ export default {
 				if (value.includes(id)){
 					const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == key ? i : []);
 					const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
-					console.log("index", titles, "for", key, value);
-					console.log(data.exprs[titles[0]], id);
+					// console.log("index", titles, "for", key, value);
+					// console.log(data.exprs[titles[0]], id);
 					const variant = {
 						"eid1": titles[0],
 						"eid": key,
@@ -62,7 +62,7 @@ export default {
 				}
 			}
 			// console.log("results", JSON.stringify(results));
-			console.log("=>", JSON.stringify(results));
+			// console.log("=>", JSON.stringify(results));
 			matches.value = results;
       // router.push("/results")
 		};

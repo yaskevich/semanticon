@@ -12,12 +12,18 @@
         <div v-if="value && value.length && !['id', 'phrase', 'translations'].includes(name)" :key="name" class="item">
           <span v-if="Array.isArray(value)">
             <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
-            <span v-for="a in value" :key="a">
+            <span v-for="item in value" :key="item">
               <!-- <Chip :label="data.features[a]" /> -->
-              <Tag class="p-mr-2" severity="warning" :value="data.features[a]" rounded></Tag>
+              <Tag class="p-mr-2" severity="warning" :value="data.features[item]" rounded></Tag>
             </span>
           </span>
-          <span v-else><span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>{{ value }}</span>
+          <span v-else>
+              <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
+              <span v-if="name=='situation'">
+                <span v-html='value.replace("А", a).replace("Б", b)'></span>
+              </span>
+              <span v-else>{{value}}</span>
+          </span>
         </div>
       </template>
       <Divider v-if="!last" type="dashed"/>
@@ -35,6 +41,13 @@ export default {
     auth: Boolean,
     unit: Object,
     last: Boolean
+  },
+  setup (){
+    return {
+      a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>", // 🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>
+      b: "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>" //🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>
+      ,
+    }
   }
 };
 </script>
