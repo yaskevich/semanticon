@@ -225,24 +225,72 @@ async function processTranslations(fld, content){
 }
 
 async function processExamples(fld, content){
-	const cleaned = content.replace(/\|/g, '');
+	const cleaned = content.replace(/\|/g, '').trim();
 	let arr  = cleaned.split(/(?<=]])\s*/g);
 	const thisArrTransIds = [];
 	if (cleaned.length) {
 		for (let ii=0; ii<arr.length; ii++){
-			const transPlusLang  = arr[ii].split("[[");
+			const example  = arr[ii].trim().replace(/--|-/, '–');
+			const transPlusLang  = example.split("[[");
 				if (transPlusLang.length!==2) {
-					console.error(`ERROR: ${fld} <DOES NOT MATCH> ${content}: '${transPlusLang}'`);
+					console.error(`ERROR: ${fld} len=${transPlusLang.length} <DOES NOT MATCH> |${transPlusLang}|:\n${example}\n►${content}◄`);
 					// console.error(arr);
 				} else {
 					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
 					const [trans, langRu] = transPlusLang;
 					const langRussian = langRu.replace(/\.?\]\]$/, '');
-					console.log("--------------------------------");
-					// console.log("[text]", trans);
+					
 					const textPlusSource  = trans.split("[");
-					console.log("[text]", textPlusSource);
-					console.log("lang",langRussian);	
+					
+					const info = {};
+					// console.log("--------------------------------");
+					// console.log("[text]", textPlusSource);
+					info["lang"] = langRussian;
+					
+					if (textPlusSource.length>1) {
+						const srcAndDate = textPlusSource[1].trim();
+						let matches = srcAndDate.match(/^(.*?)(\([\d–\.]+\))\]$/);
+						
+						if (!matches){
+							const matches  = srcAndDate.match(/^(.*?)\s*\/\/\s*«(.*?)»\,\s+([\d–\.]+)\]$/);
+							if (matches) {
+								console.log(">>", matches[1]);
+								console.log(">>", matches[2], "■",matches[3]);
+							} else {
+								console.error("NO", srcAndDate);
+							}
+						} else {
+							// const dotSplitter = matches[1].lastIndexOf();
+							const [author, book, rest] = matches[1].split('.');
+							if (rest) {
+								console.error(matches[1]);
+							} else {
+								info["author"] = author.trim();
+								info["book"] = book.trim();
+								info["date"] = matches[2].trim();
+							}
+						}
+						
+						if (matches) {
+							// console.log(matches);
+							// console.log(">",src);
+							// console.log(">", date.split(')')[0]);
+						} else {
+							
+							// const matches  = srcAndDate.match(/^(.*?)\s*\/\/\s*«(.*?)»\,\s+(\d+)\]$/);
+							// if (matches) {
+								// console.log(">>", matches[1]);
+								// console.log(">>", matches[2], matches[3]);
+							// } else {
+								// console.log("NO DATE", textPlusSource[1], matches);
+							// }
+						}
+						console.log(info);
+					} else {
+						// console.error("NO SRC", textPlusSource.length, textPlusSource);
+					}
+					
+					
 					
 					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
 					if (pdLang){
@@ -304,8 +352,8 @@ async function processFile(fileName) {
                 // const fieldRu = fieldRow[i];
                 if(fieldEn  === "unit") {
                     const vectorResults = await vectorizeTokens(data);
-					console.error(vectorResults[1]);
-					const vector = vectorResults[0];
+					// console.error(vectorResults[1]);
+					const vector = vectorResults[2];
 					if (!Reflect.getOwnPropertyDescriptor(phraseIds, vector)) {
 						try {
 							const result  = await pool.query(phrasesInsert, [vector]);
