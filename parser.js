@@ -23,6 +23,7 @@ const exprIds = {};
 const transIds = {};
 const featureIds = {};
 const phraseIds = {};
+const mediaIds = {};
 //
 // https://www.loc.gov/standards/iso639-2/php/code_list.php
 const langCodes = {
@@ -105,18 +106,59 @@ const schemes = {
 		excerpt text not null,
 		lang text not null,
 		UNIQUE (excerpt, lang)
+	)`,
+	"media":
+	`CREATE TABLE media (
+		id SERIAL PRIMARY KEY,
+		filename text not null,
+		filehash text not null UNIQUE,
+		fileext text not null,
+		filetype boolean not null default false		
 	)`
 };
 
+const mediaInsert = `INSERT INTO media (filename, filehash, fileext, filetype) VALUES($1, $2, $3, $4) RETURNING id`;
 const exprsInsert = `INSERT INTO exprs (expr) VALUES($1) RETURNING eid`;
 const phrasesInsert = `INSERT INTO phrases (phrase) VALUES($1) RETURNING pid`;
 const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const transInsert = `INSERT INTO translations (excerpt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
 const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
-					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples)
-                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
                     RETURNING *`;
+
+async function checkMedia(fld, content){
+	const thisIdsArr = [];
+	if (content) {
+		const filenamesArr = content.split("|");
+		// const thisArrIds = [];
+		for (let i=0; i < filenamesArr.length; i++) {
+			if (filenamesArr[i]) {
+				const type  = fld === "audio"; // false - video, true - audio
+				const filename  = filenamesArr[i];
+				const fileext = path.extname(filename);
+				const hash  = filename; // CHANGE WHEN I HAVE REAL FILES!!!
+				
+				// var buffer = Buffer.alloc(100);
+				// fs.read(fd, buffer, 0, 100, 0, function(err, num) {
+					// console.log(buffer.toString('utf8', 0, num));
+				// });
+				// for wav from byte 44
+				// https://audiocoding.ru/articles/2008-05-22-wav-file-structure/
+				// for other give up and read let's say from 128-th
+				
+				const pd = Reflect.getOwnPropertyDescriptor(mediaIds, hash)
+				if (!pd) {
+					const result  = await pool.query(mediaInsert, [filename, hash, fileext, type]);
+					mediaIds[hash] = result.rows[0].id;
+				}
+				thisIdsArr.push(mediaIds[hash]);				
+			}
+		}
+	}
+	return JSON.stringify(thisIdsArr);
+}
 
 async function checkFeature(fld, content){
      // select semantics1, semantics2->0 from units;
@@ -287,7 +329,7 @@ async function processExamples(fld, content){
 						info["text"] = textPlusSource[0].trim();
 						examplesArray.push(info);
 						console.log(info);
-					}					
+					}		
 				} 
 				else {
 					// no author info !!
@@ -380,6 +422,9 @@ async function processFile(fileName) {
                     values.push(result);
                 } else if(fieldEn === "examples") {
 					const result  = await processExamples(fieldEn, data);
+                    values.push(result);					
+                } else if(["audio", "video"].includes(fieldEn)) {
+					const result  = await checkMedia(fieldEn, data);
                     values.push(result);					
                 } else {
                     // console.log(data);
