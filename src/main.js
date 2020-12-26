@@ -18,7 +18,7 @@ import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
 import Panel from 'primevue/panel';
-
+import Inplace from 'primevue/inplace';
 
 const app = createApp(App);
 const pvLocale = {
@@ -36,7 +36,13 @@ const pvLocale = {
       extension: "продолжение",
       mods: "модификации",
       gest: "жестикуляция",
-      organ: "активный орган"
+      organ: "активный орган",
+      examples: "примеры",
+      audio: "аудио",
+      video: "видео",
+      style: "пометы",
+      comment: "комментарий",
+      construction: "конструкция",
     }
 }
 app.provide("store", store);
@@ -48,6 +54,8 @@ app.use(Panel);
 app.use(router);
 document.title = pvLocale.title;
 
+
+app.component('Inplace', Inplace);
 app.component('InputText', InputText);
 app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);

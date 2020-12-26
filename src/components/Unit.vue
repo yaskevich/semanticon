@@ -9,7 +9,7 @@
     </h4>
     <div>
         <template v-for="(value, name) in unit" >
-        <div v-if="value && value.length && !['id', 'phrase', 'translations'].includes(name)" :key="name" class="item">
+        <div v-if="value && value.length && !['id', 'phrase', 'translations', 'examples', 'video', 'audio'].includes(name)" :key="name" class="item">
           <span v-if="Array.isArray(value)">
             <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
             <span v-for="item in value" :key="item">
@@ -24,6 +24,19 @@
               </span>
               <span v-else>{{value}}</span>
           </span>
+        </div>
+        <div v-if="value && value.length && name == 'examples'" :key="name" class="example">
+          <Inplace :closable="false">
+            <template #display>
+              <span className="pi pi-bookmark" style="vertical-align: middle"></span>
+              <span style="margin-left:.5rem; vertical-align: middle">Пример{{value.length>1?"ы":''}}</span>
+            </template>
+            <template #content>
+              <div v-for="(v, k) in value" :key="k">
+                <span class="example-text">{{v.text}}</span> <span class="example-author">{{v.author}}</span>  <span class="example-pub">{{v.pub}}</span>  <span v-if="v.journal" class="example-journal" title="публикация в журнале">(«{{v.journal}}»)</span> <span class="example-pubdate">{{v.pubdate}}</span>
+              </div>
+            </template>
+          </Inplace>
         </div>
       </template>
       <Divider v-if="!last" type="dashed"/>
@@ -63,5 +76,22 @@ export default {
 .item {
   /* margin-bottom: .5rem; */
   line-height:2;
+}
+.example {
+  border: 1px solid orange;
+}
+.example-text {
+  /* font-stretch: condensed; */
+  letter-spacing: -1px;
+  font-style: italic;
+}
+.example-author {
+  color: purple;
+}
+.example-pub {
+  color: green;
+}
+.example-pubdate {
+  color: blue;
 }
 </style>
