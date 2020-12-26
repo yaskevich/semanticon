@@ -80,9 +80,9 @@ const schemes = {
     gest jsonb,
     organ jsonb,
     translations jsonb,
-    examples text,
-    audio text,
-    video text,
+    examples jsonb,
+    audio jsonb,
+    video jsonb,
     style integer,
     comment text,
     construction text,
@@ -114,8 +114,8 @@ const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const transInsert = `INSERT INTO translations (excerpt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
 const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
-					actclass, situation, parts, intonation, extension, mods, gest, organ, translations)
-                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
                     RETURNING *`;
 
 async function checkFeature(fld, content){
@@ -194,7 +194,7 @@ async function processTranslations(fld, content){
 		for (let ii=0; ii<arr.length; ii++){
 			const transPlusLang  = arr[ii].split("[[");
 				if (transPlusLang.length!==2) {
-					console.error(`ERROR: ${fld} <DOES NOT MATCH> ${content}`);
+					console.error(`${fld} <DOES NOT MATCH> ${content}`);
 				} else {
 					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
 					const [trans, langRu] = transPlusLang;
@@ -203,7 +203,7 @@ async function processTranslations(fld, content){
 					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
 					if (pdLang){
 						if (pdLang.value === "rus") {
-							console.error(`ERROR: ${fld} <RUSSIAN> ${content}`);
+							console.error(`${fld} <RUSSIAN> ${content}`);
 						}
 						const pdTrans = Reflect.getOwnPropertyDescriptor(transIds, trans);
 						if (!pdTrans) {
@@ -216,7 +216,7 @@ async function processTranslations(fld, content){
 						} 
 						thisArrTransIds.push(transIds[trans]);
 					} else {
-						console.error("ERROR", fld, "<NOT IN LANG LIST>",langRussian, "■",content);
+						console.error(fld, "<NOT IN LANG LIST>",langRussian, "■",content);
 					}
 				}
 		}						
@@ -227,93 +227,77 @@ async function processTranslations(fld, content){
 async function processExamples(fld, content){
 	const cleaned = content.replace(/\|/g, '').trim();
 	let arr  = cleaned.split(/(?<=]])\s*/g);
-	const thisArrTransIds = [];
+	const examplesArray = [];
 	if (cleaned.length) {
 		for (let ii=0; ii<arr.length; ii++){
-			const example  = arr[ii].trim().replace(/--|-/, '–');
-			const transPlusLang  = example.split("[[");
-				if (transPlusLang.length!==2) {
-					console.error(`ERROR: ${fld} len=${transPlusLang.length} <DOES NOT MATCH> |${transPlusLang}|:\n${example}\n►${content}◄`);
-					// console.error(arr);
+			const info = {};
+			let error = "";
+			const example  = arr[ii].trim().replace(/--|-/g, '–');
+			const exPlusLang  = example.split("[[");
+			if (exPlusLang.length!==2) {
+				console.error(`${fld} len=${exPlusLang.length} <DOES NOT MATCH> |${exPlusLang}|:\n${example}\n►${content}◄`);
+			} else {
+				const [exBody, langRu] = exPlusLang;
+				const langRussian = langRu.replace(/\.?\]\]$/, '');
+				const textPlusSource  = exBody.split("[");
+				// console.log("--------------------------------");
+				// console.log("[text]", textPlusSource);
+				
+				const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
+				
+				if (pdLang){
+					info["lang"] = pdLang.value;
 				} else {
-					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
-					const [trans, langRu] = transPlusLang;
-					const langRussian = langRu.replace(/\.?\]\]$/, '');
+					console.error("LANG", langRussian);
+				}
+				
+				if (textPlusSource.length>1) {
+					const srcAndDate = textPlusSource[1].trim();
+					let matches = srcAndDate.match(/^(.*?)\(([\d–\.]+)\)\]$/);
 					
-					const textPlusSource  = trans.split("[");
-					
-					const info = {};
-					// console.log("--------------------------------");
-					// console.log("[text]", textPlusSource);
-					info["lang"] = langRussian;
-					
-					if (textPlusSource.length>1) {
-						const srcAndDate = textPlusSource[1].trim();
-						let matches = srcAndDate.match(/^(.*?)(\([\d–\.]+\))\]$/);
-						
-						if (!matches){
-							const matches  = srcAndDate.match(/^(.*?)\s*\/\/\s*«(.*?)»\,\s+([\d–\.]+)\]$/);
-							if (matches) {
-								console.log(">>", matches[1]);
-								console.log(">>", matches[2], "■",matches[3]);
-							} else {
-								console.error("NO", srcAndDate);
-							}
-						} else {
-							// const dotSplitter = matches[1].lastIndexOf();
+					if (!matches){
+						const matches  = srcAndDate.match(/^(.*?)\s*\/\/\s*«(.*?)»\,\s+([\d–\.]+)\]$/);
+						if (matches) {
 							const [author, book, rest] = matches[1].split('.');
 							if (rest) {
-								console.error(matches[1]);
+								error = `DOT SPLITTER (JOURNAL) ¦${rest}¦`;
 							} else {
 								info["author"] = author.trim();
-								info["book"] = book.trim();
-								info["date"] = matches[2].trim();
+								info["pub"] = book.trim();
+								info["journal"] = matches[2].trim();
+								info["pubdate"] = matches[3].trim();
 							}
-						}
-						
-						if (matches) {
-							// console.log(matches);
-							// console.log(">",src);
-							// console.log(">", date.split(')')[0]);
 						} else {
-							
-							// const matches  = srcAndDate.match(/^(.*?)\s*\/\/\s*«(.*?)»\,\s+(\d+)\]$/);
-							// if (matches) {
-								// console.log(">>", matches[1]);
-								// console.log(">>", matches[2], matches[3]);
-							// } else {
-								// console.log("NO DATE", textPlusSource[1], matches);
-							// }
+							error = "AUTHOR/DATE FORMAT";
 						}
+					} else {
+						// const dotSplitter = matches[1].lastIndexOf();
+						const [author, book, rest] = matches[1].split('.');
+						if (rest) {
+							error = `DOT SPLITTER (BOOK) ¦${rest}¦`;
+						} else {
+							info["author"] = author.trim();
+							info["pub"] = book.trim();
+							info["pubdate"] = matches[2].trim();
+						}
+					}
+					if (Object.keys(info).length < 4){
+						console.error("examples <"+error+">", srcAndDate);
+					} else {
+						info["text"] = textPlusSource[0].trim();
+						examplesArray.push(info);
 						console.log(info);
-					} else {
-						// console.error("NO SRC", textPlusSource.length, textPlusSource);
-					}
-					
-					
-					
-					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
-					if (pdLang){
-						// if (pdLang.value === "rus") {
-							// console.error(`ERROR: ${fld} <RUSSIAN> ${content}`);
-						// }
-						const pdTrans = Reflect.getOwnPropertyDescriptor(transIds, trans);
-						if (!pdTrans) {
-							// try {
-								// const result  = await pool.query(transInsert, [trans, pdLang.value]);
-								// transIds[trans] = result.rows[0].id;
-							// } catch (e) {
-								// console.error(e);
-							// }
-						} 
-						thisArrTransIds.push(transIds[trans]);
-					} else {
-						console.error("ERROR", fld, "<NOT IN LANG LIST>",langRussian, "■",content);
-					}
+					}					
+				} 
+				else {
+					// no author info !!
+					// console.error ("LEN", textPlusSource.length, textPlusSource);
+					examplesArray.push({"text": exBody.trim(), "lang": pdLang.value});
 				}
+			}
 		}						
 	}
-	return JSON.stringify(thisArrTransIds);
+	return JSON.stringify(examplesArray);
 }
 
 async function processFile(fileName) {
@@ -376,7 +360,7 @@ async function processFile(fileName) {
                 } else if(fieldEn === "actclass") {
                     // empty = error!!!
                     if(!data) {
-                        console.error("ERROR:", fieldEn, "<EMPTY>");
+                        console.error(fieldEn, "<EMPTY>");
                     }
                     const result = await checkFeatureArray(fieldEn, data);
                     values.push(result);
@@ -396,7 +380,7 @@ async function processFile(fileName) {
                     values.push(result);
                 } else if(fieldEn === "examples") {
 					const result  = await processExamples(fieldEn, data);
-                    // values.push(result);					
+                    values.push(result);					
                 } else {
                     // console.log(data);
 					// console.error(fieldEn);
