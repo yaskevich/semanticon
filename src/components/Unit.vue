@@ -14,7 +14,7 @@
               <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
               <span v-for="item in value" :key="item">
                 <!-- <Chip :label="data.features[a]" /> -->
-                <Tag class="p-mr-2" severity="warning" :value="data.features[item]" rounded></Tag>
+                <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
               </span>
             </span>
             <span v-else>
@@ -23,24 +23,29 @@
                 <span v-if="name=='situation'">
                   <span v-html='value.replace("А", a).replace("Б", b)'></span>
                 </span>
+                <span v-else>
+                  {{value}}
+                </span>
               </span>
               <span v-else>
                 <span v-if="data.features[value]">
                   <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
-                    {{data.features[value]}}
+                    {{data.features[value][0]}}
                 </span>
               </span>
             </span>
           </div>
-          <div v-if="value && value.length && name == 'examples'" :key="name" class="example">
+          <div v-if="value && value.length && name == 'examples'" :key="name">
             <Inplace :closable="false">
               <template #display>
                 <span className="pi pi-bookmark" style="vertical-align: middle"></span>
                 <span style="margin-left:.5rem; vertical-align: middle">Пример{{value.length>1?"ы":''}}</span>
               </template>
               <template #content>
-                <div v-for="(v, k) in value" :key="k">
-                  <span class="example-text">{{v.text}}</span> <span class="example-author">{{v.author}}</span>  <span class="example-pub">{{v.pub}}</span>  <span v-if="v.journal" class="example-journal" title="публикация в журнале">(«{{v.journal}}»)</span> <span class="example-pubdate">{{v.pubdate}}</span>
+                <div class="example">
+                  <div v-for="(v, k) in value" :key="k">
+                    <span class="example-text">{{v.text}}</span> <span class="example-author">{{v.author}}</span>  <span class="example-pub">{{v.pub}}</span>  <span v-if="v.journal" class="example-journal" title="публикация в журнале">(«{{v.journal}}»)</span> <span class="example-pubdate">{{v.pubdate}}</span>
+                  </div>
                 </div>
               </template>
             </Inplace>

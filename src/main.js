@@ -19,6 +19,8 @@ import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
 import Panel from 'primevue/panel';
 import Inplace from 'primevue/inplace';
+import MultiSelect from 'primevue/multiselect';
+
 
 const app = createApp(App);
 const pvLocale = {
@@ -55,6 +57,8 @@ app.use(router);
 document.title = pvLocale.title;
 
 
+
+app.component('MultiSelect', MultiSelect);
 app.component('Inplace', Inplace);
 app.component('InputText', InputText);
 app.component('AutoComplete', AutoComplete);
