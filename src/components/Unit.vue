@@ -21,7 +21,7 @@
               <span v-if="typeof value === 'string'">
                 <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
                 <span v-if="name=='situation'">
-                  <span v-html='value.replace("А", a).replace("Б", b)'></span>
+                  <span v-html='value.split("А").join(a).split("Б").join(b)'></span>
                 </span>
                 <span v-else>
                   {{value}}
