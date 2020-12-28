@@ -24,8 +24,12 @@ import MultiSelect from 'primevue/multiselect';
 
 const app = createApp(App);
 const pvLocale = {
-    hi: 'Расширенный поиск',
+    home: 'Главная',
+    filtering: 'Расширенный поиск',
+    about: "О проекте",
     title: "Дискурсивные формулы",
+    logout: "Выйти",
+    loading: "загрузка...",
     phrase: {
       extrequired : "требуется продолжение",
       semantics: "семантика",

@@ -20,7 +20,7 @@ export default {
 		result.value  = Object.keys(data.features).filter(x => data.features[x][1]==="semantics").map(x => ({"value": x, "name": data.features[x][0]}));
 		// console.log(result.length);
     // sel.value = result;
-    return { toc: Object.keys(store.state.config.toc), data: data,
+    return { toc: Object.keys(store.state.config.toc), data,
 		sel, result };
   },
   components: {

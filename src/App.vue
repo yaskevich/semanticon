@@ -1,12 +1,11 @@
 <template >
   <div id="main" v-if="dataReady">
   <div id="nav" class="p-component" style="text-align: center;">
-    <router-link to="/">Главная</router-link> |
-    <router-link to="/home">{{$primevue.config.locale.hi}}</router-link> |
-    <router-link to="/about">О проекте</router-link>
+    <router-link to="/">{{$primevue.config.locale.home}}</router-link> |
+    <router-link to="/home">{{$primevue.config.locale.filtering}}</router-link> |
+    <router-link to="/about"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
     <!-- | -->
-
-    <router-link v-if="isAuth()" to="/logout">Выйти</router-link>
+    <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link>
     <!-- <router-link v-else to="/login">Войти</router-link> -->
   </div>
   <div id="content">
@@ -19,7 +18,7 @@
   </div>
   </div>
   <div v-else>
-    загрузка...
+    {{$primevue.config.locale.loading}}
   </div>
 </template>
 
@@ -100,5 +99,8 @@ body {
 #footer {
   background-color:pink;
   margin-top:auto;
+}
+.nowrap {
+  white-space: nowrap; 
 }
 </style>
