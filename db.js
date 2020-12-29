@@ -64,10 +64,10 @@ export default {
         return {"eid1": eid1, "exprs": eids};
 	},
 	async getFeatures(){
-		const res = await pool.query('select id, ru FROM features');
-        return Object.fromEntries(res.rows.map(item => [item.id, item.ru]));
+		const res = await pool.query('select id, ru, groupid as class FROM features');
+        return Object.fromEntries(res.rows.map(item => [item.id, [item.ru, item.class]]));
 	}, 
-	async getUnits(id){
+	async getUnits1(id){
 		// const units = await pool.query('select * FROM units where pid=$1', [pid]);
 		// const phrases = await pool.query('select * FROM phrases where pid=$1', [pid]);
         // return { "units": units.rows, "phrase": phrases.rows[0]["phrase"]};
@@ -82,6 +82,29 @@ export default {
 		
 		// return results;
 		return Object.fromEntries(data.map(item => [item.id, item]));
+	},
+
+	async getUnits(id){
+		// const units = await pool.query('select * FROM units where pid=$1', [pid]);
+		// const phrases = await pool.query('select * FROM phrases where pid=$1', [pid]);
+        // return { "units": units.rows, "phrase": phrases.rows[0]["phrase"]};
+		const res = await pool.query('select units.*, phrase, phrase->0 as eid1 from units inner join phrases on units.pid=phrases.pid', []);
+		 // remove empty features?
+		let data = res.rows;
+		
+		
+		data = data.map(x => (Object.keys(x).forEach((key) => (x[key] == null || (Array.isArray(x[key])|| typeof x[key] === 'string') && !x[key].length) && delete x[key]), x));
+		
+		// console.log(data);
+		
+		// const results  = data.reduce(function(results, data) {
+			// (results[data.pid] = results[data.pid] || []).push(data);
+			// return results;
+		// }, {});
+		
+		// return results;
+		return Object.fromEntries(data.map(item => [item.id, item]));
+		// return data;
 	},
 	async getExprs(){
 		const res = await pool.query('select * from exprs');

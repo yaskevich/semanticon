@@ -11,11 +11,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 import db from './db.js';
 
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function getUser(request) {
 	return users.find(user => {
@@ -122,7 +122,7 @@ let users = [
 	app.get("/api/data/:id", async(req, res) =>  {
 		const id  = parseInt(req.params.id, 10);
 		console.log(`query for ${id}`);
-		const data  = id ? await db.getUnits(id) : [];
+		const data  = id ? await db.getUnits1(id) : [];
 		return res.json(data);
 	});	
 		
@@ -131,14 +131,16 @@ let users = [
 	  const tokens = await db.getTokens();
 	  // const phrases = await db.getPhrases();
 	  const exprs = await db.getExprs();
+	  const units = await db.getUnits();
 	  const idx = await db.getIndex();
 	  const titles = await db.getTitles();
 	  // console.log("data", data);
 	  return res.json({
+			"units": units,
+			"features": features, 
 			"titles": titles,
 			"toc": idx,
 			"exprs": exprs,
-			"features": features, 
 			"tokens": tokens,			
 			// "phrases": phrases,
 			"user": req.isAuthenticated()?getUser(req):{}});
@@ -166,6 +168,14 @@ let users = [
 
 	app.get("/api/user", authMiddleware, (req, res) => {
 	  res.send({ user: getUser(req) });
+	});
+
+	app.get("/api/icon/:id", (req, res) => {
+		let id  = parseInt(req.params.id, 10);
+		if (![1, 2].includes(id)) {
+			id  = 1;
+		}
+		res.sendFile(__dirname+"/"+id+'.png');
 	});
 
 	app.all("/", (req,res) => {
