@@ -24,11 +24,10 @@
                   <span v-html='value.split("А").join(a).split("Б").join(b)'></span>
                 </span>
                 <span v-else>
-                  {{value}}
                 </span>
               </span>
               <span v-else>
-                <span v-if="data.features[value]">
+                <span v-if="data.features[value] && data.features[value][0]">
                   <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
                     {{data.features[value][0]}}
                 </span>
