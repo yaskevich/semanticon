@@ -12,15 +12,14 @@ import 'primeicons/primeicons.css';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
-import Tag from 'primevue/tag';
-// import Chip from 'primevue/chip';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
-import Panel from 'primevue/panel';
 import Inplace from 'primevue/inplace';
 import MultiSelect from 'primevue/multiselect';
-
+import Tag from 'primevue/tag';
+// import Chip from 'primevue/chip';
+import Panel from 'primevue/panel';
 
 const app = createApp(App);
 const pvLocale = {

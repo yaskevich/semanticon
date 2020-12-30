@@ -15,7 +15,7 @@ export default {
   name: "PhraseListItem",
   props: {
     eid: Number,
-    data: Object
+    data: Object,
   },
 };
 </script>
