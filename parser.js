@@ -24,6 +24,7 @@ const transIds = {};
 const featureIds = {};
 const phraseIds = {};
 const mediaIds = {};
+let rowNumber = 0;
 //
 // https://www.loc.gov/standards/iso639-2/php/code_list.php
 const langCodes = {
@@ -173,7 +174,7 @@ async function checkFeature(fld, content){
             const result  = await pool.query(featuresInsert, [fld, content]);
             featureIds[uuid] = result.rows[0].id;
         } catch (e){
-            console.error(e.detail);
+            console.error(rowNumber, e.detail);
         }
     }
     return featureIds[uuid];
@@ -207,7 +208,7 @@ async function vectorizeTokens(content){
                     const result  = await pool.query(tokensInsert, [tkn]);
                     tokenIds[tkn] = result.rows[0].id;
                 } catch (e){
-                    console.error(e.detail);
+                    console.error(rowNumber, e.detail);
                 }
             }
             tokensArrVector.push(tokenIds[tkn]);
@@ -219,7 +220,7 @@ async function vectorizeTokens(content){
 				const result  = await pool.query(exprsInsert, [exprSerialized]);
 				exprIds[exprSerialized] = result.rows[0].eid;
 			} catch (e){
-				console.error(e.detail);
+				console.error(rowNumber, e.detail);
 			}					
 		}
 		// console.error(unitsArr[i], exprIds[exprSerialized]);
@@ -238,7 +239,7 @@ async function processTranslations(fld, content){
 		for (let ii=0; ii<arr.length; ii++){
 			const transPlusLang  = arr[ii].split("[[");
 				if (transPlusLang.length!==2) {
-					console.error(`${fld} <DOES NOT MATCH> ${content}`);
+					console.error(rowNumber, `${fld} <DOES NOT MATCH> ${content}`);
 				} else {
 					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
 					const [trans, langRu] = transPlusLang;
@@ -247,7 +248,7 @@ async function processTranslations(fld, content){
 					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
 					if (pdLang){
 						if (pdLang.value === "rus") {
-							console.error(`${fld} <RUSSIAN> ${content}`);
+							console.error(rowNumber, `${fld} <RUSSIAN> ${content}`);
 						}
 						const pdTrans = Reflect.getOwnPropertyDescriptor(transIds, trans);
 						if (!pdTrans) {
@@ -255,12 +256,12 @@ async function processTranslations(fld, content){
 								const result  = await pool.query(transInsert, [trans, pdLang.value]);
 								transIds[trans] = result.rows[0].id;
 							} catch (e) {
-								console.error(e);
+								console.error(rowNumber, e);
 							}
 						} 
 						thisArrTransIds.push(transIds[trans]);
 					} else {
-						console.error(fld, "<NOT IN LANG LIST>",langRussian, "■",content);
+						console.error(`${rowNumber}:${fld}<NOT IN LANG LIST>`, langRussian, "■",content);
 					}
 				}
 		}						
@@ -279,7 +280,7 @@ async function processExamples(fld, content){
 			const example  = arr[ii].trim().replace(/--|-/g, '–');
 			const exPlusLang  = example.split("[[");
 			if (exPlusLang.length!==2) {
-				console.error(`${fld} len=${exPlusLang.length} <DOES NOT MATCH> |${exPlusLang}|:\n${example}\n►${content}◄`);
+				console.error(`${rowNumber}:${fld} len=${exPlusLang.length} <DOES NOT MATCH> |${exPlusLang}|:\n${example}\n►${content}◄`);
 			} else {
 				const [exBody, langRu] = exPlusLang;
 				const langRussian = langRu.replace(/\.?\]\]$/, '');
@@ -292,7 +293,7 @@ async function processExamples(fld, content){
 				if (pdLang){
 					info["lang"] = pdLang.value;
 				} else {
-					console.error("LANG", langRussian);
+					console.error(rowNumber, "LANG", langRussian);
 				}
 				
 				if (textPlusSource.length>1) {
@@ -326,7 +327,7 @@ async function processExamples(fld, content){
 						}
 					}
 					if (Object.keys(info).length < 4){
-						console.error("examples <"+error+">", srcAndDate);
+						console.error(rowNumber, "examples <"+error+">", srcAndDate);
 					} else {
 						info["text"] = textPlusSource[0].trim();
 						examplesArray.push(info);
@@ -371,7 +372,11 @@ async function processFile(fileName) {
 			}
 		}
 
-        for (const row of csvArr) {
+        // for (const row of csvArr) {
+		for (let n = 0; n < csvArr.length; n++) {
+			// rowNumber = `${n + 2}(${n})`;
+			rowNumber = n+2;
+			const row = csvArr[n];
             const values = [];
             let semantics1 = "";
             for (let i=0; i < row.length; i++) {
@@ -404,7 +409,7 @@ async function processFile(fileName) {
                 } else if(fieldEn === "actclass") {
                     // empty = error!!!
                     if(!data) {
-                        console.error(fieldEn, "<EMPTY>");
+                        console.error(rowNumber, fieldEn, "<EMPTY>");
                     }
                     const result = await checkFeatureArray(fieldEn, data);
                     values.push(result);
