@@ -87,7 +87,6 @@ const schemes = {
     style integer,
     comment text,
     construction text,
-    link text,
 	CONSTRAINT fk_phrases
       FOREIGN KEY(pid) 
 	  REFERENCES phrases(pid)
@@ -124,8 +123,8 @@ const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const transInsert = `INSERT INTO translations (excerpt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
 const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
-					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video)
-                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video, style, comment)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
                     RETURNING *`;
 
 async function checkMedia(fld, content){
@@ -147,6 +146,9 @@ async function checkMedia(fld, content){
 				// for wav from byte 44
 				// https://audiocoding.ru/articles/2008-05-22-wav-file-structure/
 				// for other give up and read let's say from 128-th
+				
+				// let crypto = require('crypto');
+				// let md5CheckSum = crypto.createHash('md5').update(dataToConvert).digest("hex");
 				
 				const pd = Reflect.getOwnPropertyDescriptor(mediaIds, hash)
 				if (!pd) {
@@ -406,13 +408,13 @@ async function processFile(fileName) {
                     }
                     const result = await checkFeatureArray(fieldEn, data);
                     values.push(result);
-                } else if(fieldEn === "situation") {
+                } else if(["situation", "comment"].includes(fieldEn)) {
                     values.push(data);
                 } else if(fieldEn === "parts") {
                     // !!! empty I treat as two-parts !!!
                     // parts boolean not null default false,
                     values.push(data==="трехчастная"?1:0);
-                } else if(fieldEn === "intonation") {
+                } else if(["intonation", "style"].includes(fieldEn)) {
                     const result = await checkFeature(fieldEn, data);
                     values.push(result);
                 } else if(fieldEn === "mods") {
