@@ -89,7 +89,7 @@ let users = [
 	app.use(passport.session());
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
-	app.use(express.static('public'));
+	app.use('/res', express.static('public'));
 	
 	app.post('/api/login', function(req, res, next) {
 	  passport.authenticate("local", (err, user, info) => {
@@ -134,13 +134,15 @@ let users = [
 	  const units = await db.getUnits();
 	  const idx = await db.getIndex();
 	  const titles = await db.getTitles();
+	  const media = await db.getMedia();
 	  // console.log("data", data);
 	  return res.json({
+			"media": media,
+			"exprs": exprs,
 			"units": units,
 			"features": features, 
 			"titles": titles,
-			"toc": idx,
-			"exprs": exprs,
+			"toc": idx,			
 			"tokens": tokens,			
 			// "phrases": phrases,
 			"user": req.isAuthenticated()?getUser(req):{}});

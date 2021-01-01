@@ -29,11 +29,15 @@ export default {
 		const res = await pool.query(' select * from phrases');
         return res.rows;
 	}, 
+	async getMedia(){
+		const res = await pool.query(' select * from media');
+        return res.rows.reduce((obj, item) => (obj[item.id.toString()] = item.filename+item.fileext, obj), {});;
+	}, 
 	async getIndex(){
 		const res = await pool.query('select units.id, units.pid, phrase->0 as eid1 from units inner join phrases on units.pid=phrases.pid');
 		const data = {};
 		  for (let i=0; i<res.rows.length; i++){
-			  const it = res.rows[i];		  
+			  const it = res.rows[i];  
 			  const eid = it.eid1.toString();
 			  const pid = it.pid.toString();
 			  const id  = it.id.toString();
