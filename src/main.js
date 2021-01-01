@@ -29,6 +29,9 @@ const pvLocale = {
     title: "Дискурсивные формулы",
     logout: "Выйти",
     loading: "загрузка...",
+    yes: "да",
+    parts2: "двухчастная",
+    parts3: "трёхчастная",
     phrase: {
       extrequired : "требуется продолжение",
       semantics: "семантика",

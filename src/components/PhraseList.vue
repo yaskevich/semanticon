@@ -22,20 +22,30 @@ export default {
     semanticsResult.value  = Object.keys(data.features).filter(x => data.features[x][1]==="semantics").map(x => ({"value": x, "name": data.features[x][0]}));
 
     watchEffect(() => {
-      if (semantics.value) {
-          const vals = semantics.value.map(y=>Number(y.value));
-          const selected = [];
-          for (let [k, v] of Object.entries(store.state.config.toc)) {
-            let sems = Object.values(v).flatMap(x=>x).flatMap(x=> data.units[x].semantics);
-            if (vals.every(y => sems.includes(y))) {
-              selected.push(k);
-            }
+      if(!(semantics.value===null)){
+        setTimeout((x) => {
+          if ((!x && !semantics.value) || (x && semantics.value && (semantics.value.sort().toString() == x.sort().toString()))) {
+              console.log("update", semantics.value, x);
+              const selected = [];
+              if (semantics.value) {
+                  const vals = semantics.value.map(y=>Number(y.value));
+                  for (let [k, v] of Object.entries(store.state.config.toc)) {
+                    let sems = Object.values(v).flatMap(x=>x).flatMap(x=> data.units[x].semantics);
+                    if (vals.every(y => sems.includes(y))) {
+                      selected.push(k);
+                    }
+                  }
+                }
+              eids.value = selected;
+          } else {
+            console.log("wait");
           }
-          eids.value = selected;
-        }
-      });
-      
-    return { data, eids, semantics, semanticsResult };
+        }, 1000, semantics.value);
+      } else {
+        console.log("is null");
+      }
+    });
+  return { data, eids, semantics, semanticsResult };
   },
   components: {
     // eslint-disable-next-line vue/no-unused-components
