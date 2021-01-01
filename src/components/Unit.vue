@@ -67,6 +67,7 @@
               </template>
             </Inplace>
           </div>
+
           <div v-else-if="name === 'construction' && unit[name].length">
             <span class="desc">{{value}}: </span>
             <div v-for="(v, k) in unit[name]" :key="k" class="construction">
@@ -79,7 +80,29 @@
                 <span v-if="v.hasOwnProperty('link') && v['link']">
                   <a :href="v.link" target="_blank"><i class='pi pi-external-link' style='color: blue;'></i></a>
                 </span>
+            </div>
+          </div>
 
+          <div v-else-if="name === 'audio' && unit[name].length">
+            <div v-for="(v, k) in unit[name]" :key="k" class="audio">
+              <audio
+                src="/api/media/horse.ogg"
+                controls>
+                Ваш браузер не поддерживает элемент <code>audio</code>.
+              </audio>
+              <!-- https://stackoverflow.com/questions/4126708/is-it-possible-to-style-html5-audio-tag -->
+              <!-- {{data.media[v]}} -->
+            </div>
+          </div>
+
+          <div v-else-if="name === 'video' && unit[name].length">
+            <div v-for="(v, k) in unit[name]" :key="k" class="video">
+              <video
+                :src="'/api/media/' + ['crazy.mp4', 'amused-cat.mp4'][k]"
+                width ="200"
+                controls>
+                Ваш браузер не поддерживает элемент <code>video</code>.
+              </video>
             </div>
           </div>
 
@@ -113,6 +136,20 @@ export default {
 </script>
 
 <style>
+.video {
+  float:left;
+  padding:1rem;
+  align:left;
+    /* right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    background-size: cover;
+    overflow: hidden; */
+}
 .unit {
   /* border: 1px solid red;*/
   margin-top: 2rem;

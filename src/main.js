@@ -46,11 +46,11 @@ const pvLocale = {
       gest: "жестикуляция",
       organ: "активный орган",
       examples: "примеры",
-      audio: "аудио",
-      video: "видео",
       style: "пометы",
       comment: "комментарий",
       construction: "конструкция",
+      audio: "аудио",
+      video: "видео",      
     }
 }
 app.provide("store", store);

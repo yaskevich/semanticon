@@ -8,13 +8,18 @@ module.exports = {
 		proxy: {
 			"/api": {
 				target: "http://localhost:5000",
-				changeOrigin: true, 
+				changeOrigin: true,
 				ws:true,
 				// pathRewrite: {
 					// "^/api": ""
 				// },
-				logLevel: 'debug' 
-			}
+				logLevel: 'debug'
+			},
+			// "/media": {
+			// 	target: "http://localhost:5000",
+			// 	changeOrigin: true,
+			// 	logLevel: 'debug'
+			// }
 		}
 	}
 }
