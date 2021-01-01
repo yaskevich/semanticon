@@ -87,7 +87,7 @@ const schemes = {
     video jsonb,
     style integer,
     comment text,
-    construction text,
+    construction jsonb,
 	CONSTRAINT fk_phrases
       FOREIGN KEY(pid) 
 	  REFERENCES phrases(pid)
@@ -124,8 +124,8 @@ const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const transInsert = `INSERT INTO translations (excerpt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
 const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
-					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video, style, comment)
-                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video, style, comment, construction)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
                     RETURNING *`;
 
 async function checkMedia(fld, content){
@@ -261,7 +261,7 @@ async function processTranslations(fld, content){
 						} 
 						thisArrTransIds.push(transIds[trans]);
 					} else {
-						console.error(`${rowNumber}:${fld}<NOT IN LANG LIST>`, langRussian, "■",content);
+						console.error(rowNumber, `${fld} <NOT IN LANG LIST>`, langRussian, "■",content);
 					}
 				}
 		}						
@@ -343,6 +343,21 @@ async function processExamples(fld, content){
 		}						
 	}
 	return JSON.stringify(examplesArray);
+}
+
+async function processConstruction(fld, content) {
+	let arr  = content.split(/\]\]/g).filter(Boolean).map(x => { 
+		const y = x.split('[[');
+		if (y.length % 2 !== 0) {
+			console.error(rowNumber, "<CONSTRUCTION ANNOTATION ERROR>", arr);
+		}
+		const obj = {"syn": y[0]};
+		if (y[1]) {
+			obj["link"] = y[1];
+		}
+		return obj;
+	});
+	return JSON.stringify(arr);
 }
 
 async function processFile(fileName) {
@@ -433,9 +448,15 @@ async function processFile(fileName) {
                 } else if(["audio", "video"].includes(fieldEn)) {
 					const result  = await checkMedia(fieldEn, data);
                     values.push(result);					
+                } else if(fieldEn === "construction") {
+					const result  = await processConstruction(fieldEn, data);
+					// if (data) {
+						// console.error("=>",result);
+					// }
+                    values.push(result);					
                 } else {
                     // console.log(data);
-					// console.error(fieldEn);
+					console.error(fieldEn);
 					
 					// 
 					// process.exit();
