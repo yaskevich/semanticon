@@ -7,6 +7,8 @@ import bodyParser from 'body-parser';
 import session from 'cookie-session';
 import passport from 'passport';
 import passportLocal from 'passport-local';
+import history from 'connect-history-api-fallback';
+
 import dotenv from 'dotenv';
 dotenv.config();
 import db from './db.js';
@@ -89,6 +91,7 @@ let users = [
 	app.use(passport.session());
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
+	app.use(history());
 	app.use('/res', express.static('public'));
 	
 	app.post('/api/login', function(req, res, next) {
