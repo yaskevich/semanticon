@@ -83,6 +83,13 @@
             </div>
           </div>
 
+          <div v-else-if="name === 'translations' && unit[name].length">
+            <span class="desc">{{value}}: </span>
+            <span v-for="(v, k) in unit[name]" :key="k">
+              <span class="example-text">{{data.trans[v]['txt']}}</span> ({{$primevue.config.locale.lang.hasOwnProperty(data.trans[v]['lang'])?$primevue.config.locale.lang[data.trans[v]['lang']]:data.trans[v]['lang']}})
+            </span>
+          </div>
+
           <div v-else-if="name === 'audio' && unit[name].length">
             <div v-for="(v, k) in unit[name]" :key="k" class="audio">
               <audio

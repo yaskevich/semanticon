@@ -32,15 +32,25 @@ const pvLocale = {
     yes: "да",
     parts2: "двухчастная",
     parts3: "трёхчастная",
+    lang: {
+        tgk: "таджикский",
+        eng: "английский",
+        fin: "финский",
+        bua: "бур",
+        heb: "ивр",
+        ita: "ит",
+        slv: "слвн",
+        rus: "русский"
+    },
     phrase: {
       extrequired : "требуется продолжение",
       semantics: "семантика",
+      translations: "переводные аналоги",
       act1: "речевой акт 1",
       actclass:  "тип речевого акта",
       situation: "о ситуации",
       parts: "структура",
       intonation: "интонация",
-      translations: "переводные аналоги",
       extension: "продолжение",
       mods: "модификации",
       gest: "жестикуляция",
@@ -50,7 +60,7 @@ const pvLocale = {
       comment: "комментарий",
       construction: "конструкция",
       audio: "аудио",
-      video: "видео",      
+      video: "видео",
     }
 }
 app.provide("store", store);
