@@ -2,6 +2,7 @@
 
 // import path from 'path';
 import express from 'express';
+import path from 'path';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import session from 'cookie-session';
@@ -80,6 +81,8 @@ let users = [
 	  done(null, user);
 	});
 	
+	app.use('/api/media', express.static(path.join(__dirname, 'public')));
+	
 	app.use(compression());
 	app.use(session({
 	  secret: process.env.SESSION_SECRET || Math.random().toString(36).substring(2),
@@ -87,12 +90,20 @@ let users = [
 	  saveUninitialized: true,
 	  cookie: { secure: true }
 	}));
+	
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
-	app.use(history());
-	app.use('/res', express.static('public'));
+	
+	app.use(history({
+		  verbose: true,
+		  rewrites: [
+			{ from: /\/api\/.*$/, to: context => context.parsedUrl.pathname }
+		  ]
+		}));
+	// app.use(path.join(__dirname, 'public'), express.static('media'));
+	
 	
 	app.post('/api/login', function(req, res, next) {
 	  passport.authenticate("local", (err, user, info) => {
