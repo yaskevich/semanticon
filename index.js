@@ -97,7 +97,7 @@ let users = [
 	app.use(bodyParser.urlencoded({ extended: true }));
 	
 	app.use(history({
-		  verbose: true,
+		  // verbose: true,
 		  rewrites: [
 			{ from: /\/api\/.*$/, to: context => context.parsedUrl.pathname }
 		  ]
@@ -149,8 +149,10 @@ let users = [
 	  const idx = await db.getIndex();
 	  const titles = await db.getTitles();
 	  const media = await db.getMedia();
+	  const trans = await db.getTranslations();
 	  // console.log("data", data);
 	  return res.json({
+			"trans": trans,
 			"media": media,
 			"exprs": exprs,
 			"units": units,

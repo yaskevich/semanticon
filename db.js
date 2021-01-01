@@ -26,8 +26,12 @@ export default {
         return phraseMap;
     },
 	async getPhrases(){
-		const res = await pool.query(' select * from phrases');
+		const res = await pool.query('select * from phrases');
         return res.rows;
+	}, 
+	async getTranslations(){
+		const res = await pool.query('select * from translations');
+        return res.rows.reduce((obj, item) => (obj[item.id.toString()] = item, obj), {});
 	}, 
 	async getMedia(){
 		const res = await pool.query(' select * from media');
