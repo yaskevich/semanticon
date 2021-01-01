@@ -59,8 +59,7 @@ const mappingRuEn = {
   'Видео': "video",
   'уст.|груб.|нейтр.': "style",
   'Комментарий': "comment",
-  'конструкция': "construction",
-  'ссылка на конструктикон' : "link"
+  'конструкция': "construction"
 };
 
 const schemes = {
@@ -103,25 +102,24 @@ const schemes = {
 	"translations":
 	`CREATE TABLE translations (
 		id SERIAL PRIMARY KEY,
-		excerpt text not null,
+		txt text not null,
 		lang text not null,
-		UNIQUE (excerpt, lang)
+		UNIQUE (txt, lang)
 	)`,
 	"media":
 	`CREATE TABLE media (
 		id SERIAL PRIMARY KEY,
 		filename text not null,
 		filehash text not null UNIQUE,
-		fileext text not null,
-		filetype boolean not null default false		
+		fileext text not null		
 	)`
 };
 
-const mediaInsert = `INSERT INTO media (filename, filehash, fileext, filetype) VALUES($1, $2, $3, $4) RETURNING id`;
+const mediaInsert = `INSERT INTO media (filename, filehash, fileext) VALUES($1, $2, $3) RETURNING id`;
 const exprsInsert = `INSERT INTO exprs (expr) VALUES($1) RETURNING eid`;
 const phrasesInsert = `INSERT INTO phrases (phrase) VALUES($1) RETURNING pid`;
 const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
-const transInsert = `INSERT INTO translations (excerpt, lang) VALUES($1, $2) RETURNING id`;
+const transInsert = `INSERT INTO translations (txt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
 const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
 					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video, style, comment, construction)
@@ -135,7 +133,7 @@ async function checkMedia(fld, content){
 		// const thisArrIds = [];
 		for (let i=0; i < filenamesArr.length; i++) {
 			if (filenamesArr[i]) {
-				const type  = fld === "audio"; // false - video, true - audio
+				// const type  = fld === "audio"; // false - video, true - audio
 				const filename  = filenamesArr[i];
 				const fileext = path.extname(filename);
 				const hash  = filename; // CHANGE WHEN I HAVE REAL FILES!!!
@@ -153,7 +151,7 @@ async function checkMedia(fld, content){
 				
 				const pd = Reflect.getOwnPropertyDescriptor(mediaIds, hash)
 				if (!pd) {
-					const result  = await pool.query(mediaInsert, [filename, hash, fileext, type]);
+					const result  = await pool.query(mediaInsert, [filename.substring(0, filename.length - fileext.length), hash, fileext]);
 					mediaIds[hash] = result.rows[0].id;
 				}
 				thisIdsArr.push(mediaIds[hash]);				
@@ -185,7 +183,7 @@ async function checkFeatureArray(fld, content) {
     const thisArrIds = [];
     for (let s=0; s < thisArr.length; s++) {
         if (thisArr[s]) {
-            thisArrIds.push(await checkFeature(fld, thisArr[s]));
+            thisArrIds.push(await checkFeature(fld, thisArr[s].trim()));
         }
     }
     return JSON.stringify(thisArrIds);
@@ -242,8 +240,9 @@ async function processTranslations(fld, content){
 					console.error(rowNumber, `${fld} <DOES NOT MATCH> ${content}`);
 				} else {
 					// console.log(transPlusLang[0], transPlusLang[1].slice(0, -3) );
-					const [trans, langRu] = transPlusLang;
-					const langRussian = langRu.replace(/\.?\]\]$/, '');
+					let [trans, langRussian] = transPlusLang;
+					langRussian = langRussian.replace(/\.?\]\]$/, '');
+					trans = trans.trim();
 					
 					const pdLang  = Reflect.getOwnPropertyDescriptor(langCodes, langRussian);
 					if (pdLang){
@@ -419,7 +418,12 @@ async function processFile(fileName) {
                     const result = await checkFeatureArray(fieldEn, semantics1 + "|" + data);
                     values.push(result);
                 } else if(["act1", "extension", "gest", "organ"].includes(fieldEn)) {
-                    const result = await checkFeatureArray(fieldEn, data);
+						let datum = data;
+					if (fieldEn === "extension") {
+						// (+ аргументация) | (+ переформулировка)
+						datum = data.replace(/[+)(]/g, '');
+					}
+                    const result = await checkFeatureArray(fieldEn, datum);
                     values.push(result);
                 } else if(fieldEn === "actclass") {
                     // empty = error!!!
