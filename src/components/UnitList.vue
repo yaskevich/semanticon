@@ -29,7 +29,7 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import { unref, ref, computed } from "vue";
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
 import store from "@/modules/store";
 import Unit from "./Unit.vue";
 

@@ -101,6 +101,6 @@ body {
   margin-top:auto;
 }
 .nowrap {
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 </style>

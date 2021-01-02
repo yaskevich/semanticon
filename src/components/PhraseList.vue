@@ -10,15 +10,24 @@ import store from "@/modules/store";
 import PhraseListItem from "./PhraseListItem.vue";
 // eslint-disable-next-line no-unused-vars
 import { unref, ref, computed, watchEffect } from "vue";
+import { useRoute } from 'vue-router';
 
 export default {
   name: "PhraseList",
   setup() {
+    const router = useRoute();
+    // const id = router.params.id;
+    console.log(router.params);
+
+    const data  = store.state.config;
 		let semantics = ref(null);
+    if (router.params.id) {
+      semantics.value = [{"value": router.params.id, "name": data.features[router.params.id][0]}];
+    }
     let semanticsResult = ref({});
     let eids = ref([]);
     eids.value = Object.keys(store.state.config.toc);
-		const data  = store.state.config;
+
     semanticsResult.value  = Object.keys(data.features).filter(x => data.features[x][1]==="semantics").map(x => ({"value": x, "name": data.features[x][0]}));
 
     watchEffect(() => {

@@ -13,7 +13,7 @@
         <div v-if="name === 'parts'"  class="item" :key="index">
           <span class="desc">{{$primevue.config.locale.phrase[name]}}: </span>
           <span>
-            {{unit.hasOwnProperty(name)?$primevue.config.locale.parts3: $primevue.config.locale.parts2}}
+            {{ unit.hasOwnProperty(name) && unit[name] ? $primevue.config.locale.parts3: $primevue.config.locale.parts2 }}
           </span>
         </div>
 
@@ -24,11 +24,26 @@
             <span class="desc">{{value}} </span>
           </span>
 
-          <span v-else-if="['semantics', 'act1', 'actclass', 'extension', 'gest', 'organ'].includes(name)">
+          <span v-else-if="['act1', 'actclass', 'extension', 'gest', 'organ'].includes(name)">
             <span class="desc">{{value}}: </span>
             <span v-for="item in unit[name]" :key="item">
               <!-- <Chip :label="data.features[a]" /> -->
               <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+            </span>
+          </span>
+
+          <span v-else-if="name === 'semantics'">
+            <span class="desc">{{value}}: </span>
+            <span v-for="item in unit[name]" :key="item">
+              <!-- <Button :label="data.features[item][0]" class="p-button-raised p-button-rounded p-button-sm" /> -->
+
+              <router-link :to="{ name: 'List', params: { prop: name, id: item } }" tag="li" class="interactive">
+                {{data.features[item][0]}}
+              </router-link>
+              <!-- <a :href="'/search/' + name + '/' +item" class="interactive">
+
+              </a> -->
+
             </span>
           </span>
 
@@ -61,7 +76,7 @@
                 <div class="example">
                   <div v-for="(v, k) in unit[name]" :key="k">
                     <span class="example-text">{{v.text}}</span> <span class="example-author">{{v.author}}</span>  <span class="example-pub">{{v.pub}}</span>  <span v-if="v.journal" class="example-journal" title="публикация в журнале">(«{{v.journal}}»)</span> <span class="example-pubdate">{{v.pubdate}}
-                    </span>
+                    </span> <span class="">‹{{$primevue.config.locale.lang[v.lang]}}›</span>
                   </div>
                 </div>
               </template>
@@ -188,4 +203,23 @@ export default {
 .example-pubdate {
   color: blue;
 }
+
+a.interactive {
+  text-decoration: none;
+  background:yellow;
+  border-radius: 25px;
+  font-size: 0.75rem;
+font-weight: 700;
+padding: .3rem;
+margin-left:.3rem;
+color: black;
+border: 1px solid white;
+}
+
+a.interactive:hover {
+    background: orange; /* Цвет фона под ссылкой */
+    color: #ffe; /* Цвет ссылки */
+    border: 1px solid brown;
+   }
+
 </style>

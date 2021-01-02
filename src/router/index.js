@@ -25,9 +25,11 @@ const routes = [
   {
     path: '/home',
     name: 'PhraseListScreen',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    component: PhraseListScreen
+  },
+  {
+    path: '/search/:prop/:id',
+    name: 'List',
     component: PhraseListScreen
   },
    { path: '/expr/:id', component: UnitListScreen, name: 'Phrase', props: true },

@@ -23,6 +23,8 @@ import Panel from 'primevue/panel';
 
 const app = createApp(App);
 const pvLocale = {
+    // locale: 'rus',
+    // switch: 'RUS/ENG',
     home: 'Главная',
     filtering: 'Расширенный поиск',
     about: "О проекте",
