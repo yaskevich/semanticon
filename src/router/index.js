@@ -5,6 +5,7 @@ import PhraseListScreen from '../components/PhraseListScreen.vue'
 import UnitListScreen from '../components/UnitListScreen.vue'
 import Login from '../components/Login.vue'
 import Logout from '../components/Logout.vue'
+import Admin from '../components/Admin.vue'
 import Dashboard from '../components/Dashboard.vue'
 
 const routes = [
@@ -42,6 +43,11 @@ const routes = [
      path: '/logout',
      name: 'Logout',
      component: Logout
+   },
+   {
+     path: '/admin',
+     name: 'Admin',
+     component: Admin
    },
    {
      path: '/dashboard',
