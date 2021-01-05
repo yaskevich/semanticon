@@ -1,5 +1,6 @@
 <template>
   <div class="p-shadow-12 p-component result-item">
+    {{datum}}
     <router-link :to="{ name: 'Phrase', params: { id: datum.eid1 } }" tag="li" class="nounderline">
       <Button class="p-button-link">
         <span v-for="(v, k) in data.exprs[datum[datum.main]]" :key="k">

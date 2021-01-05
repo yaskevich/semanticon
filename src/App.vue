@@ -83,7 +83,7 @@ body {
   display: inline-block; */
   /* height: 100px; */
   /* width: 100%; */
-  background-color: rgb(200, 200, 200);
+  background-color: lightblue;
 }
 #content {
   /* min-height:80vh; */
@@ -94,10 +94,12 @@ body {
   color: #2c3e50;
 }
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: blue;
 }
 #footer {
-  background-color:pink;
+  background-color:#2E86C1;
+  color:white;
+  padding: .2rem;
   margin-top:auto;
 }
 .nowrap {
