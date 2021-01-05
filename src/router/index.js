@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../components/Home.vue'
+// import Home from '../components/Home.vue'
+import SimpleSearch from '../components/SimpleSearch.vue'
 import About from '../components/About.vue'
 import PhraseListScreen from '../components/PhraseListScreen.vue'
 import UnitListScreen from '../components/UnitListScreen.vue'
@@ -12,7 +13,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: SimpleSearch
   },
   {
     path: '/about',
