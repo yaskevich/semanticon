@@ -101,6 +101,7 @@ body {
   color:white;
   padding: .2rem;
   margin-top:auto;
+  text-align:center;
 }
 .nowrap {
   white-space: nowrap;
