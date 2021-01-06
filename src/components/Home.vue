@@ -11,7 +11,7 @@
 		@complete="search($event)"
 		@item-select="getSelection($event)">
 			<template #item="slotProps">
-					<span>{{slotProps.item.txt.join(' ').replace(' -', '-')}}</span>
+					<span>{{slotProps.item.name}}</span>
 						<!-- <span v-for="(v, i) in slotProps.item.arr" :key="i">
 							<span v-if="v === token" class="match">{{v}}</span>
 							<span v-else>{{v}}</span>
@@ -44,14 +44,11 @@ export default {
 		let matches = ref({});
 
 		const getSelection = (e) => {
-			// console.log(e.value.indx, data.tokens.keys[e.value.indx]);
-			const indx = e.value.indx;
-			const id = data.tokens.keys[indx];
-			const exprs = data.exprs;
+			const indx = e.value.key;
 			const results = [];
 
-			for (let [key, value] of Object.entries(exprs)) {
-				if (value.includes(id)){
+			for (let key of Object.keys(data.exprs)) {
+				if (indx === key){
 					const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == key ? i : []);
 					const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
 					// console.log("index", titles, "for", key, value);
@@ -59,7 +56,7 @@ export default {
 					const variant = {
 						"eid1": titles[0],
 						"eid": key,
-						"main" : !data.exprs[titles[0]].includes(id)? "eid" : "eid1"
+						"main" : !data.exprs[titles[0]].includes(key)? "eid" : "eid1"
 					};
 					if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
 							results.push(variant);
@@ -70,10 +67,11 @@ export default {
       // router.push("/results")
 		};
 		const search = (e) => {
+			const results = [];
 			const queryChunks = e.query
-				.split(/\s|(?=-)/g) // что-то!
+				.split(/\s|(?=-)/g)
 				.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
-			// console.log("split", "|"+queries+"|");
+
 			token.value = queryChunks.join(' ').replace(' -', '-');
 			const queries = queryChunks.filter(x => x);
 			const phraseVariants = new Array(queries.length).fill(null).map(()=>[]);
@@ -89,21 +87,18 @@ export default {
 				}
 			}
 
-			const results = [];
-			const phraseVariantsLast = phraseVariants.length-1;
-			const [head] = phraseVariants.slice(0, phraseVariantsLast);
-			if (phraseVariants.length){
+			const phraseVariantsLength = phraseVariants.length;
+			if (phraseVariantsLength){
+				const phraseVariantsLast = phraseVariantsLength-1;
+				const [head] = phraseVariants.slice(0, phraseVariantsLast);
 				for (let [key, value] of Object.entries(data.exprs)) {
 						let needToLookHead = false;
 						// if there are more than 1 token in query
 						// must check all that before last
 						// whether all they are in value
 						if (phraseVariantsLast){
-							// console.log("long", value, phraseVariants.slice(0, phraseVariantsLast));
-							// console.log("h", JSON.stringify(head));
 							if (head.every(v => value.includes(v))) {
 								needToLookHead = true;
-								// console.log("yep", key);
 							}
 						} else {
 							needToLookHead = true;
@@ -113,7 +108,7 @@ export default {
 								const phrase = value.map(x => data.tokens.values[data.tokens.keys.findIndex(y=>y==x)]);
 								// const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
 								// const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
-								results.push({ "txt": phrase, "key": key });
+								results.push({ "txt": phrase, "key": key, "name": phrase.join(' ').replace(' -', '-') });
 								// if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
 								// 		results.push(variant);
 								// 	}
