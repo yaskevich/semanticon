@@ -1,28 +1,27 @@
 <template>
   <div class="p-component">
 		<div class="div-container" style="margin-top:2rem;">
-      <!-- <h3>Поиск</h3> -->
-  <AutoComplete v-model="token"
-		:suggestions="searchVariants"
-		:minLength="Number(2)"
-		placeholder="Впишите слово"
-		field="name"
-		scrollHeight="200"
-		@complete="search($event)"
-		@item-select="getSelection($event)">
-			<template #item="slotProps">
-					<span>{{slotProps.item.name}}</span>
-						<!-- <span v-for="(v, i) in slotProps.item.arr" :key="i">
-							<span v-if="v === token" class="match">{{v}}</span>
-							<span v-else>{{v}}</span>
-						</span> -->
-			</template>
-	</AutoComplete>
-	<SelectButton v-model="value1" :options="options"  class="switcher"/>
+		<AutoComplete v-model="token"
+			:suggestions="searchVariants"
+			:minLength="Number(2)"
+			placeholder="Впишите слово"
+			field="name"
+			scrollHeight="200"
+			@complete="autocomplete($event)"
+			@item-select="renderSelected($event)">
+				<template #item="slotProps">
+						<span>{{slotProps.item.name}}</span>
+							<!-- <span v-for="(v, i) in slotProps.item.arr" :key="i">
+								<span v-if="v === token" class="match">{{v}}</span>
+								<span v-else>{{v}}</span>
+							</span> -->
+				</template>
+		</AutoComplete>
+		<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"/>
 
 		<div v-for="(value, key) in matches" :key="key">
-		<SearchResults :datum="value" :num="Number(key)" :data="data"/>
-	</div>
+			<SearchResults :datum="value" :num="Number(key)" :data="data"/>
+		</div>
 	</div>
 </div>
 </template>
@@ -38,12 +37,13 @@ export default {
 	name: "Search",
 	setup(){
 		const data = store.state.config;
+		const switchStateOptions = [{"name": 'Русский', "code": 'ru'}, {"name":'Перевод', "code": "none"}];
 		let searchVariants = ref(null);
-
 		let token =  ref(null);
 		let matches = ref({});
+		let switchState = ref('ru');
 
-		const getSelection = (e) => {
+		const renderSelected = (e) => {
 			const indx = e.value.key;
 			const results = [];
 
@@ -66,7 +66,8 @@ export default {
 			matches.value = results;
       // router.push("/results")
 		};
-		const search = (e) => {
+		const autocomplete = (e) => {
+			console.log("mode", switchState.value);
 			const results = [];
 			const queryChunks = e.query
 				.split(/\s|(?=-)/g)
@@ -120,7 +121,7 @@ export default {
 			searchVariants.value = results;
 		};
 
-		return { getSelection, search, data, searchVariants, token, matches, checked:false, value1: 'Русский', options: ['Русский', 'Перевод'], };
+		return { autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions };
 	},
 	components: {
 		SearchResults, SelectButton
