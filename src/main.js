@@ -9,6 +9,7 @@ import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
+import SelectButton from 'primevue/selectbutton';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
@@ -78,6 +79,7 @@ document.title = pvLocale.title;
 
 
 
+app.component('SelectButton', SelectButton);
 app.component('InputSwitch', InputSwitch);
 app.component('MultiSelect', MultiSelect);
 app.component('Inplace', Inplace);

@@ -1,10 +1,22 @@
 <template>
   <!-- <div v-if="errors.phrases">{{ errors.phrases }}</div> -->
   <!-- <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" /> -->
-    <Dropdown v-model="selectedSemfunc" :options="semfuncArray" optionLabel="name" placeholder="Выберите функцию" scrollHeight="300" showClear="true" class="semfunc"/>
-  <MultiSelect v-model="semtone"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="semtoneResult" optionLabel="name" placeholder="Выберите оттенок" display="chip" class="semtone" />
-  <!-- {{semtone}} -->
-
+  <div class="p-grid">
+    <div class="p-col" style="text-align:center;">
+      <Dropdown v-model="selectedSemfunc" :options="semfuncArray" optionLabel="name" placeholder="Выберите функцию" scrollHeight="300" :showClear="true" class="semfunc"/>
+    </div>
+    <div class="p-col">
+      <MultiSelect v-model="semtone"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="semtoneResult" optionLabel="name" placeholder="Выберите оттенок" display="chip" class="semtone" />
+    </div>
+  </div>
+<div class="p-grid">
+  <div class="p-col" style="text-align:center;">
+    <Button label="Выберите речевой акт" icon="pi pi-check" iconPos="right" class="semtone" />
+  </div>
+  <div class="p-col" style="text-align:center;">
+    <SelectButton v-model="parts" :options="partsOptions"  class="semtone" optionLabel="name" optionValue="code" style="float:left;" />
+  </div>
+</div>
   <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" />
 </template>
 <script>
@@ -23,7 +35,9 @@ export default {
     // const id = router.params.id;
     console.log(routerInfo.params);
 
+    const partsOptions = [{"name": '2-хчастная', "code": 2}, {"name":'3-хчастная', "code": 3}];
     const data  = store.state.config;
+		let parts = ref(2);
 		let semtone = ref(null);
     let selectedSemfunc = ref(null);
     if (routerInfo.params.id) {
@@ -75,7 +89,7 @@ export default {
       // }
     });
   return { data, eids, semtone, semtoneResult, updateRoute, selectedSemfunc,
-semfuncArray };
+semfuncArray, parts, partsOptions };
 },
   components: {
     // eslint-disable-next-line vue/no-unused-components

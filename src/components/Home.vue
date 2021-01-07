@@ -29,7 +29,6 @@
 <script>
 import store from "@/modules/store";
 import SearchResults from "./SearchResults.vue";
-import SelectButton from 'primevue/selectbutton';
 // import router from "../router"
 // eslint-disable-next-line no-unused-vars
 import { unref, ref, computed } from "vue";
@@ -124,12 +123,12 @@ export default {
 		return { autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions };
 	},
 	components: {
-		SearchResults, SelectButton
+		SearchResults
 	}
 }
 </script>
 
-<style>
+<style scoped>
 .match{
 	font-weight: bold;
 }
