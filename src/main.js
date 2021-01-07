@@ -47,7 +47,8 @@ const pvLocale = {
     },
     phrase: {
       extrequired : "требуется продолжение",
-      semantics: "семантика",
+      semfunc: "семантика",
+      semtone: "оттенок",
       translations: "переводные аналоги",
       act1: "речевой акт 1",
       actclass:  "тип речевого акта",

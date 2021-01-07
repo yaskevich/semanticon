@@ -117,7 +117,7 @@ export default {
 						}
 				}
 			}
-			console.log("results", JSON.stringify(results));
+			console.log("results", results.length);
 			searchVariants.value = results;
 		};
 

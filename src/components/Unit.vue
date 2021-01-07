@@ -24,28 +24,31 @@
             <span class="desc">{{value}} </span>
           </span>
 
-          <span v-else-if="['act1', 'actclass', 'extension', 'gest', 'organ'].includes(name)">
+          <span v-else-if="['act1', 'actclass', 'extension', 'gest', 'organ', 'semtone'].includes(name)">
             <span class="desc">{{value}}: </span>
-            <span v-for="item in unit[name]" :key="item">
-              <!-- <Chip :label="data.features[a]" /> -->
-              <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
-            </span>
+            <!-- <template v-if="unit[name].length"> -->
+              <span v-for="item in unit[name]" :key="item">
+                <!-- <Chip :label="data.features[a]" /> -->
+                <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+              </span>
+          <!-- </template> -->
           </span>
 
-          <span v-else-if="name === 'semantics'">
-            <span class="desc">{{value}}: </span>
-            <span v-for="item in unit[name]" :key="item">
-              <!-- <Button :label="data.features[item][0]" class="p-button-raised p-button-rounded p-button-sm" /> -->
-
-              <router-link :to="{ name: 'List', params: { prop: name, id: item } }" tag="li" class="interactive">
-                {{data.features[item][0]}}
+          <span v-else-if="name  === 'semfunc'">
+            <span v-if="data.features[unit[name]] && data.features[unit[name]][0]">
+              <span class="desc">{{value}}: </span>
+              <router-link :to="{ name: 'List', params: { prop: name, id: unit[name] } }" tag="li" class="interactive">
+                {{data.features[unit[name]][0]}}
               </router-link>
-              <!-- <a :href="'/search/' + name + '/' +item" class="interactive">
-
-              </a> -->
-
             </span>
           </span>
+
+          <!-- <span v-else-if="name === 'semtone'">
+            <span class="desc">{{value}}: </span>
+            <span v-for="item in unit[name]" :key="item">
+                {{data.features[item][0]}}
+            </span>
+          </span> -->
 
           <span v-else-if="['intonation', 'style'].includes(name)">
             <span v-if="data.features[unit[name]] && data.features[unit[name]][0]">
