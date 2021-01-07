@@ -14,8 +14,7 @@ const pool = new Pool();
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // global objects
 const tokenIds = {};
@@ -42,8 +41,8 @@ const langCodes = {
 const mappingRuEn = {
   'ДФ': "unit",
   'требуется продолжение': "extrequired",
-  'основная семантика': "semantics1",
-  'дополнительная семантика': "semantics",
+  'основная семантика': "semfunc",
+  'дополнительная семантика': "semtone",
   'речевой акт 1 (для трехчастных)': "act1",
   'тип речевого акта (собеседник)': "actclass",
   'о ситуации': "situation",
@@ -70,7 +69,8 @@ const schemes = {
     id SERIAL PRIMARY KEY,
     pid integer not null,
     extrequired boolean not null default false,
-    semantics jsonb,
+    semfunc integer,
+    semtone jsonb,
     act1 jsonb, 
     actclass jsonb,
     situation text,
@@ -121,9 +121,9 @@ const phrasesInsert = `INSERT INTO phrases (phrase) VALUES($1) RETURNING pid`;
 const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const transInsert = `INSERT INTO translations (txt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
-const unitsInsert = `INSERT INTO units (pid, extrequired, semantics, act1, 
+const unitsInsert = `INSERT INTO units (pid, extrequired, semfunc, semtone, act1, 
 					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video, style, comment, construction)
-                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
                     RETURNING *`;
 
 async function checkMedia(fld, content){
@@ -149,7 +149,7 @@ async function checkMedia(fld, content){
 				// let crypto = require('crypto');
 				// let md5CheckSum = crypto.createHash('md5').update(dataToConvert).digest("hex");
 				
-				const pd = Reflect.getOwnPropertyDescriptor(mediaIds, hash)
+				const pd = Reflect.getOwnPropertyDescriptor(mediaIds, hash);
 				if (!pd) {
 					const result  = await pool.query(mediaInsert, [filename.substring(0, filename.length - fileext.length), hash, fileext]);
 					mediaIds[hash] = result.rows[0].id;
@@ -197,7 +197,7 @@ async function vectorizeTokens(content){
 	const exprsArr = [];
 	
     for (let i=0; i < unitsArr.length; i++) {
-        const tokensArr = unitsArr[i].split(/\s|(?=-)/g);
+        const tokensArr = unitsArr[i].trim().split(/\s|(?=-)/g);
         const tokensArrVector = [];
         for (let t=0; t < tokensArr.length; t++) {
             const tkn = tokensArr[t].trim();
@@ -222,7 +222,7 @@ async function vectorizeTokens(content){
 			}					
 		}
 		// console.error(unitsArr[i], exprIds[exprSerialized]);
-		exprsArr.push(exprIds[exprSerialized])
+		exprsArr.push(exprIds[exprSerialized]);
         unitsArrVector.push(tokensArrVector);
     }
     // console.timeEnd();
@@ -392,7 +392,7 @@ async function processFile(fileName) {
 			rowNumber = n+2;
 			const row = csvArr[n];
             const values = [];
-            let semantics1 = "";
+            
             for (let i=0; i < row.length; i++) {
                 const data  = row[i];
                 const fieldEn = dict[i];
@@ -412,10 +412,8 @@ async function processFile(fileName) {
                     values.push(phraseIds[vector]);
                 } else if(fieldEn  === "extrequired") {
                     values.push(data?1:0);
-                } else if(fieldEn  === "semantics1") {
-                    semantics1 = data;
-                } else if(fieldEn === "semantics") {
-                    const result = await checkFeatureArray(fieldEn, semantics1 + "|" + data);
+                } else if(fieldEn === "semtone") {
+                    const result = await checkFeatureArray(fieldEn, data);
                     values.push(result);
                 } else if(["act1", "extension", "gest", "organ"].includes(fieldEn)) {
 						let datum = data;
@@ -438,7 +436,10 @@ async function processFile(fileName) {
                     // !!! empty I treat as two-parts !!!
                     // parts boolean not null default false,
                     values.push(data==="трехчастная"?1:0);
-                } else if(["intonation", "style"].includes(fieldEn)) {
+                } else if(["semfunc", "intonation", "style"].includes(fieldEn)) {
+					if(fieldEn=== 'semfunc' && !data) {
+                        console.error(rowNumber, fieldEn, "<EMPTY>");
+                    }
                     const result = await checkFeature(fieldEn, data);
                     values.push(result);
                 } else if(fieldEn === "mods") {
