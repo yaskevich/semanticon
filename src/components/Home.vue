@@ -5,16 +5,16 @@
 			:suggestions="searchVariants"
 			:minLength="Number(2)"
 			placeholder="Впишите слово"
-			field="name"
+			field="txt"
 			scrollHeight="200"
 			@complete="autocomplete($event)"
 			@item-select="renderSelected($event)">
 				<template #item="slotProps">
-						<span>{{slotProps.item.name}}</span>
-							<!-- <span v-for="(v, i) in slotProps.item.arr" :key="i">
-								<span v-if="v === token" class="match">{{v}}</span>
-								<span v-else>{{v}}</span>
-							</span> -->
+					<span v-if="slotProps.item.hasOwnProperty('lang')">
+						<!-- <img :alt="slotProps.item.lang" :src="'demo/images/car/' + slotProps.value.brand + '.png'" /> -->
+						<img :alt="$primevue.config.locale.lang[slotProps.item.lang]" :src="'/api/media/flags/'+slotProps.item.lang+ '.svg'" class="mini-flag"/>
+					</span>
+					<span>{{slotProps.item.txt}}</span>
 				</template>
 		</AutoComplete>
 		<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"/>
@@ -68,55 +68,67 @@ export default {
 		const autocomplete = (e) => {
 			console.log("mode", switchState.value);
 			const results = [];
-			const queryChunks = e.query
-				.split(/\s|(?=-)/g)
-				.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
 
-			token.value = queryChunks.join(' ').replace(' -', '-');
-			const queries = queryChunks.filter(x => x);
-			const phraseVariants = new Array(queries.length).fill(null).map(()=>[]);
+			if (switchState.value === 'ru') {
+				const queryChunks = e.query
+					.split(/\s|(?=-)/g)
+					.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
 
-			const queriesLength = queries.length;
-			const last = queriesLength-1;
+				token.value = queryChunks.join(' ').replace(' -', '-');
+				const queries = queryChunks.filter(x => x);
+				const phraseVariants = new Array(queries.length).fill(null).map(()=>[]);
 
-			for(let i=0; i<data.tokens.values.length; i++){
-				for(let ii=0; ii<queriesLength; ii++){
-					if (ii === last ? data.tokens.values[i].startsWith(queries[ii]) : data.tokens.values[i] === queries[ii]){
-							phraseVariants[ii].push(data.tokens.keys[i]);
+				const queriesLength = queries.length;
+				const last = queriesLength-1;
+
+				for(let i=0; i<data.tokens.values.length; i++){
+					for(let ii=0; ii<queriesLength; ii++){
+						if (ii === last ? data.tokens.values[i].startsWith(queries[ii]) : data.tokens.values[i] === queries[ii]){
+								phraseVariants[ii].push(data.tokens.keys[i]);
+						}
+					}
+				}
+
+				const phraseVariantsLength = phraseVariants.length;
+				if (phraseVariantsLength){
+					const phraseVariantsLast = phraseVariantsLength-1;
+					const [head] = phraseVariants.slice(0, phraseVariantsLast);
+					for (let [key, value] of Object.entries(data.exprs)) {
+							let needToLookHead = false;
+							// if there are more than 1 token in query
+							// must check all that before last
+							// whether all they are in value
+							if (phraseVariantsLast){
+								if (head.every(v => value.includes(v))) {
+									needToLookHead = true;
+								}
+							} else {
+								needToLookHead = true;
+							}
+							if (needToLookHead) {
+								if(phraseVariants[phraseVariantsLast].some(v => value.includes(v))) {
+									const phrase = value.map(x => data.tokens.values[data.tokens.keys.findIndex(y=>y==x)]);
+									// const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
+									// const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
+									results.push({ "arr": phrase, "key": key, "txt": phrase.join(' ').replace(' -', '-') });
+									// if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+									// 		results.push(variant);
+									// 	}
+								}
+							}
+					}
+				}
+				console.log("results", results.length);
+			} else {
+				const query = e.query.replace(/[.*+?^${}()|[\]\\]/g, '');
+				console.log("in trans", query);
+				token.value = query;
+				for (let value of Object.values(data.trans)) {
+					if (value.txt.includes(query)) {
+						results.push(value);
 					}
 				}
 			}
-
-			const phraseVariantsLength = phraseVariants.length;
-			if (phraseVariantsLength){
-				const phraseVariantsLast = phraseVariantsLength-1;
-				const [head] = phraseVariants.slice(0, phraseVariantsLast);
-				for (let [key, value] of Object.entries(data.exprs)) {
-						let needToLookHead = false;
-						// if there are more than 1 token in query
-						// must check all that before last
-						// whether all they are in value
-						if (phraseVariantsLast){
-							if (head.every(v => value.includes(v))) {
-								needToLookHead = true;
-							}
-						} else {
-							needToLookHead = true;
-						}
-						if (needToLookHead) {
-							if(phraseVariants[phraseVariantsLast].some(v => value.includes(v))) {
-								const phrase = value.map(x => data.tokens.values[data.tokens.keys.findIndex(y=>y==x)]);
-								// const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
-								// const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
-								results.push({ "txt": phrase, "key": key, "name": phrase.join(' ').replace(' -', '-') });
-								// if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
-								// 		results.push(variant);
-								// 	}
-							}
-						}
-				}
-			}
-			console.log("results", results.length);
 			searchVariants.value = results;
 		};
 
@@ -142,5 +154,13 @@ export default {
 .switcher{
 	line-height: .2rem;
 	margin-top: .4rem;
+}
+.mini-flag{
+	height: 1rem;
+	border: 1px solid gray;
+	margin-right: .3rem;
+}
+.p-autocomplete {
+	text-align:left;
 }
 </style>
