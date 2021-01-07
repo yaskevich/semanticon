@@ -17,7 +17,7 @@
 					<span>{{slotProps.item.txt}}</span>
 				</template>
 		</AutoComplete>
-		<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"/>
+		<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
 
 		<div v-for="(value, key) in matches" :key="key">
 			<SearchResults :datum="value" :num="Number(key)" :data="data"/>
@@ -42,31 +42,51 @@ export default {
 		let matches = ref({});
 		let switchState = ref('ru');
 
+		const handleSwitchState = () => {
+			token.value= '';
+			matches.value = [];
+		};
 		const renderSelected = (e) => {
 			const indx = e.value.key;
 			const results = [];
 
-			for (let key of Object.keys(data.exprs)) {
-				if (indx === key){
-					const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == key ? i : []);
-					const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
-					// console.log("index", titles, "for", key, value);
-					// console.log(data.exprs[titles[0]], id);
-					const variant = {
-						"eid1": titles[0],
-						"eid": key,
-						"main" : !data.exprs[titles[0]].includes(key)? "eid" : "eid1"
-					};
-					if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
-							results.push(variant);
-						}
+			if (switchState.value === 'ru') {
+				for (let key of Object.keys(data.exprs)) {
+					if (indx === key){
+						const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == key ? i : []);
+						const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
+						const variant = {
+							"eid1": titles[0],
+							"eid": key,
+							"main" : !data.exprs[titles[0]].includes(key)? "eid" : "eid1"
+						};
+						if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+								results.push(variant);
+							}
+					}
+				}
+			} else {
+				// console.log(e.value);
+				for (let unit of Object.values(data.units)) {
+					const pd  = Reflect.getOwnPropertyDescriptor(unit, "translations");
+					// console.log("pd", JSON.stringify(pd));
+					if (pd && pd.value.includes(e.value.id)){
+						console.log(unit.eid1);
+						results.push({
+							"eid1": unit.eid1,
+							"main" : 'eid1',
+							"txt": e.value.txt
+						});
+					}
+					// console.log("kek");
 				}
 			}
 			matches.value = results;
+			// console.log("results", results);
       // router.push("/results")
 		};
 		const autocomplete = (e) => {
-			console.log("mode", switchState.value);
+			// console.log("mode", switchState.value);
 			const results = [];
 
 			if (switchState.value === 'ru') {
@@ -118,10 +138,10 @@ export default {
 							}
 					}
 				}
-				console.log("results", results.length);
+				console.log("results qty", results.length);
 			} else {
 				const query = e.query.replace(/[.*+?^${}()|[\]\\]/g, '');
-				console.log("in trans", query);
+				// console.log("in trans", query);
 				token.value = query;
 				for (let value of Object.values(data.trans)) {
 					if (value.txt.includes(query)) {
@@ -132,7 +152,7 @@ export default {
 			searchVariants.value = results;
 		};
 
-		return { autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions };
+		return { autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions, handleSwitchState };
 	},
 	components: {
 		SearchResults
