@@ -24,7 +24,7 @@ export default {
 
 <style scoped>
 .result-item {
-  /* text-align:center; */
+  text-align:center;
   padding: 1rem;
   margin: 2rem;
 }

@@ -94,8 +94,8 @@
               </span>
               <span v-else>{{v.syn}}
               </span> -->
-                {{v.syn}}
-                <span v-if="v.hasOwnProperty('link') && v['link']">
+
+                {{v.syn}}&nbsp;<span v-if="v.hasOwnProperty('link') && v['link']">
                   <a :href="v.link" target="_blank"><i class='pi pi-external-link' style='color: blue;'></i></a>
                 </span>
             </div>
@@ -152,8 +152,9 @@ export default {
   },
   setup (){
     return {
-      a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>", // 🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>
-      b: "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>" //🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>
+      a: 'А', b: 'Б'
+      // a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>", // 🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>
+      // b: "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>" //🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>
       ,
     }
   }
