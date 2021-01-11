@@ -11,7 +11,9 @@
   </div>
 <div class="p-grid">
   <div class="p-col" style="text-align:center;">
-    <Button label="Выберите речевой акт" icon="pi pi-check" iconPos="right" class="semtone" />
+    <MultiSelect v-model="actclass"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="actclassResult" optionLabel="name" placeholder="Выберите речевой акт" display="chip" class="semtone" />
+
+    <!-- <Button label="Выберите речевой акт" icon="pi pi-check" iconPos="right" class="semtone" /> -->
   </div>
   <div class="p-col" style="text-align:center;">
     <SelectButton v-model="parts" :options="partsOptions"  class="semtone" optionLabel="name" optionValue="code" style="float:left;" />
@@ -39,15 +41,20 @@ export default {
     const data  = store.state.config;
 		let parts = ref(2);
 		let semtone = ref(null);
+		let actclass = ref(null);
     let selectedSemfunc = ref(null);
     if (routerInfo.params.id) {
       semtone.value = [{"value": routerInfo.params.id, "name": data.features[routerInfo.params.id][0]}];
     }
-    let semtoneResult = ref({});
+    let semtoneResult = ref([]);
+    let actclassResult = ref([]);
     let eids = ref([]);
     eids.value = Object.keys(store.state.config.toc);
 
     const semfuncArray = Object.keys(data.features).filter(x => data.features[x][1]==="semfunc").map(x => ({"value": x, "name": data.features[x][0]}));
+
+
+    actclassResult.value = Object.keys(data.features).filter(x => data.features[x][1]==="actclass").map(x => ({"value": x, "name": data.features[x][0]}));
 
     semtoneResult.value  = Object.keys(data.features).filter(x => data.features[x][1]==="semtone").map(x => ({"value": x, "name": data.features[x][0]}));
 
@@ -89,7 +96,7 @@ export default {
       // }
     });
   return { data, eids, semtone, semtoneResult, updateRoute, selectedSemfunc,
-semfuncArray, parts, partsOptions };
+semfuncArray, parts, partsOptions, actclass, actclassResult };
 },
   components: {
     // eslint-disable-next-line vue/no-unused-components
