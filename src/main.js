@@ -18,9 +18,9 @@ import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
 import Inplace from 'primevue/inplace';
 import MultiSelect from 'primevue/multiselect';
-import Tag from 'primevue/tag';
+// import Tag from 'primevue/tag';
 // import Chip from 'primevue/chip';
-import Panel from 'primevue/panel';
+// import Panel from 'primevue/panel';
 import InputSwitch from 'primevue/inputswitch';
 
 const app = createApp(App);
@@ -73,7 +73,7 @@ app.use(PrimeVue, {
     locale: pvLocale
 });
 app.use(ToastService);
-app.use(Panel);
+// app.use(Panel);
 app.use(router);
 document.title = pvLocale.title;
 
@@ -88,6 +88,6 @@ app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);
 app.component('Toast', Toast);
 app.component('Divider', Divider);
-app.component('Tag', Tag);
+// app.component('Tag', Tag);
 // app.component('Chip', Chip);
 app.mount('#app')
