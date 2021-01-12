@@ -1,24 +1,22 @@
 <template>
   <!-- <div v-if="errors.phrases">{{ errors.phrases }}</div> -->
   <!-- <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" /> -->
+
   <div class="p-grid">
     <div class="p-col" style="text-align:center;">
       <Dropdown v-model="selectedSemfunc" :options="semfuncArray" optionLabel="name" placeholder="Выберите функцию" scrollHeight="300" :showClear="true" class="semfunc"/>
     </div>
     <div class="p-col">
-      <MultiSelect v-model="semtone"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="semtoneResult" optionLabel="name" placeholder="Выберите оттенок" display="chip" class="semtone" />
+      <SelectButton v-model="parts" :options="partsOptions"  class="semtone" optionLabel="name" optionValue="code" style="float:left;" />
     </div>
   </div>
-<div class="p-grid">
-  <div class="p-col" style="text-align:center;">
-    <MultiSelect v-model="actclass"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="actclassResult" optionLabel="name" placeholder="Выберите речевой акт" display="chip" class="semtone" />
+  <div class="p-d-flex p-flex-column p-mb-2">
+    <MultiSelect v-model="semtone"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="semtoneResult" optionLabel="name" placeholder="Выберите оттенок" display="chip" class="" />
+  </div>
+  <div class="p-d-flex p-flex-column">
+    <MultiSelect v-model="actclass"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="actclassResult" optionLabel="name" placeholder="Выберите речевой акт" display="chip"/>
+  </div>
 
-    <!-- <Button label="Выберите речевой акт" icon="pi pi-check" iconPos="right" class="semtone" /> -->
-  </div>
-  <div class="p-col" style="text-align:center;">
-    <SelectButton v-model="parts" :options="partsOptions"  class="semtone" optionLabel="name" optionValue="code" style="float:left;" />
-  </div>
-</div>
   <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" />
 </template>
 <script>
@@ -106,7 +104,10 @@ semfuncArray, parts, partsOptions, actclass, actclassResult };
 };
 </script>
 
-<style scoped>
+<style>
+.p-dropdown-items{
+  text-align:left;
+}
 .semfunc {
   width: 15rem;
   margin: .3rem;
