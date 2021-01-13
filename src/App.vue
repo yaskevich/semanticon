@@ -11,10 +11,34 @@
   <div id="content">
     <router-view />
   </div>
-  <div id="footer" class="p-component p-mt-4">
-     &copy; 2020—2021, «Дискурсивные формулы». НИУ ВШЭ, Школа лингвистики.
+  <div id="footer" class="p-component p-mt-4 back-1">
+    <div class="p-grid p-p-4">
+      <div class="p-col">
+      <div>Контакты:
+          discourseformulae@gmail.com
+        </div>
+        <div class="p-p-2">
+          <img src="/api/media/constructicon.png" style="max-height:5rem;"/>
+        </div>
+      </div>
+    <div class="p-col">
+      <div>О проекте</div>
+      <div>Как пользоваться сайтом</div>
+      <div>Русский Конструктикон</div>
+    </div>
+    </div>
       <!-- <pre>store.state: {{ state }}</pre>
       <pre>store.state: {{ isAuth() }}</pre> -->
+  </div>
+  <div id="footer" class="p-component back-1">
+    <div class="p-grid p-pr-4 p-pl-4">
+      <div class="p-col">
+          2021, Прагматикон
+      </div>
+      <div class="p-col">
+        Школа лингвистики НИУ ВШЭ
+      </div>
+    </div>
   </div>
   </div>
   <div v-else>
@@ -61,8 +85,19 @@ export default {
 body {
 }
 
+.back-1 {
+  background-color:#E8EDDF;
+}
+.back-2 {
+  background-color:#CFDBD5;
+}
+.back-3 {
+  background-color:#F5CB5C;
+}
+
 .p-component {
   font-family: 'Montserrat', sans-serif !important;
+  line-height: 1.5;
 }
 
 #app {
@@ -102,11 +137,11 @@ body {
   color: blue;
 }
 #footer {
-  background-color:#2E86C1;
+  /* background-color:#2E86C1;
   color:white;
   padding: .2rem;
   margin-top:auto;
-  text-align:center;
+  text-align:center; */
 }
 .nowrap {
   white-space: nowrap;
