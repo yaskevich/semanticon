@@ -1,7 +1,7 @@
 <template >
   <div id="main" v-if="dataReady">
   <div id="nav" class="p-component" style="text-align: center;">
-    <router-link to="/">{{$primevue.config.locale.home}}</router-link> |
+    <router-link to="/">PRAGMATICON</router-link> |
     <router-link to="/home">{{$primevue.config.locale.filtering}}</router-link> |
     <router-link to="/about"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
     <!-- | -->
@@ -11,7 +11,7 @@
   <div id="content">
     <router-view />
   </div>
-  <div id="footer" class="p-component">
+  <div id="footer" class="p-component p-mt-4">
      &copy; 2020—2021, «Дискурсивные формулы». НИУ ВШЭ, Школа лингвистики.
       <!-- <pre>store.state: {{ state }}</pre>
       <pre>store.state: {{ isAuth() }}</pre> -->
@@ -76,14 +76,14 @@ body {
    margin: auto;
 }
 #nav {
-  padding: 2rem;
+  /* padding: 2rem; */
   /* display: flex;
   flex-direction: row;
   justify-content: center;
   display: inline-block; */
   /* height: 100px; */
   /* width: 100%; */
-  background-color: lightblue;
+  /* background-color: lightblue; */
 }
 #content {
   /* min-height:80vh; */

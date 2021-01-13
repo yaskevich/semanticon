@@ -1,12 +1,19 @@
 <template>
+	<div class="p-component p-mt-4">
+		<div class="p-col " style="text-align:center;">
+		<div class="p-jc-center">База данных дискурсивных формул русского языка</div>
+		<div>[Для студентов и преподавателей РКИ]</div>
+		</div>
+	</div>
 	<div class="p-grid p-jc-center">
+
 	<div class="p-component">
 		<div class="p-inputgroup autocomplete-container p-col">
 			<AutoComplete v-model="token"
 				:suggestions="searchVariants"
 				ref="searchInstance"
 				:minLength="Number(2)"
-				placeholder="Впишите слово"
+				placeholder="да ладно"
 				field="txt"
 				scrollHeight="200"
 				@keyup.enter="renderMatches($event)"
@@ -29,6 +36,43 @@
 		<SearchResults v-for="(value, key) in matches" :datum="value" :num="Number(key)" :data="data" :key="key"/>
 	</div>
 </div>
+<div class="p-component">
+	<div class="explain-header p-mt-4">Что такое дискурсивные формулы?</div>
+	<div class="p-ml-4">Короткие устойчивые ответы, которые мы используем в разговорной речи.
+		<div>Например — <span class="cite">Не говори!</span> <span class="cite">Как скажешь!</span> или <span class="cite">Да ладно!</span></div>
+		<div>В основном формулы выражают положительные или отрицательные реакции на слова собеседника. Можно сказать, что в большинстве они — синонимы Да и Нет, но с дополнительными оттенками значения.</div>
+</div>
+</div>
+<div class="p-component p-mt-6">
+	<div style="text-align:center;">
+		<img src="/api/media/no-meme.jpg" style="max-height:10rem;"/>
+	</div>
+</div>
+<div class="p-component">
+	<div class="explain-header p-mt-4">В чем задача Прагматикона?</div>
+	<div class="p-ml-4">
+		<div>Формулы редко попадают в словари, а угадать их значение бывает непросто.</div>
+		<div>Мы собрали список дискурсивных формул для русского языка и разработали  формат описания, который помогает узнать не только что значит каждая  формула, но и как и когда её употреблять.</div>
+	</div>
+</div>
+
+
+<div class="p-grid p-mt-4">
+	<div class="p-col" style="text-align:center;">
+		<img src="/api/media/constructicon.png" style="max-height:4rem;"/>
+	</div>
+	<div class="p-col">
+		<img src="/api/media/logo_с_hse_cmyk.jpg" style="max-height:5rem;"/>
+	</div>
+</div>
+
+<div class="p-component">
+	<div class="explain-header p-mt-4">Как строится описание?</div>
+	<div class="p-ml-4">
+		<div>Наша база данных — результат исследовательского проекта Школы Лингвистики НИУ ВШЭ <a href="https://ling.hse.ru/" target="_blank"><i class='pi pi-external-link'></i></a>. Содержательно она является частью Russian Constructicon <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
+		<div>Мы используем теоретические рамки Грамматики конструкций и Московской семантической школы и анализируем употребление формул, используя корпусные данные, прежде всего — Национальный корпус русского языка (НКРЯ) <a href="https://ruscorpora.ru/" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
+	</div>
+</div>
 </template>
 
 <script>
@@ -40,7 +84,6 @@ import { unref, ref, computed } from "vue";
 export default {
 	name: "Search",
 	setup(){
-
 		const data = store.state.config;
 		const switchStateOptions = [{"name": 'Русский', "code": 'ru'}, {"name":'Перевод', "code": "none"}];
 		let searchVariants = ref(null);
@@ -200,5 +243,12 @@ export default {
 }
 .p-autocomplete {
 	text-align:left;
+}
+
+.explain-header {
+	font-weight:bold;
+}
+.cite{
+	font-style:italic;
 }
 </style>

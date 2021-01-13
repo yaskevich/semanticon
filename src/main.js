@@ -9,6 +9,7 @@ import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
+
 import SelectButton from 'primevue/selectbutton';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
@@ -18,7 +19,7 @@ import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
 import Inplace from 'primevue/inplace';
 import MultiSelect from 'primevue/multiselect';
-// import Tag from 'primevue/tag';
+import Tag from 'primevue/tag';
 // import Chip from 'primevue/chip';
 // import Panel from 'primevue/panel';
 import InputSwitch from 'primevue/inputswitch';
@@ -88,6 +89,6 @@ app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);
 app.component('Toast', Toast);
 app.component('Divider', Divider);
-// app.component('Tag', Tag);
+app.component('Tag', Tag);
 // app.component('Chip', Chip);
 app.mount('#app')
