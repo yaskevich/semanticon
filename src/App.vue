@@ -60,6 +60,11 @@ export default {
 <style>
 body {
 }
+
+.font {
+  font-family: 'Montserrat', sans-serif;
+}
+
 #app {
   /* display: flex;
   flex-direction: row;

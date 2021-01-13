@@ -8,7 +8,7 @@ import 'primeflex/primeflex.css';
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
-
+import 'typeface-montserrat';
 
 import SelectButton from 'primevue/selectbutton';
 import InputText from 'primevue/inputtext';
