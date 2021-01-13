@@ -61,8 +61,8 @@ export default {
 body {
 }
 
-.font {
-  font-family: 'Montserrat', sans-serif;
+.p-component {
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 #app {

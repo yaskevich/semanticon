@@ -8,7 +8,8 @@ import 'primeflex/primeflex.css';
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
-import 'typeface-montserrat';
+import "@fontsource/montserrat" // Defaults to weight 400 with normal variant.
+import "@fontsource/montserrat/400-italic.css" // Italic variant.
 
 import SelectButton from 'primevue/selectbutton';
 import InputText from 'primevue/inputtext';
