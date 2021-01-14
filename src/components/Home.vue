@@ -121,111 +121,136 @@ export default {
 		const renderMatches = () => {
 			searchInstance.value.hideOverlay();
 			if (typeof token.value === 'object'){
-				console.log("object", token.value);
+				console.log("do nothing: object", token.value);
 			} else {
+				console.log("state", switchState.value);
 				const tokenMatches  = getMatches(token.value);
-				// const tokenMatches  = getMatches(token.value).map(x => x.eid);
-				console.log("getMatches: result", tokenMatches);
-				const variants  = getVariants(tokenMatches);
-				console.log(variants);
-				matches.value = variants;
+				if (switchState.value  === 'ru') {
+					const tokenEids  = tokenMatches.map(x => x.eid);
+					const variants  = getVariants(tokenEids);
+					matches.value = variants;
+				} else {
+					console.log("wow", tokenMatches);
+					const transIds = tokenMatches.map(x => x.id);
+					const variants  = getUnitByTrans(null, transIds);
+					matches.value = variants;
+				}
+				//
 			}
 		};
 
-		const renderSelected = (e) => {
-			console.log("on render", e);
+		const getUnitByTrans = (id, ids) => {
+			const results  = [];
+			for (let unit of Object.values(data.units)) {
+				const pd  = Reflect.getOwnPropertyDescriptor(unit, "translations");
+				if (pd) {
+					if (id) {
+						if (pd.value.includes(id)){
+							results.push({
+								"eid1": unit.eid1,
+								"main" : 'eid1'
+							});
+						}
+					}
+				else if (ids) {
+						for (let i = 0; i < ids.length; i++) {
+							if(pd.value.includes(ids[i])) {
+								results.push({
+									"eid1": unit.eid1,
+									"main" : 'eid1'
+								});
+							}
+						}
+				}
+				}
+			}
+			return results;
+		};
 
-			const results = [];
+		const renderSelected = (e) => {
+			//  get clicked autocomplete item and render it in search resuts block
+			let results = [];
 			if (switchState.value === 'ru') {
 				results.push(getBasicExpr(e.value.eid));
 			} else {
-				// console.log(e.value);
-				for (let unit of Object.values(data.units)) {
-					const pd  = Reflect.getOwnPropertyDescriptor(unit, "translations");
-					// console.log("pd", JSON.stringify(pd));
-					if (pd && pd.value.includes(e.value.id)){
-						console.log(unit.eid1);
-						results.push({
-							"eid1": unit.eid1,
-							"main" : 'eid1',
-							"txt": e.value.txt
-						});
-					}
-				}
+				results = getUnitByTrans(e.value.id);
 			}
 			matches.value = results;
 			console.log("results", results);
       // router.push("/results")
 		};
 
+		const processInput = {
+			"ru": (str) => {
+				const results = [];
+				const queryChunks = str
+					.split(/\s|(?=-)/g)
+					.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
 
+				token.value = queryChunks.join(' ').replace(' -', '-');
+				const queries = queryChunks.filter(x => x);
+				const phraseVariants = new Array(queries.length).fill(null).map(()=>[]);
 
-		const getMatches = (queryString) => {
-			console.log("input", queryString);
-			const results = [];
-			if (token.value) {
-				if (switchState.value === 'ru') {
-					const queryChunks = queryString
-						.split(/\s|(?=-)/g)
-						.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
+				const queriesLength = queries.length;
+				const last = queriesLength-1;
 
-					token.value = queryChunks.join(' ').replace(' -', '-');
-					const queries = queryChunks.filter(x => x);
-					const phraseVariants = new Array(queries.length).fill(null).map(()=>[]);
-
-					const queriesLength = queries.length;
-					const last = queriesLength-1;
-
-					for(let i=0; i<data.tokens.values.length; i++){
-						for(let ii=0; ii<queriesLength; ii++){
-							if (ii === last ? data.tokens.values[i].startsWith(queries[ii]) : data.tokens.values[i] === queries[ii]){
-									phraseVariants[ii].push(data.tokens.keys[i]);
-							}
-						}
-					}
-
-					const phraseVariantsLength = phraseVariants.length;
-					if (phraseVariantsLength){
-						const phraseVariantsLast = phraseVariantsLength-1;
-						const [head] = phraseVariants.slice(0, phraseVariantsLast);
-						for (let [key, value] of Object.entries(data.exprs)) {
-								let needToLookHead = false;
-								// if there are more than 1 token in query
-								// must check all that before last
-								// whether all they are in value
-								if (phraseVariantsLast){
-									if (head.every(v => value.includes(v))) {
-										needToLookHead = true;
-									}
-								} else {
-									needToLookHead = true;
-								}
-								if (needToLookHead) {
-									if(phraseVariants[phraseVariantsLast].some(v => value.includes(v))) {
-										const phrase = value.map(x => data.tokens.values[data.tokens.keys.findIndex(y=>y==x)]);
-										// const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
-										// const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
-										results.push({ "arr": phrase, "eid": key, "txt": phrase.join(' ').replace(' -', '-') });
-										// if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
-										// 		results.push(variant);
-										// 	}
-									}
-								}
-						}
-					}
-					console.log("results qty", results.length);
-				} else {
-					const query = queryString.replace(/[.*+?^${}()|[\]\\]/g, '');
-					// console.log("in trans", query);
-					token.value = query;
-					for (let value of Object.values(data.trans)) {
-						if (value.txt.includes(query)) {
-							results.push(value);
+				for(let i=0; i<data.tokens.values.length; i++){
+					for(let ii=0; ii<queriesLength; ii++){
+						if (ii === last ? data.tokens.values[i].startsWith(queries[ii]) : data.tokens.values[i] === queries[ii]){
+								phraseVariants[ii].push(data.tokens.keys[i]);
 						}
 					}
 				}
+
+				const phraseVariantsLength = phraseVariants.length;
+				if (phraseVariantsLength){
+					const phraseVariantsLast = phraseVariantsLength-1;
+					const [head] = phraseVariants.slice(0, phraseVariantsLast);
+					for (let [key, value] of Object.entries(data.exprs)) {
+							let needToLookHead = false;
+							// if there are more than 1 token in query
+							// must check all that before last
+							// whether all they are in value
+							if (phraseVariantsLast){
+								if (head.every(v => value.includes(v))) {
+									needToLookHead = true;
+								}
+							} else {
+								needToLookHead = true;
+							}
+							if (needToLookHead) {
+								if(phraseVariants[phraseVariantsLast].some(v => value.includes(v))) {
+									const phrase = value.map(x => data.tokens.values[data.tokens.keys.findIndex(y=>y==x)]);
+									// const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
+									// const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
+									results.push({ "arr": phrase, "eid": key, "txt": phrase.join(' ').replace(' -', '-') });
+									// if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+									// 		results.push(variant);
+									// 	}
+								}
+							}
+					}
+				}
+				console.log("results qty", results.length);
+				return results;
+			},
+			"none": (str) => {
+				const results = [];
+				const query = str.replace(/[.*+?^${}()|[\]\\]/g, '');
+				// console.log("in trans", query);
+				token.value = query;
+				for (let value of Object.values(data.trans)) {
+					if (value.txt.includes(query)) {
+						results.push(value);
+					}
+				}
+				return results;
 			}
-			return results;
+		};
+
+		const getMatches = (queryString) => {
+			console.log("input", queryString);
+			return token.value ? processInput[switchState.value](queryString) : [];
 		};
 
 		const autocomplete = (e) => {
