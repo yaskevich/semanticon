@@ -3,18 +3,26 @@
   <!-- <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" /> -->
 
   <div class="p-grid">
-    <div class="p-col" style="text-align:center;">
-      <Dropdown v-model="selectedSemfunc" :options="semfuncArray" optionLabel="name" placeholder="Выберите функцию" scrollHeight="300" :showClear="true" class="semfunc"/>
-    </div>
-    <div class="p-col">
-      <SelectButton v-model="parts" :options="partsOptions"  class="semtone" optionLabel="name" optionValue="code" style="float:left;" />
+    <div class="p-col p-text-center">
+      <Dropdown v-model="selectedSemfunc" :options="semfuncArray" optionLabel="name" placeholder="Основная функция" scrollHeight="300" :showClear="true" class="semfunc"/>
     </div>
   </div>
-  <div class="p-d-flex p-flex-column p-mb-2">
-    <MultiSelect v-model="semtone"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="semtoneResult" optionLabel="name" placeholder="Выберите оттенок" display="chip" class="" />
+
+  <div class="p-d-flex p-flex-column p-col">
+    <MultiSelect v-model="semtone"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="semtoneResult" optionLabel="name" placeholder="Дополнительная семантика" display="chip" class="" />
   </div>
-  <div class="p-d-flex p-flex-column">
-    <MultiSelect v-model="actclass"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="actclassResult" optionLabel="name" placeholder="Выберите речевой акт" display="chip"/>
+
+  <div class="p-d-flex p-flex-column p-col">
+    <MultiSelect v-model="actclass"  filterPlaceholder="Наберите название" :filter="true" @change="updateRoute()" :options="actclassResult" optionLabel="name" placeholder="Реплика-стимул" display="comma"/>
+  </div>
+
+  <div class="p-fluid p-col" >
+    <div class="p-field p-grid" >
+      <label for="partsbutton" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0 p-component">Структура</label>
+      <div class="p-col-12 p-md-10">
+        <SelectButton v-model="parts" :options="partsOptions"  class="" optionLabel="name" optionValue="code" id="partsbutton"  />
+      </div>
+    </div>
   </div>
 
   <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" />
@@ -35,7 +43,7 @@ export default {
     // const id = router.params.id;
     console.log(routerInfo.params);
 
-    const partsOptions = [{"name": '2-хчастная', "code": 2}, {"name":'3-хчастная', "code": 3}];
+    const partsOptions = [{"name": 'двухчастная', "code": 2}, {"name":'трёхчастная', "code": 3}];
     const data  = store.state.config;
 		let parts = ref(2);
 		let semtone = ref(null);
@@ -105,16 +113,4 @@ semfuncArray, parts, partsOptions, actclass, actclassResult };
 </script>
 
 <style>
-.p-dropdown-items{
-  text-align:left;
-}
-.semfunc {
-  width: 15rem;
-  margin: .3rem;
-}
-.semtone {
-  width: 15rem;
-  margin: .3rem;
-}
-
 </style>

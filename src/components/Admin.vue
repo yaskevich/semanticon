@@ -1,6 +1,6 @@
 <template>
   <div class="home p-component">
-    <div class="div-container form-container" style="text-align:left;padding-left:1rem;">
+    <div class="div-container form-container p-text-left">
       <div v-for="(value, name, index) in $primevue.config.locale.phrase"  :key="index" class="feature-item">
           {{value}}
           <Inplace :closable="true">

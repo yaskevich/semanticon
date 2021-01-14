@@ -1,5 +1,5 @@
 <template>
-  <div class="p-shadow-12 p-component result-item">
+  <div class="p-shadow-12 p-component result-item p-text-center">
     <router-link :to="{ name: 'Phrase', params: { id: datum.eid1 } }" tag="li" class="nounderline">
       <Button class="p-button-link">
         <span v-for="(v, k) in data.exprs[datum[datum.main]]" :key="k">
@@ -24,7 +24,6 @@ export default {
 
 <style scoped>
 .result-item {
-  text-align:center;
   padding: 1rem;
   margin: 2rem;
 }

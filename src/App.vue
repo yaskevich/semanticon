@@ -1,6 +1,6 @@
 <template >
   <div id="main" v-if="dataReady">
-  <div id="nav" class="p-component" style="text-align: center;">
+  <div id="nav" class="p-component p-text-center">
     <router-link to="/">PRAGMATICON</router-link> |
     <router-link to="/home">{{$primevue.config.locale.filtering}}</router-link> |
     <router-link to="/about"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
@@ -143,9 +143,15 @@ body {
   color:white;
   padding: .2rem;
   margin-top:auto;
-  text-align:center; */
+   */
 }
 .nowrap {
   white-space: nowrap;
+}
+.p-dropdown-items{
+  text-align:left;
+}
+.p-autocomplete {
+	text-align:left;
 }
 </style>

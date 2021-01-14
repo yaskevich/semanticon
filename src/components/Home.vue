@@ -1,13 +1,13 @@
 <template>
 	<div class="p-component p-mt-4">
-		<div class="p-col " style="text-align:center;">
+		<div class="p-col p-text-center">
 		<div>База данных дискурсивных формул русского языка</div>
 		<div>[Для студентов и преподавателей РКИ]</div>
 		</div>
 	</div>
 	<div class="p-grid p-jc-center">
 		<div class="p-component">
-			<div class="p-inputgroup autocomplete-container p-col">
+			<div class="p-inputgroup p-text-center p-col">
 				<AutoComplete v-model="token"
 					:suggestions="searchVariants"
 					ref="searchInstance"
@@ -44,7 +44,7 @@
 		</div>
 	</div>
 	<div class="p-component p-p-4">
-		<div style="text-align:center;">
+		<div class="p-text-center">
 			<img src="/api/media/no-meme.jpg" style="max-height:10rem;"/>
 		</div>
 	</div>
@@ -56,7 +56,7 @@
 		</div>
 	</div>
 	<div class="p-grid p-p-4">
-		<div class="p-col" style="text-align:center;">
+		<div class="p-col p-text-center">
 			<img src="/api/media/constructicon.png" style="max-height:4rem;"/>
 		</div>
 		<div class="p-col">
@@ -261,14 +261,7 @@ export default {
 .match{
 	font-weight: bold;
 }
-.autocomplete-container {
-	margin-top:2rem;
-  text-align: center;
-}
-.p-autocomplete-item{
-	text-align: left;
-	color: red;
-}
+
 .switcher{
 	line-height: .3rem;
 }
@@ -276,9 +269,6 @@ export default {
 	height: 1rem;
 	border: 1px solid gray;
 	margin-right: .3rem;
-}
-.p-autocomplete {
-	text-align:left;
 }
 
 .explain-header {

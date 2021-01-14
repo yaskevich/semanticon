@@ -1,7 +1,7 @@
 <template>
   <div class="home p-component">
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <div class="head">
+    <div class="p-text-center">
       <h2>Дискурсивные формулы</h2>
     </div>
     <div class="p-shadow-1 item">Это модно и современно! Также это подходит тем, кто чтит традиции.</div>
@@ -50,9 +50,6 @@ export default {
 .item{
   margin:2rem;
   padding:1rem;
-}
-.head {
-  text-align:center;
 }
 .form-container{
   margin-bottom:1rem;

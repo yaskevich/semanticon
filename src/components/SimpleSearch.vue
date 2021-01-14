@@ -1,6 +1,6 @@
 <template>
   <div class="p-component">
-		<div class="div-container" style="margin-top:2rem;">
+		<div class="div-container p-text-center" style="margin-top:2rem;">
       <!-- <h3>Поиск</h3> -->
   <AutoComplete v-model="token"
 		:suggestions="searchVariants"
@@ -157,12 +157,5 @@ export default {
 <style>
 .match{
 	font-weight: bold;
-}
-.div-container {
-  text-align: center;
-}
-.p-autocomplete-item{
-	text-align: left;
-	color: red;
 }
 </style>

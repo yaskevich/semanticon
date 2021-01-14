@@ -1,5 +1,5 @@
 <template>
-    <div class="p-component phrase-list-item">
+    <div class="p-component phrase-list-item p-text-center">
     <router-link :to="{ name: 'Phrase', params: { id: eid } }" tag="li" class="nounderline">
       <Button class="p-button-link" >
       <span v-for="(value, key) in data.exprs[eid]" :key="key">
@@ -23,8 +23,5 @@ export default {
 <style>
 .nounderline {
   text-decoration: none;
-}
-.phrase-list-item {
-  text-align:center;
 }
 </style>
