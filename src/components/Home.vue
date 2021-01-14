@@ -17,7 +17,7 @@
 					scrollHeight="200"
 					@keyup.enter="renderMatches($event)"
 					@complete="autocomplete($event)"
-					@item-select="renderSelected($event)">
+					@item-select="renderSelected[switchState]($event)">
 						<template #item="slotProps">
 							<span v-if="slotProps.item.hasOwnProperty('lang')">
 								<!-- <img :alt="slotProps.item.lang" :src="'demo/images/car/' + slotProps.value.brand + '.png'" /> -->
@@ -97,9 +97,7 @@ export default {
 
 		const getBasicExpr = (eid) => {
 			const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == eid ? i : []);
-			// console.log("titlesIndexes", titlesIndexes);
 			const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
-			// console.log("titles", titles);
 			return {
 				"eid1": titles[0],
 				"eid": eid,
@@ -107,7 +105,9 @@ export default {
 			};
 		};
 
-		const getVariants = (eids) => {
+		const getVariants = {
+			"ru": (objs) => {
+			const eids  = objs.map(x => x.eid)
 			const results = [];
 			for (let eid of eids) {
 				const variant  = getBasicExpr(eid);
@@ -116,6 +116,25 @@ export default {
 				}
 			}
 			return results;
+		},
+		"none": (objs) =>  {
+				const ids  = objs.map(x => x.id)
+				const results  = [];
+				for (let unit of Object.values(data.units)) {
+					const pd  = Reflect.getOwnPropertyDescriptor(unit, "translations");
+					if (pd) {
+						for (let id of ids) {
+							if(pd.value.includes(id)) {
+								const variant  = { "eid1": unit.eid1, "main" : 'eid1' };
+								if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+										results.push(variant);
+								}
+							}
+						}
+					}
+				}
+				return results;
+			}
 		};
 
 		const renderMatches = () => {
@@ -123,62 +142,35 @@ export default {
 			if (typeof token.value === 'object'){
 				console.log("do nothing: object", token.value);
 			} else {
-				console.log("state", switchState.value);
 				const tokenMatches  = getMatches(token.value);
-				if (switchState.value  === 'ru') {
-					const tokenEids  = tokenMatches.map(x => x.eid);
-					const variants  = getVariants(tokenEids);
-					matches.value = variants;
-				} else {
-					console.log("wow", tokenMatches);
-					const transIds = tokenMatches.map(x => x.id);
-					const variants  = getUnitByTrans(null, transIds);
-					matches.value = variants;
-				}
-				//
+				// console.log("getMatches: result", tokenMatches);
+				const variants  = getVariants[switchState.value](tokenMatches);
+				// console.log("variants", variants);
+				matches.value = variants;
 			}
 		};
 
-		const getUnitByTrans = (id, ids) => {
+		const getUnitByTrans = (id) => {
 			const results  = [];
 			for (let unit of Object.values(data.units)) {
 				const pd  = Reflect.getOwnPropertyDescriptor(unit, "translations");
-				if (pd) {
-					if (id) {
-						if (pd.value.includes(id)){
-							results.push({
-								"eid1": unit.eid1,
-								"main" : 'eid1'
-							});
-						}
-					}
-				else if (ids) {
-						for (let i = 0; i < ids.length; i++) {
-							if(pd.value.includes(ids[i])) {
-								results.push({
-									"eid1": unit.eid1,
-									"main" : 'eid1'
-								});
-							}
-						}
-				}
+				if (pd && pd.value.includes(id)){
+					results.push({
+						"eid1": unit.eid1,
+						"main" : 'eid1'
+					});
 				}
 			}
 			return results;
 		};
 
-		const renderSelected = (e) => {
+		const renderSelected = {
 			//  get clicked autocomplete item and render it in search resuts block
-			let results = [];
-			if (switchState.value === 'ru') {
-				results.push(getBasicExpr(e.value.eid));
-			} else {
-				results = getUnitByTrans(e.value.id);
-			}
-			matches.value = results;
-			console.log("results", results);
-      // router.push("/results")
-		};
+			"ru": (e) => {
+				matches.value = [getBasicExpr(e.value.eid)];
+		}, "none": (e) => {
+				matches.value = getUnitByTrans(e.value.id);
+		}};
 
 		const processInput = {
 			"ru": (str) => {
