@@ -1,78 +1,75 @@
 <template>
 	<div class="p-component p-mt-4">
 		<div class="p-col " style="text-align:center;">
-		<div class="p-jc-center">База данных дискурсивных формул русского языка</div>
+		<div>База данных дискурсивных формул русского языка</div>
 		<div>[Для студентов и преподавателей РКИ]</div>
 		</div>
 	</div>
 	<div class="p-grid p-jc-center">
-
+		<div class="p-component">
+			<div class="p-inputgroup autocomplete-container p-col">
+				<AutoComplete v-model="token"
+					:suggestions="searchVariants"
+					ref="searchInstance"
+					:minLength="Number(2)"
+					placeholder="да ладно"
+					field="txt"
+					scrollHeight="200"
+					@keyup.enter="renderMatches($event)"
+					@complete="autocomplete($event)"
+					@item-select="renderSelected($event)">
+						<template #item="slotProps">
+							<span v-if="slotProps.item.hasOwnProperty('lang')">
+								<!-- <img :alt="slotProps.item.lang" :src="'demo/images/car/' + slotProps.value.brand + '.png'" /> -->
+								<img :alt="$primevue.config.locale.lang[slotProps.item.lang]" :src="'/api/media/flags/'+slotProps.item.lang+ '.svg'" class="mini-flag"/>
+							</span>
+							<span>{{slotProps.item.txt}}</span>
+						</template>
+				</AutoComplete>
+				<Button icon="pi pi-search" class="enter" @click="renderMatches()"/>
+			</div>
+			<div class="p-grid p-jc-center p-col">
+				<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
+			</div>
+		</div>
+	</div>
 	<div class="p-component">
-		<div class="p-inputgroup autocomplete-container p-col">
-			<AutoComplete v-model="token"
-				:suggestions="searchVariants"
-				ref="searchInstance"
-				:minLength="Number(2)"
-				placeholder="да ладно"
-				field="txt"
-				scrollHeight="200"
-				@keyup.enter="renderMatches($event)"
-				@complete="autocomplete($event)"
-				@item-select="renderSelected($event)">
-					<template #item="slotProps">
-						<span v-if="slotProps.item.hasOwnProperty('lang')">
-							<!-- <img :alt="slotProps.item.lang" :src="'demo/images/car/' + slotProps.value.brand + '.png'" /> -->
-							<img :alt="$primevue.config.locale.lang[slotProps.item.lang]" :src="'/api/media/flags/'+slotProps.item.lang+ '.svg'" class="mini-flag"/>
-						</span>
-						<span>{{slotProps.item.txt}}</span>
-					</template>
-			</AutoComplete>
-			<Button icon="pi pi-search" class="enter" @click="renderMatches()"/>
-		</div>
-		<div class="p-grid p-jc-center p-col">
-			<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
-		</div>
-
 		<SearchResults v-for="(value, key) in matches" :datum="value" :num="Number(key)" :data="data" :key="key"/>
 	</div>
-</div>
-<div class="p-component back-1 p-p-4">
-	<div class="explain-header">Что такое дискурсивные формулы?</div>
-	<div class="p-ml-4">Короткие устойчивые ответы, которые мы используем в разговорной речи.
-		<div>Например — <span class="cite">Не говори!</span> <span class="cite">Как скажешь!</span> или <span class="cite">Да ладно!</span></div>
-		<div>В основном формулы выражают положительные или отрицательные реакции на слова собеседника. Можно сказать, что в большинстве они — синонимы Да и Нет, но с дополнительными оттенками значения.</div>
-</div>
-</div>
-<div class="p-component p-p-4">
-	<div style="text-align:center;">
-		<img src="/api/media/no-meme.jpg" style="max-height:10rem;"/>
+	<div class="p-component back-1 p-p-4">
+		<div class="explain-header">Что такое дискурсивные формулы?</div>
+		<div class="p-ml-4">Короткие устойчивые ответы, которые мы используем в разговорной речи.
+			<div>Например — <span class="cite">Не говори!</span> <span class="cite">Как скажешь!</span> или <span class="cite">Да ладно!</span></div>
+			<div>В основном формулы выражают положительные или отрицательные реакции на слова собеседника. Можно сказать, что в большинстве они — синонимы Да и Нет, но с дополнительными оттенками значения.</div>
+		</div>
 	</div>
-</div>
-<div class="p-component back-2 p-p-4">
-	<div class="explain-header">В чем задача Прагматикона?</div>
-	<div class="p-ml-4">
-		<div>Формулы редко попадают в словари, а угадать их значение бывает непросто.</div>
-		<div>Мы собрали список дискурсивных формул для русского языка и разработали  формат описания, который помогает узнать не только что значит каждая  формула, но и как и когда её употреблять.</div>
+	<div class="p-component p-p-4">
+		<div style="text-align:center;">
+			<img src="/api/media/no-meme.jpg" style="max-height:10rem;"/>
+		</div>
 	</div>
-</div>
-
-
-<div class="p-grid p-p-4">
-	<div class="p-col" style="text-align:center;">
-		<img src="/api/media/constructicon.png" style="max-height:4rem;"/>
+	<div class="p-component back-2 p-p-4">
+		<div class="explain-header">В чем задача Прагматикона?</div>
+		<div class="p-ml-4">
+			<div>Формулы редко попадают в словари, а угадать их значение бывает непросто.</div>
+			<div>Мы собрали список дискурсивных формул для русского языка и разработали  формат описания, который помогает узнать не только что значит каждая  формула, но и как и когда её употреблять.</div>
+		</div>
 	</div>
-	<div class="p-col">
-		<img src="/api/media/logo_с_hse_cmyk.jpg" style="max-height:5rem;"/>
+	<div class="p-grid p-p-4">
+		<div class="p-col" style="text-align:center;">
+			<img src="/api/media/constructicon.png" style="max-height:4rem;"/>
+		</div>
+		<div class="p-col">
+			<img src="/api/media/logo_с_hse_cmyk.jpg" style="max-height:5rem;"/>
+		</div>
 	</div>
-</div>
-
-<div class="p-component back-3 p-p-4">
-	<div class="explain-header">Как строится описание?</div>
-	<div class="p-ml-4">
-		<div>Наша база данных — результат исследовательского проекта Школы Лингвистики НИУ ВШЭ <a href="https://ling.hse.ru/" target="_blank"><i class='pi pi-external-link'></i></a>. Содержательно она является частью Russian Constructicon <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
-		<div>Мы используем теоретические рамки Грамматики конструкций и Московской семантической школы и анализируем употребление формул, используя корпусные данные, прежде всего — Национальный корпус русского языка (НКРЯ) <a href="https://ruscorpora.ru/" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
+	<div class="p-component back-3 p-p-4">
+		<div class="explain-header">Как строится описание?</div>
+		<div class="p-ml-4">
+			<div>Наша база данных — результат исследовательского проекта Школы Лингвистики НИУ ВШЭ <a href="https://ling.hse.ru/" target="_blank"><i class='pi pi-external-link'></i></a>. Содержательно она является частью Russian Constructicon <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
+			<div>Мы используем теоретические рамки Грамматики конструкций и Московской семантической школы и анализируем употребление формул, используя корпусные данные, прежде всего — Национальный корпус русского языка (НКРЯ) <a href="https://ruscorpora.ru/" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
+		</div>
 	</div>
-</div>
 </template>
 
 <script>
@@ -98,29 +95,49 @@ export default {
 			matches.value = [];
 		};
 
+		const getBasicExpr = (eid) => {
+			const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == eid ? i : []);
+			// console.log("titlesIndexes", titlesIndexes);
+			const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
+			// console.log("titles", titles);
+			return {
+				"eid1": titles[0],
+				"eid": eid,
+				"main" : !data.exprs[titles[0]].includes(eid)? "eid" : "eid1"
+			};
+		};
+
+		const getVariants = (eids) => {
+			const results = [];
+			for (let eid of eids) {
+				const variant  = getBasicExpr(eid);
+				if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+						results.push(variant);
+				}
+			}
+			return results;
+		};
+
 		const renderMatches = () => {
 			searchInstance.value.hideOverlay();
 			if (typeof token.value === 'object'){
 				console.log("object", token.value);
 			} else {
-				console.log("getMatches: result", getMatches(token.value));
+				const tokenMatches  = getMatches(token.value);
+				// const tokenMatches  = getMatches(token.value).map(x => x.eid);
+				console.log("getMatches: result", tokenMatches);
+				const variants  = getVariants(tokenMatches);
+				console.log(variants);
+				matches.value = variants;
 			}
 		};
 
 		const renderSelected = (e) => {
-			const eid = e.value.eid;
+			console.log("on render", e);
+
 			const results = [];
 			if (switchState.value === 'ru') {
-				const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == eid ? i : []);
-				const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
-				const variant = {
-					"eid1": titles[0],
-					"eid": eid,
-					"main" : !data.exprs[titles[0]].includes(eid)? "eid" : "eid1"
-				};
-				if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
-						results.push(variant);
-				}
+				results.push(getBasicExpr(e.value.eid));
 			} else {
 				// console.log(e.value);
 				for (let unit of Object.values(data.units)) {
@@ -140,6 +157,8 @@ export default {
 			console.log("results", results);
       // router.push("/results")
 		};
+
+
 
 		const getMatches = (queryString) => {
 			console.log("input", queryString);
