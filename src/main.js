@@ -5,7 +5,7 @@ import store from "./modules/store";
 import router from './router'
 
 import 'primeflex/primeflex.css';
-import 'primevue/resources/themes/saga-blue/theme.css';
+import 'primevue/resources/themes/saga-orange/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import "@fontsource/montserrat" // Defaults to weight 400 with normal variant.
