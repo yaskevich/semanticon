@@ -278,7 +278,7 @@ export default {
 	margin-right: .3rem;
 }
 .explain-header{
-	font-weight: bold;
+	/* font-weight: bold; */
 }
 .cite{
 	font-style: italic;

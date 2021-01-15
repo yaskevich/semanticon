@@ -10,6 +10,7 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import "@fontsource/montserrat" // Defaults to weight 400 with normal variant.
 import "@fontsource/montserrat/400-italic.css" // Italic variant.
+import "@fontsource/montserrat/900.css" // Bold variant.
 
 import SelectButton from 'primevue/selectbutton';
 import InputText from 'primevue/inputtext';
@@ -30,7 +31,8 @@ const pvLocale = {
     // locale: 'rus',
     // switch: 'RUS/ENG',
     home: 'Главная',
-    filtering: 'Расширенный поиск',
+    // filtering: 'Расширенный поиск',
+    filtering: 'Поиск+',
     about: "О проекте",
     title: "Дискурсивные формулы",
     logout: "Выйти",

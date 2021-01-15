@@ -1,11 +1,11 @@
 <template >
   <div id="main" v-if="dataReady">
-  <div id="nav" class="p-component p-text-center">
-    <router-link to="/">PRAGMATICON</router-link> |
-    <router-link to="/home">{{$primevue.config.locale.filtering}}</router-link> |
-    <router-link to="/about"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
+  <div id="nav" class="p-component p-d-flex p-p-3 card">
+    <router-link to="/" class=""><span class="app-title">Pragmaticon</span></router-link>
+    <router-link to="/about" class="p-ml-auto p-mr-2 page"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
+    <router-link to="/home" class="page">{{$primevue.config.locale.filtering}}</router-link>
     <!-- | -->
-    <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link>
+    <!-- <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link> -->
     <!-- <router-link v-else to="/login">Войти</router-link> -->
   </div>
   <div id="content">
@@ -116,6 +116,10 @@ body {
    margin: auto;
 }
 #nav {
+  /* display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap; */
+    align-items: baseline;
   /* padding: 2rem; */
   /* display: flex;
   flex-direction: row;
@@ -130,12 +134,12 @@ body {
   flex: 1;
 }
 #nav a {
-  font-weight: bold;
+  /* font-weight: bold; */
   color: #2c3e50;
   text-decoration: none;
 }
 #nav a.router-link-exact-active {
-  color: blue;
+  /* color: blue; */
 
 }
 #footer {
@@ -145,6 +149,45 @@ body {
   margin-top:auto;
    */
 }
+
+@media only screen and (max-width : 420px) {
+  .app-title{
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 1rem;
+    line-height: 1rem;
+  }
+  .page{
+    /* line-height: 3.5rem; */
+    /* vertical-align: bottom; */
+    /* vertical-align:baseline; */
+    display: inline-block;
+  }
+
+}
+@media only screen and (min-width : 421px) {
+.app-title{
+  font-weight: bold;
+  text-transform: uppercase;
+    font-size: 2rem;
+    line-height: 2rem;
+    /* vertical-align: bottom; */
+    align-items: baseline;
+}
+.page{
+  /* line-height: 3.5rem; */
+  /* vertical-align: bottom; */
+  line-height: 2rem;
+  align-items: baseline;
+  /* vertical-align:baseline; */
+  display: inline-block;
+}
+
+}
+
+/* vertical-align: bottom;
+ display: inline-block;
+} */
 .nowrap {
   white-space: nowrap;
 }
