@@ -95,9 +95,9 @@ body {
   background-color:#F5CB5C;
 }
 
-.p-component {
+.p-inputtext, .p-component {
   font-family: 'Montserrat', sans-serif !important;
-  line-height: 1.5;
+  /* line-height: 1.5; */
 }
 
 #app {
@@ -154,4 +154,9 @@ body {
 .p-autocomplete {
 	text-align:left;
 }
+span.p-inputswitch-slider{
+	max-height: 1.5rem;
+	background: red;
+}
+
 </style>

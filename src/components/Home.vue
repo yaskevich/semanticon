@@ -29,6 +29,10 @@
 				<Button icon="pi pi-search" class="enter" @click="renderMatches()"/>
 			</div>
 			<div class="p-grid p-jc-center p-col">
+				<div class="p-pr-3">поиск по переводному аналогу</div>
+					<InputSwitch v-model="checked" />
+			</div>
+			<div class="p-grid p-jc-center p-col">
 				<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
 			</div>
 		</div>
@@ -36,26 +40,26 @@
 	<div class="p-component">
 		<SearchResults v-for="(value, key) in matches" :datum="value" :num="Number(key)" :data="data" :key="key"/>
 	</div>
-	<div class="p-component back-1 p-p-4">
+	<div class="p-component back-1 p-p-4 info">
 		<div class="explain-header">Что такое дискурсивные формулы?</div>
 		<div class="p-ml-4">Короткие устойчивые ответы, которые мы используем в разговорной речи.
 			<div>Например — <span class="cite">Не говори!</span> <span class="cite">Как скажешь!</span> или <span class="cite">Да ладно!</span></div>
 			<div>В основном формулы выражают положительные или отрицательные реакции на слова собеседника. Можно сказать, что в большинстве они — синонимы Да и Нет, но с дополнительными оттенками значения.</div>
 		</div>
 	</div>
-	<div class="p-component p-p-4">
+	<div class="p-component p-p-4 info">
 		<div class="p-text-center">
 			<img src="/api/media/no-meme.jpg" style="max-height:10rem;"/>
 		</div>
 	</div>
-	<div class="p-component back-2 p-p-4">
+	<div class="p-component back-2 p-p-4 info">
 		<div class="explain-header">В чем задача Прагматикона?</div>
 		<div class="p-ml-4">
 			<div>Формулы редко попадают в словари, а угадать их значение бывает непросто.</div>
 			<div>Мы собрали список дискурсивных формул для русского языка и разработали  формат описания, который помогает узнать не только что значит каждая  формула, но и как и когда её употреблять.</div>
 		</div>
 	</div>
-	<div class="p-grid p-p-4">
+	<div class="p-grid p-p-4 info">
 		<div class="p-col p-text-center">
 			<img src="/api/media/constructicon.png" style="max-height:4rem;"/>
 		</div>
@@ -63,7 +67,7 @@
 			<img src="/api/media/logo_с_hse_cmyk.jpg" style="max-height:5rem;"/>
 		</div>
 	</div>
-	<div class="p-component back-3 p-p-4">
+	<div class="p-component back-3 p-p-4 info">
 		<div class="explain-header">Как строится описание?</div>
 		<div class="p-ml-4">
 			<div>Наша база данных — результат исследовательского проекта Школы Лингвистики НИУ ВШЭ <a href="https://ling.hse.ru/" target="_blank"><i class='pi pi-external-link'></i></a>. Содержательно она является частью Russian Constructicon <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
@@ -74,6 +78,7 @@
 
 <script>
 import store from "@/modules/store";
+import InputSwitch from 'primevue/inputswitch';
 import SearchResults from "./SearchResults.vue";
 // import router from "../router"
 // eslint-disable-next-line no-unused-vars
@@ -88,6 +93,8 @@ export default {
 		let matches = ref({});
 		let switchState = ref('ru');
 		let searchInstance = ref();
+
+		let checked = ref(false);
 
 
 		const handleSwitchState = () => {
@@ -249,7 +256,8 @@ export default {
 			searchVariants.value = getMatches(e.query);
 		};
 
-		return { autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions, handleSwitchState, renderMatches, searchInstance };
+		return { autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions, handleSwitchState, renderMatches, searchInstance,
+		InputSwitch, checked  };
 	},
 	components: {
 		SearchResults
@@ -261,20 +269,21 @@ export default {
 .match{
 	font-weight: bold;
 }
-
 .switcher{
-	line-height: .3rem;
+	line-height: 0.3rem;
 }
 .mini-flag{
 	height: 1rem;
 	border: 1px solid gray;
 	margin-right: .3rem;
 }
-
-.explain-header {
-	font-weight:bold;
+.explain-header{
+	font-weight: bold;
 }
 .cite{
-	font-style:italic;
+	font-style: italic;
+}
+.info{
+	line-height: 1.5rem;
 }
 </style>

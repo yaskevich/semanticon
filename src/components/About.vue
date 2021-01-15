@@ -8,7 +8,7 @@
     <div class="p-shadow-2 item">Откройте для себя Вашу дискурсивную формулу успеха!</div>
     <div class="p-shadow-3 item">Успейте подписаться на нашу закрытую новостную рассылку:</div>
 
-    <div class="div-container form-container">
+    <div class="div-container form-container p-text-center">
       <h4>Введите свой e-mail</h4>
       <form @submit.prevent="greet">
         <InputText type="text" v-model="text"/>
