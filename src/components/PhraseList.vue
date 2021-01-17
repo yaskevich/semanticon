@@ -25,6 +25,8 @@
     </div>
   </div>
 
+
+
   <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" />
 </template>
 <script>

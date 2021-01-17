@@ -25,6 +25,7 @@ import Tag from 'primevue/tag';
 // import Chip from 'primevue/chip';
 // import Panel from 'primevue/panel';
 import InputSwitch from 'primevue/inputswitch';
+import Panel from 'primevue/panel';
 
 const app = createApp(App);
 const pvLocale = {
@@ -81,8 +82,7 @@ app.use(ToastService);
 app.use(router);
 document.title = pvLocale.title;
 
-
-
+app.component('Panel', Panel);
 app.component('SelectButton', SelectButton);
 app.component('InputSwitch', InputSwitch);
 app.component('MultiSelect', MultiSelect);

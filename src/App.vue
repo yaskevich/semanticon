@@ -2,7 +2,7 @@
   <div id="main" v-if="dataReady">
   <div id="nav" class="p-component p-d-flex p-p-3 card">
     <router-link to="/" class=""><span class="app-title">Pragmaticon</span></router-link>
-    <router-link to="/about" class="p-ml-auto p-mr-2 page"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
+    <router-link to="/about" class="p-ml-auto p-mr-4 page"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
     <router-link to="/home" class="page">{{$primevue.config.locale.filtering}}</router-link>
     <!-- | -->
     <!-- <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link> -->
@@ -110,10 +110,10 @@ body {
 }
 #main {
   display: flex;
-    flex-direction: column;
-    min-height: 97vh;
-   max-width: 100vh;
-   margin: auto;
+  flex-direction: column;
+  min-height: 97vh;
+  max-width: 100vh;
+  margin: auto;
 }
 #nav {
   /* display: flex;
@@ -143,11 +143,6 @@ body {
 
 }
 #footer {
-  /* background-color:#2E86C1;
-  color:white;
-  padding: .2rem;
-  margin-top:auto;
-   */
 }
 
 @media only screen and (max-width : 420px) {
@@ -158,31 +153,20 @@ body {
     line-height: 1rem;
   }
   .page{
-    /* line-height: 3.5rem; */
-    /* vertical-align: bottom; */
-    /* vertical-align:baseline; */
     display: inline-block;
   }
-
 }
 @media only screen and (min-width : 421px) {
-.app-title{
-  font-weight: bold;
-  text-transform: uppercase;
-    font-size: 2rem;
+  .app-title{
+    font-weight: bold;
+    text-transform: uppercase;
+      font-size: 2rem;
+      line-height: 2rem;
+      align-items: baseline;
+  }
+  .page{
     line-height: 2rem;
-    /* vertical-align: bottom; */
-    align-items: baseline;
-}
-.page{
-  /* line-height: 3.5rem; */
-  /* vertical-align: bottom; */
-  line-height: 2rem;
-  align-items: baseline;
-  /* vertical-align:baseline; */
-  display: inline-block;
-}
-
+  }
 }
 
 /* vertical-align: bottom;
@@ -190,6 +174,9 @@ body {
 } */
 .nowrap {
   white-space: nowrap;
+}
+.p-panel-title{
+  font-weight:400 !important;
 }
 .p-dropdown-items{
   text-align:left;
