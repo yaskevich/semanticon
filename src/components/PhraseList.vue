@@ -4,7 +4,7 @@
 
   <div class="p-grid p-m-2">
     <div class="p-col p-text-center">
-      <Dropdown v-model="semfunc" :options="aggregatedFeatures['semfunc']" optionLabel="name" placeholder="Основная функция" scrollHeight="300" :showClear="true" class="semfunc" @change="updateRoute($event)"/>
+      <Dropdown v-model="semfunc" :options="aggregatedFeatures['semfunc']" optionLabel="name" placeholder="Основная функция" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)"/>
     </div>
   </div>
 
@@ -26,9 +26,15 @@
   </div>
   <Panel header="Ещё фильтры" :toggleable="true" :collapsed="true">
     <div class="p-grid">
-    <div class="p-col p-text-center">1</div>
-    <div class="p-col p-text-center">2</div>
-    <div class="p-col p-text-center">3</div>
+    <div class="p-col p-text-center">
+      <Dropdown v-model="organ" :options="aggregatedFeatures['organ']" optionLabel="name" placeholder="Жесты" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)"/>
+    </div>
+    <div class="p-col p-text-center">
+      <Dropdown v-model="intonation" :options="aggregatedFeatures['intonation']" optionLabel="name" placeholder="Интонация" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)"/>
+    </div>
+    <div class="p-col p-text-center">
+      <Dropdown v-model="lang" :options="aggregatedLangs" optionLabel="name" placeholder="Языки" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)"/>
+    </div>
     </div>
     <!-- <Dropdown v-model="semfunc" :options="semfuncOptions" optionLabel="name" placeholder="Жесты" scrollHeight="300" :showClear="true" class="semfunc p-mr-4" @change="updateRoute($event, 'semfunc')"/>
     <Dropdown v-model="semfunc" :options="semfuncOptions" optionLabel="name" placeholder="Интонация" scrollHeight="300" :showClear="true" class="semfunc" @change="updateRoute($event, 'semfunc')"/>
@@ -46,6 +52,8 @@ import { unref, ref, computed, watchEffect } from "vue";
 import { useRoute } from 'vue-router';
 // import router from "../router";
 import Dropdown from 'primevue/dropdown';
+import { usePrimeVue } from "primevue/config";
+
 
 export default {
   name: "PhraseList",
@@ -56,10 +64,15 @@ export default {
 
     const partsOptions = [{"name": 'двухчастная', "code": false}, {"name":'трёхчастная', "code": true}];
     const data  = store.state.config;
-		let parts = ref(false);
+		// let parts = ref(false);
+		let parts = ref(null); // or change UI to radiobuttons
 		let semtone = ref(null);
 		let actclass = ref(null);
     let semfunc = ref(null);
+    let organ = ref(null);
+    let intonation = ref(null);
+    let lang  = ref(null);
+
     let eids = ref([]);
     eids.value = Object.keys(store.state.config.toc);
 
@@ -71,6 +84,11 @@ export default {
     const aggregatedFeatures = Object.keys(data.features)
     .map((key) => ({ "value": Number(key), "name": data.features[key][0], "feature": data.features[key][1]}))
     .reduce((obj, x) => ({ ...obj, [x["feature"]]: [...(obj[x["feature"]] || []), x, ],}),{},);
+
+    const primevue = usePrimeVue();
+    const aggregatedLangs = [...new Set(Object.values(data.trans).map(x=> x.lang))].map(x=>({"value": x, name: primevue.config.locale.lang[x], "feature": "lang"}));
+    // console.log(aggregatedLangs);
+    // console.log(aggregatedFeatures);
 
     const updateRoute = (e) => {
       // let curTarget = e.currentTarget;
@@ -124,7 +142,7 @@ export default {
       console.log("router", routerInfo.params.id);
     }
 
-  return { data, eids, semtone, semfunc, actclass, parts, partsOptions, aggregatedFeatures, updateRoute };
+  return { updateRoute, data, eids, semtone, semfunc, actclass, parts, partsOptions, aggregatedFeatures, aggregatedLangs, lang, organ, intonation };
 },
   components: {
     // eslint-disable-next-line vue/no-unused-components
@@ -134,5 +152,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.combo{
+  min-width: 15rem;
+}
 </style>
