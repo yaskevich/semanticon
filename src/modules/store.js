@@ -3,15 +3,27 @@ import { reactive, readonly, computed } from "vue";
 
 const state = reactive({
   msg: ["hi"],
+  accessed: [],
+  search:  {
+   'semtone' : [],
+   'actclass' : [],
+   'organ' : [],
+   'semfunc' : null,
+   'intonation' : null,
+   'translations' : null,
+   'parts' : null, // was false => null or change UI to radiobuttons
+ },
   config: {
     "user": {},
+    "test": 1,
     "features": {},
     "pages": null,
   }
 });
 
 export default {
-  state: readonly(state),
+  // state: readonly(state),
+  state: state,
   actions: {
     isAuth() {
       return Boolean(Object.keys(state.config.user).length);

@@ -64,17 +64,11 @@ export default {
 
     const partsOptions = [{"name": 'двухчастная', "code": false}, {"name":'трёхчастная', "code": true}];
     const data  = store.state.config;
-    const searchState = reactive({
-      'semtone' : [],
-      'actclass' : [],
-      'organ' : [],
-      'semfunc' : null,
-      'intonation' : null,
-      'translations' : null,
-      'parts' : null, // was false => null or change UI to radiobuttons
-    });
+    const searchState = store.state.search;
+    // console.log("setup", store.state.search);
     // console.log(Object.keys(searchState));
 
+    //
 
 
     let eids = ref([]);
@@ -98,6 +92,10 @@ export default {
 
     const updateRoute = (e) => {
       // router.push("/home");
+      if (!store.state.accessed.includes('search')){
+          store.state.accessed.push('search');
+      }
+
       console.log("update", e.value);
       // console.log("search state", searchState);
       const selected = [];
@@ -150,6 +148,9 @@ export default {
       eids.value = selected;
     };
 
+    if (store.state.accessed.includes('search')){
+      updateRoute({"value": "back"});
+    }
     if (routerInfo.params.id){
       console.log("router", routerInfo.params.id);
     }
