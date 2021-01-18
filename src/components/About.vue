@@ -72,10 +72,72 @@
 
 	</TabPanel>
 	<TabPanel header="Участники">
-		Content II
+    test
 	</TabPanel>
 	<TabPanel header="Публикации">
-		Content III
+
+    <div class="info chapter explain-header p-mb-4">
+    Основные
+    </div>
+
+    <div class="info p-mb-4">
+      Е. В. Рахилина, П. А. Бычкова. <strong>Речевые акты как лингвистическая категория. Дискурсивные формулы</strong> // Вопросы языкознания. 2021. № 2.
+    </div>
+
+    <div class="info p-mb-4">
+      С. Ю. Пужаева и др. <strong>Автоматическое извлечение дискурсивных формул из текстов на русском языке</strong> // Вестник Новосибирского государственного университета. Серия: Лингвистика и межкультурная коммуникация. 2018. Т. 16.  № 2. – С. 5-18.
+    </div>
+
+    <div class="info chapter explain-header p-mb-4">
+    Полисемичные формулы
+    </div>
+
+    <div class="info p-mb-4">
+      П. А. Бычкова, Е. В. Рахилина, Е. А. Слепак. <strong>Дискурсивные формулы, полисемия и жестовое маркирование</strong> // Труды института русского языка им. Виноградова. № 21, 2019. – С. 256-283.
+    </div>
+    <div class="info p-mb-4">
+      П. А. Бычкова. <strong>Свойства дискурсивных формул на примере русских конструкций <span class="cite">ты что</span> и <span class="cite">что ты</span></strong> // Русский язык в научном освещении. 2020. № 2 (40). – С. 88-111.
+    </div>
+
+    <div class="info chapter explain-header p-mb-4">
+    Диахрония
+    </div>
+
+    <div class="info p-mb-4">
+      В. А. Плунгян С. Ю. Пужаева Е. В. Рахилина. <strong>«Об этом рано говорить…»</strong> // Сборник статей к 85-летию В.С. Храковского / Под общ. ред.: Д. В. Герасимов, С. Ю. Дмитренко, Н. М. Заика. М. : Издательский дом ЯСК, 2019. – С. 448-462.
+    </div>
+    <div class="info p-mb-4">
+      С. Ю. Жукова, Б. В. Орехов, Е. В. Рахилина. <strong>Дискурсивные формулы русского языка: диахронический подход</strong> // Труды института русского языка им. ВВ Виноградова. 2019. № 21. – С. 142-164.
+    </div>
+    <div class="info p-mb-4">
+      С. Ю. Жукова. <strong>Дискурсивные формулы русского языка <span class="cite">как хочешь</span>, <span class="cite">как знаешь</span> в диахроническом аспекте</strong> // Acta Linguistica Petropolitana. Труды института лингвистических исследований. – 2019. – Т. 3. – №. 15. –  С. 295-319.
+    </div>
+    <div class="info p-mb-4">
+      В. А. Плунгян, Е. В. Рахилина. <strong><span class="cite">А Что?</span></strong> // Друзья, Слова, Таблицы: Сборник Статей в Честь 75-Летия А.К. Поливановой. Кейдан А. В. Москва; Екатеринбург: Кабинетный ученый, 2020. – С. 323–328.
+    </div>
+
+    <div class="info chapter explain-header p-mb-4">
+    Типология
+    </div>
+
+    <div class="info p-mb-4">
+      П. Бычкова. <strong>Дискурсивные формулы подтверждения в типологической перспективе</strong> // Jezikoslovni zapiski. 2020. 27(2).
+    </div>
+    <div class="info p-mb-4">
+      П. А. Бычкова. <strong>Источники прагматикализации дискурсивных формул отрицания в типологическом освещении: русский и словенский</strong> // Филологические заметки. 2020. Т. 2. № 18. – С. 187-211.
+    </div>
+
+    <div class="info chapter explain-header p-mb-4">
+    In English
+    </div>
+
+    <div class="info p-mb-4">
+      Gerasimenko, E., Puzhaeva, S., Zakharova, E., & Rakhilina, E. (2019). <strong>Defining discourse formulae: computational approach</strong>. EPiC Series in Language and Linguistics, 4, 61-69.
+    </div>
+    <div class="info p-mb-4">
+      SLE 2020, Workshop "Discourse phenomena in typological perspective"
+      E. Rakhilina, P. Bychkova. <strong>Towards Pragmatic Construction Typology: The case of Discourse Formulae</strong>. (presentation)
+    </div>
 	</TabPanel>
 	<TabPanel header="Помощь">
 		Content III4
