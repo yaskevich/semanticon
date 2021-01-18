@@ -277,13 +277,4 @@ export default {
 	border: 1px solid gray;
 	margin-right: .3rem;
 }
-.explain-header{
-	/* font-weight: bold; */
-}
-.cite{
-	font-style: italic;
-}
-.info{
-	line-height: 1.5rem;
-}
 </style>

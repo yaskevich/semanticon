@@ -188,5 +188,14 @@ span.p-inputswitch-slider{
 	max-height: 1.5rem;
 	background: red;
 }
+.explain-header{
+	font-weight: bold;
+}
+.cite{
+	font-style: italic;
+}
+.info{
+	line-height: 1.5rem;
+}
 
 </style>
