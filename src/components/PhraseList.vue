@@ -50,7 +50,7 @@ import PhraseListItem from "./PhraseListItem.vue";
 // eslint-disable-next-line no-unused-vars
 import { unref, ref, computed, watchEffect, reactive } from "vue";
 import { useRoute } from 'vue-router';
-// import router from "../router";
+import router from "../router";
 import Dropdown from 'primevue/dropdown';
 import { usePrimeVue } from "primevue/config";
 
@@ -76,7 +76,9 @@ export default {
 
     if (routerInfo.params.id) {
       // semtone.value = [{"value": routerInfo.params.id, "name": data.features[routerInfo.params.id][0]}];
-      searchState['semfunc'].value = {"value": routerInfo.params.id, "name": data.features[routerInfo.params.id][0]};
+      const a = {"value": Number(routerInfo.params.id), "name": data.features[routerInfo.params.id][0], "prop": "semfunc"};
+      console.log("a", a);
+      searchState['semfunc'] = a;
     }
 
     const aggregatedFeatures = Object.keys(data.features)
@@ -91,7 +93,7 @@ export default {
     // console.log(aggregatedFeatures);
 
     const updateRoute = (e) => {
-      // router.push("/home");
+      router.replace("/home");
       if (!store.state.accessed.includes('search')){
           store.state.accessed.push('search');
       }
