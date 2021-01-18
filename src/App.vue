@@ -1,7 +1,7 @@
 <template >
   <div id="main" v-if="dataReady">
   <div id="nav" class="p-component p-d-flex p-p-3 card">
-    <router-link to="/" class=""><span class="app-title">Pragmaticon</span></router-link>
+    <router-link to="/" class=""><span class="app-title app-title-basic">Pragmaticon</span></router-link>
     <router-link to="/about" class="p-ml-auto p-mr-4 page"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
     <router-link to="/home" class="page">{{$primevue.config.locale.filtering}}</router-link>
     <!-- | -->
@@ -144,11 +144,13 @@ body {
 }
 #footer {
 }
-
+.app-title-basic{
+  font-weight: 900;
+  text-transform: uppercase;
+}
 @media only screen and (max-width : 420px) {
   .app-title{
-    font-weight: bold;
-    text-transform: uppercase;
+
     font-size: 1rem;
     line-height: 1rem;
   }
@@ -158,8 +160,6 @@ body {
 }
 @media only screen and (min-width : 421px) {
   .app-title{
-    font-weight: bold;
-    text-transform: uppercase;
       font-size: 2rem;
       line-height: 2rem;
       align-items: baseline;

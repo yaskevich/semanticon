@@ -10,7 +10,9 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import "@fontsource/montserrat" // Defaults to weight 400 with normal variant.
 import "@fontsource/montserrat/400-italic.css" // Italic variant.
-import "@fontsource/montserrat/900.css" // Bold variant.
+import "@fontsource/montserrat/700.css" // Bold variant.
+import "@fontsource/montserrat/700-italic.css" // Bold italic variant.
+import "@fontsource/montserrat/900.css" // Bдфсл variant.
 
 import SelectButton from 'primevue/selectbutton';
 import InputText from 'primevue/inputtext';
