@@ -26,6 +26,8 @@ import Tag from 'primevue/tag';
 // import Panel from 'primevue/panel';
 import InputSwitch from 'primevue/inputswitch';
 import Panel from 'primevue/panel';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
 const app = createApp(App);
 const pvLocale = {
@@ -82,6 +84,8 @@ app.use(ToastService);
 app.use(router);
 document.title = pvLocale.title;
 
+app.component('TabView', TabView);
+app.component('TabPanel', TabPanel);
 app.component('Panel', Panel);
 app.component('SelectButton', SelectButton);
 app.component('InputSwitch', InputSwitch);
