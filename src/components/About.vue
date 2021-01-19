@@ -149,7 +149,10 @@
     </div>
 	</TabPanel>
 	<TabPanel header="Помощь">
-		Content III4
+    <template v-for="(value, index) in defs">
+        <div v-if="value.length === 1" class="chapter p-mb-4" :key="index">{{value[0]}}</div>
+        <Panel v-else :header="value[0]" :toggleable="true" :collapsed="true" class="p-mb-4" :key="index+10">{{value[1]}}</Panel>
+    </template>
 	</TabPanel>
 </TabView>
 
@@ -186,34 +189,50 @@ export default {
       ["Евгения Козюк", "аспирантка Школы Лингвистики НИУ ВШЭ", "поиск переводных аналогов в английском, типологическое исследование формул, исследование связи формул и конструкций"],
       ["Татьяна Зотова", "к. ф. н., преподаватель Школы иностранных языков НИУ ВШЭ", "поиск переводных аналогов в немецком"]
     ];
-
-    return {persons};
+    const defs = [
+      ["Поиск"],
+      ["Как найти конкретную дискурсивную формулу", "В строке поиска начните вводить формулу на русском языке и выберите нужную из списка"],
+      ["Как найти русские аналоги иностранной формулы", "..."],
+      ["Как посмотреть весь список формул", "..."],
+      ["Как найти группу формул", "..."],
+      ["Теги"],
+      ["Функция", "..."],
+      ["Семантика", "..."],
+      ["Интонация", "..."],
+      ["Жесты", "..."],
+      ["Конструкции", "..."],
+      ["Дополнительные возможности"],
+      ["Как посмотреть похожие формулы?", "..."],
+      ["Как посмотреть формулы с тем же переводным аналогом?", "..."],
+      ["Как скачать результаты?", "..."],
+    ]
+    return { persons, defs };
   },
-  data() {
-      return {
-          message: null,
-          text: null
-      }
-  },
-  methods: {
-      greet() {
-          this.$toast.add({severity: 'info', summary: this.text.substring(0,12) + '...'});
-          this.message = 'E-mail ' + this.text + ' добавлен в базу';
-      }
-  },
-  components: {
-  }
+  // data() {
+  //     return {
+  //         message: null,
+  //         text: null
+  //     }
+  // },
+  // methods: {
+  //     greet() {
+  //         this.$toast.add({severity: 'info', summary: this.text.substring(0,12) + '...'});
+  //         this.message = 'E-mail ' + this.text + ' добавлен в базу';
+  //     }
+  // },
+  // components: {
+  // }
 }
 </script>
 
 <style scoped>
-.item{
+/* .item{
   margin:2rem;
   padding:1rem;
 }
 .form-container{
   margin-bottom:1rem;
-}
+} */
 .person{
   margin-bottom:10rem;
 }

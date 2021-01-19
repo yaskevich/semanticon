@@ -94,7 +94,9 @@ body {
 .back-3 {
   background-color:#F5CB5C;
 }
-
+.chapter {
+  font-size: 1.5rem;
+}
 .p-inputtext, .p-component {
   font-family: 'Montserrat', sans-serif !important;
   /* line-height: 1.5; */
