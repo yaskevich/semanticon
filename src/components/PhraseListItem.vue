@@ -1,7 +1,7 @@
 <template>
     <div class="p-component phrase-list-item p-text-center">
     <router-link :to="{ name: 'Phrase', params: { id: eid } }" tag="li" class="nounderline">
-      <Button class="p-button-link" >
+      <Button class="p-button-link black" >
       <span v-for="(value, key) in data.exprs[eid]" :key="key">
         {{data.tokens.values[data.tokens.keys.indexOf(value)].charAt(0)==='-'?'':'&nbsp;'}}{{ data.tokens.values[data.tokens.keys.indexOf(value)] }}
       </span>
@@ -23,5 +23,8 @@ export default {
 <style>
 .nounderline {
   text-decoration: none;
+}
+.black {
+  color: black !important;
 }
 </style>
