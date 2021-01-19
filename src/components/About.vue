@@ -72,7 +72,16 @@
 
 	</TabPanel>
 	<TabPanel header="Участники">
-    test
+    <div class="person"></div>
+    <!-- <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" /> -->
+    <div v-for="(person, index) in persons" :key="index" :class="'p-d-flex p-ai-end p-mt-4  p-flex-column p-flex-md-row person back-'+(index%2+1)">
+      <div class="p-pb-4"><img src="/api/media/catwich.jpg" style="max-height:15rem;margin-top:-4rem;text-align:left;"/></div>
+      <div class="p-pl-2 p-pb-2">
+        <div class="p-text-bold">{{person[0]}}</div>
+        <div class="p-text-italic">{{person[1]}}</div>
+        <div class="">{{person[2]}}</div>
+    </div>
+</div>
 	</TabPanel>
 	<TabPanel header="Публикации">
 
@@ -166,9 +175,20 @@
 
 <script>
 // @ is an alias to /src
-
 export default {
   name: 'Home',
+  setup(){
+    const persons = [
+      ["Екатерина Владимировна Рахилина", "д. ф. н., профессор, руководитель Школы Лингвистики НИУ ВШЭ", "руководитель проекта"],
+      ["Светлана Пужаева", "аспирантка Школы Лингвистики НИУ ВШЭ", "составление, классификация и разметка исходного списка; исследование диахронии"],
+      ["Полина Бычкова", "аспирантка Школы Лингвистики НИУ ВШЭ", "разработка структуры базы, типологическое исследование формул"],
+      ["Евгения Слепак", "студентка магистратуры «Русский язык как иностранный», НИУ ВШЭ", "исследование интонации и жестикуляции, разметка"],
+      ["Евгения Козюк", "аспирантка Школы Лингвистики НИУ ВШЭ", "поиск переводных аналогов в английском, типологическое исследование формул, исследование связи формул и конструкций"],
+      ["Татьяна Зотова", "к. ф. н., преподаватель Школы иностранных языков НИУ ВШЭ", "поиск переводных аналогов в немецком"]
+    ];
+
+    return {persons};
+  },
   data() {
       return {
           message: null,
@@ -194,4 +214,8 @@ export default {
 .form-container{
   margin-bottom:1rem;
 }
+.person{
+  margin-bottom:10rem;
+}
+
 </style>
