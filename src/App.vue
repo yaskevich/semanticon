@@ -60,7 +60,7 @@ export default {
     const store = inject("store");
     onBeforeMount(async() => {
       const { errors, loadData } = queryLibrary();
-      await loadData("features", "/api/features");
+      await loadData();
       // document.title = $primevue.config.locale.hi;
       if (errors.features && errors.features.value) {
           console.log("error", errors.features);

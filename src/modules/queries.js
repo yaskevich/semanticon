@@ -56,8 +56,10 @@ export default function queryLibrary() {
               })
       }
   }
-  const loadData = async (key, endpoint) => {
+  const loadData = async () => {
       // console.log("← API", endpoint);
+      const key = "features";
+      const endpoint = "/api/data";
       try {
         const getApiData = await fetch(endpoint);
         const datum = await getApiData.json();
