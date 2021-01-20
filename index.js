@@ -133,14 +133,14 @@ let users = [
 		return res.send();
 	});
 	
-	app.get("/api/data/:id", async(req, res) =>  {
-		const id  = parseInt(req.params.id, 10);
-		console.log(`query for ${id}`);
-		const data  = id ? await db.getUnits1(id) : [];
-		return res.json(data);
-	});	
+	// app.get("/api/data/:id", async(req, res) =>  {
+		// const id  = parseInt(req.params.id, 10);
+		// console.log(`query for ${id}`);
+		// const data  = id ? await db.getUnits1(id) : [];
+		// return res.json(data);
+	// });	
 		
-	app.get("/api/features", async(req, res) =>  {
+	app.get("/api/data", async(req, res) =>  {
 	  const features = await db.getFeatures();
 	  const tokens = await db.getTokens();
 	  // const phrases = await db.getPhrases();

@@ -35,7 +35,7 @@ export default {
 	}, 
 	async getMedia(){
 		const res = await pool.query(' select * from media');
-        return res.rows.reduce((obj, item) => (obj[item.id.toString()] = item.filename+item.fileext, obj), {});;
+        return res.rows.reduce((obj, item) => (obj[item.id.toString()] = item.filename+item.fileext, obj), {});
 	}, 
 	async getIndex(){
 		const res = await pool.query('select units.id, units.pid, phrase->0 as eid1 from units inner join phrases on units.pid=phrases.pid');
@@ -92,7 +92,7 @@ export default {
 		return Object.fromEntries(data.map(item => [item.id, item]));
 	},
 
-	async getUnits(id){
+	async getUnits(){
 		// const units = await pool.query('select * FROM units where pid=$1', [pid]);
 		// const phrases = await pool.query('select * FROM phrases where pid=$1', [pid]);
         // return { "units": units.rows, "phrase": phrases.rows[0]["phrase"]};
