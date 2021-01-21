@@ -35,7 +35,7 @@ import Unit from "./Unit.vue";
 
 export default {
   name: "UnitList",
-  async setup() {
+  setup() {
     const router = useRoute();
     // const phraseId = computed(() => router.params.id);
     // const id = unref(phraseId);

@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import About from '../components/About.vue'
-import PhraseListScreen from '../components/PhraseListScreen.vue'
-import UnitListScreen from '../components/UnitListScreen.vue'
+import PhraseList from '../components/PhraseList.vue'
+import UnitList from '../components/UnitList.vue'
 import Login from '../components/Login.vue'
 import Logout from '../components/Logout.vue'
 import Admin from '../components/Admin.vue'
@@ -26,14 +26,19 @@ const routes = [
   {
     path: '/home',
     name: 'PhraseListScreen',
-    component: PhraseListScreen
+    component: PhraseList
   },
   {
     path: '/search/:prop/:id',
     name: 'List',
-    component: PhraseListScreen
+    component: PhraseList
   },
-   { path: '/expr/:id', component: UnitListScreen, name: 'Phrase', props: true },
+   {
+     path: '/expr/:id',
+     component: UnitList,
+     name: 'Phrase',
+     props: true
+   },
    {
      path: '/login',
      name: 'Login',
