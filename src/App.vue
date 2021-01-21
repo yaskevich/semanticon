@@ -200,4 +200,13 @@ span.p-inputswitch-slider{
 .article-title{
   text-transform: uppercase;
 }
+.article-field {
+    display: inline-block;
+    font-weight: bold;
+    padding-right: .3rem;
+}
+
+.article-field:first-letter {
+    text-transform: uppercase;
+}
 </style>
