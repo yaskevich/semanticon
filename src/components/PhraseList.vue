@@ -76,9 +76,19 @@ export default {
 
     if (routerInfo.params.id) {
       // semtone.value = [{"value": routerInfo.params.id, "name": data.features[routerInfo.params.id][0]}];
-      const a = {"value": Number(routerInfo.params.id), "name": data.features[routerInfo.params.id][0], "prop": "semfunc"};
-      console.log("a", a);
-      searchState['semfunc'] = a;
+      const routedProp = data.features[routerInfo.params.id][1];
+      const routedName  = data.features[routerInfo.params.id][0];
+      const a = {"value": Number(routerInfo.params.id), "name": routedName, "prop": routedProp};
+      console.log("route IN", a);
+      if (['semfunc'].includes(routedProp)){
+          searchState[routedProp] = a;
+      } else if (['semtone'].includes(routedProp)){
+        searchState[routedProp] = [a];
+      }
+      if (!store.state.accessed.includes('search')){
+          store.state.accessed.push('search');
+      }
+      // console.log("search state", searchState);
     }
 
     const aggregatedFeatures = Object.keys(data.features)
@@ -99,7 +109,7 @@ export default {
       }
 
       console.log("update", e.value);
-      // console.log("search state", searchState);
+      console.log("search state", searchState);
       const selected = [];
       const facet = {};
 

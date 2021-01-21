@@ -53,7 +53,8 @@
             <span class="desc">{{value}} </span>
           </span>
 
-          <span v-else-if="['act1', 'actclass', 'extension', 'gest', 'organ', 'semtone'].includes(name)">
+          <!-- drop semtone -->
+          <span v-else-if="['act1', 'actclass', 'extension', 'gest', 'organ'].includes(name)">
             <span class="desc">{{value}}: </span>
               <span v-for="item in unit[name]" :key="item">
                 <!-- <Chip :label="data.features[a]" /> -->
@@ -248,7 +249,7 @@ a.interactive {
 }
 
 a.interactive:hover {
-    background: orange; /* Цвет фона под ссылкой */
+    background: black; /* Цвет фона под ссылкой */
     color: #ffe; /* Цвет ссылки */
     border: 1px solid brown;
    }
