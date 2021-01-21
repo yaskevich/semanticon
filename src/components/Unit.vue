@@ -1,13 +1,42 @@
 <template>
   <div class="unit">
-    <div style='float:right;'>
+    <!-- <div style='float:right;'>
       <Button v-bind:icon="auth ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="auth ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" />
-  </div>
-    <h4>Значение
-      <!-- {{$route.params.id}} -->
+  </div> -->
+  <h3 class="article-title">
+    <span>
+      {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+    </span><span v-if="num"><sup>{{num}}</sup></span>
+  </h3>
+
+    <!-- <h4>Значение
       <span v-if="num">{{num}}</span>
-    </h4>
+    </h4> -->
+
+    <div class="p-mb-2">
+      <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
+        <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
+          {{data.features[unit['semfunc']][0]}}
+        </router-link>
+      </span>
+
+
+      <span v-for="item in unit['semtone']" :key="item">
+        <!-- <Chip :label="data.features[a]" /> -->
+        <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
+        <!-- {{item}} -->
+        <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
+          {{data.features[item][0]}}
+        </router-link>
+      </span>
+
+    </div>
+
     <div>
+
+
+
+
       <template v-for="(value, name, index) in $primevue.config.locale.phrase">
 
         <div v-if="name === 'parts'"  class="item" :key="index">
@@ -26,22 +55,20 @@
 
           <span v-else-if="['act1', 'actclass', 'extension', 'gest', 'organ', 'semtone'].includes(name)">
             <span class="desc">{{value}}: </span>
-            <!-- <template v-if="unit[name].length"> -->
               <span v-for="item in unit[name]" :key="item">
                 <!-- <Chip :label="data.features[a]" /> -->
                 <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
               </span>
-          <!-- </template> -->
           </span>
 
-          <span v-else-if="name  === 'semfunc'">
+          <!-- <span v-else-if="name  === 'semfunc'">
             <span v-if="data.features[unit[name]] && data.features[unit[name]][0]">
               <span class="desc">{{value}}: </span>
-              <router-link :to="{ name: 'List', params: { prop: name, id: unit[name] } }" tag="li" class="interactive">
+              <router-link :to="{ name: 'List', params: { prop: name, id: unit[name] } }" tag="li" class="interactive back-3">
                 {{data.features[unit[name]][0]}}
               </router-link>
             </span>
-          </span>
+          </span> -->
 
           <!-- <span v-else-if="name === 'semtone'">
             <span class="desc">{{value}}: </span>
@@ -210,14 +237,14 @@ export default {
 
 a.interactive {
   text-decoration: none;
-  background:yellow;
+  /* background:yellow; */
   border-radius: 25px;
   font-size: 0.75rem;
-font-weight: 700;
-padding: .3rem;
-margin-left:.3rem;
-color: black;
-border: 1px solid white;
+  font-weight: 700;
+  padding: .3rem;
+  /* margin-left:.3rem; */
+  color: black;
+  border: 1px solid white;
 }
 
 a.interactive:hover {

@@ -1,11 +1,11 @@
 <template>
-  <div class="p-component">
+  <div class="p-component p-p-4">
     <!-- <pre>{{data}}</pre> -->
-    <h3>
+    <!-- <h3 class="article-title">
       <span v-for="(token, key) in data.exprs[$route.params.id]" :key="key">
         {{data.tokens.values[data.tokens.keys.indexOf(token)]}}&#8239;
       </span>
-    </h3>
+    </h3> -->
     <div v-for="(value) in data.toc[$route.params.id]" :key="value" class="p-component">
     <!-- <div v-for="(value, name, ind) in data.toc[$route.params.id]" :key="value" class="p-component"> <span :title="'Фраза ' + name">Группа {{ind+1}}</span> -->
     <!-- {{value}} -->
@@ -29,19 +29,19 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import { unref, ref, computed } from "vue";
-import { useRoute } from 'vue-router';
+// import { useRoute } from 'vue-router';
 import store from "@/modules/store";
 import Unit from "./Unit.vue";
 
 export default {
   name: "UnitList",
   setup() {
-    const router = useRoute();
+    // const router = useRoute();
     // const phraseId = computed(() => router.params.id);
     // const id = unref(phraseId);
-    const id = router.params.id;
-    console.log(id);
-    return { id, isAuth: store.actions.isAuth, data: store.state.config };
+    // const id = router.params.id;
+    // console.log(id);
+    return { isAuth: store.actions.isAuth, data: store.state.config };
   },
   components: {
     // eslint-disable-next-line vue/no-unused-components

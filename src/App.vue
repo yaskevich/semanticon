@@ -197,5 +197,7 @@ span.p-inputswitch-slider{
 .info{
 	line-height: 1.5rem;
 }
-
+.article-title{
+  text-transform: uppercase;
+}
 </style>
