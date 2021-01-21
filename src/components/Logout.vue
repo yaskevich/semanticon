@@ -1,14 +1,14 @@
 <template>
   Logout
 </template>
+
 <script>
-import queryLibrary from "../modules/queries";
-// import router from "../router"
+import store from "@/modules/store";
+
 export default {
     name: "Logout",
     setup() {
-        const { doLogout } = queryLibrary();
-        doLogout();
+        store.backend.doLogout();
         // router.push("/")
     }
 }

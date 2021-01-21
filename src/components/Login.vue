@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import queryLibrary from "../modules/queries";
+    import store from "@/modules/store";
     // import store from "@/modules/store";
     export default {
         name: "Login",
@@ -26,17 +26,14 @@
         methods: {
             login: (e) => {
                 e.preventDefault()
-                const { doLogin } = queryLibrary();
                 let email = "user@email.com"
                 let password = "password"
-                doLogin(email, password);
-                // login();
+                store.backend.doLogin(email, password);
             },
         },  computed: {
           isLog() {
-            const { isLoaded } = queryLibrary();
-            console.log("!!!!");
-            return Boolean(Reflect.getOwnPropertyDescriptor(isLoaded.value, "user"));
+            console.log("is Logged check!");
+            return store.actions.isAuth();
           }
         }
     }

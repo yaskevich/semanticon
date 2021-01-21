@@ -51,7 +51,6 @@
 import { ref, unref } from "vue";
 import { inject } from "vue";
 import {onBeforeMount} from 'vue'
-import queryLibrary from "./modules/queries";
 
 export default {
   name: "App",
@@ -59,23 +58,22 @@ export default {
    setup() {
     const store = inject("store");
     onBeforeMount(async() => {
-      const { errors, loadData } = queryLibrary();
-      await loadData();
+      await store.backend.getData();
+      // console.log(store);
       // document.title = $primevue.config.locale.hi;
-      if (errors.features && errors.features.value) {
-          console.log("error", errors.features);
-      }
+      // if (errors.features && errors.features.value) {
+      //     console.log("error", errors.features);
+      // }
       dataReady.value = true;
       console.log('app → mounted!')
    })
     console.log("app → setup");
     let dataReady = ref(false);
-    console.log(store.actions.isAuth());
+    console.log("auth:", store.actions.isAuth());
     return {
       dataReady,
       isAuth: store.actions.isAuth,
       state: store.state,
-      // featuresError
     };
   },
 };
