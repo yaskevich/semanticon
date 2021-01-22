@@ -140,9 +140,10 @@
           <!-- drop semtone actclass act1 organ -->
           <span v-else-if="['extension', 'gest'].includes(name)">
             <span class="article-field">{{value}}: </span>
-              <span v-for="item in unit[name]" :key="item">
+              <span v-for="item in unit[name]" :key="item" class="p-pl-2">
                 <!-- <Chip :label="data.features[a]" /> -->
-                <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+                <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
+                {{data.features[item][0]}}
               </span>
           </span>
 

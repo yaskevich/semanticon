@@ -97,7 +97,7 @@ body {
 }
 .p-inputtext, .p-component {
   font-family: 'Montserrat', sans-serif !important;
-  /* line-height: 1.5; */
+  line-height: 1.5;
 }
 
 #main {
@@ -105,7 +105,7 @@ body {
   flex-direction: column; */
   /* min-height: 97vh; */
   /* max-width: 100vh; */
-  max-width: 800px;  
+  max-width: 800px;
   /* margin: auto; */
 }
 #nav {
