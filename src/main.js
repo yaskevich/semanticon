@@ -30,6 +30,7 @@ import InputSwitch from 'primevue/inputswitch';
 import Panel from 'primevue/panel';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import Dropdown from 'primevue/dropdown';
 
 const app = createApp(App);
 const pvLocale = {
@@ -86,6 +87,7 @@ app.use(ToastService);
 app.use(router);
 document.title = pvLocale.title;
 
+app.component('Dropdown', Dropdown);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
 app.component('Panel', Panel);

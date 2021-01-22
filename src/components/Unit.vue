@@ -7,11 +7,13 @@
     <Button :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded" @click="clicked($event)"/>
   </div>
 
-  <h3 class="article-title">
+  <h3 class="article-title app-title-basic">
     <span>
       {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
     </span><span v-if="num"><sup>{{num}}</sup></span>
+    <Button icon="pi pi-volume-up" class="p-button-text p-ml-3" style="padding:0 !important;"/>
   </h3>
+
 
     <!-- <h4>Значение
       <span v-if="num">{{num}}</span>
@@ -37,6 +39,15 @@
           ({{data.features[unit['style']][0]}})
       </span>
     </div>
+
+
+    <!-- <div>
+      <Dropdown v-model="selectedLang" :options="langs" optionLabel="name" placeholder="Выберите язык" />
+    </div> -->
+
+
+
+
     <div class="parts3" v-if="unit.hasOwnProperty('parts') && unit['parts']">
     <span class="article-field">{{ $primevue.config.locale.phrase.parts}}</span>
       [{{ $primevue.config.locale.parts3}}]
@@ -203,12 +214,12 @@
             </div>
           </div>
 
-          <div v-else-if="name === 'translations' && unit[name].length">
+          <!-- <div v-else-if="name === 'translations' && unit[name].length">
             <span class="article-field">{{value}}: </span>
             <span v-for="(v, k) in unit[name]" :key="k">
               <span class="example-text">{{data.trans[v]['txt']}}</span> ({{$primevue.config.locale.lang.hasOwnProperty(data.trans[v]['lang'])?$primevue.config.locale.lang[data.trans[v]['lang']]:data.trans[v]['lang']}})
             </span>
-          </div>
+          </div> -->
 
           <div v-else-if="name === 'audio' && unit[name].length">
             <div v-for="(v, k) in unit[name]" :key="k" class="audio">
@@ -258,8 +269,15 @@ export default {
     const clicked = (e) => {
       display.value = display.value? '' : 'p-d-none';
       console.log("switch display", display.value, e);
-    }
+    };
+
+    // console.log(props.unit['translations'].map(x => ({ props.data.trans[x]["lang"] })));
+    // <span v-for="(v, k) in unit['translations']" :key="k">
+    //   <span class="example-text">{{data.trans[v]['txt']}}</span> ({{$primevue.config.locale.lang.hasOwnProperty(data.trans[v]['lang'])?$primevue.config.locale.lang[data.trans[v]['lang']]:data.trans[v]['lang']}})
+    // </span>
+    const langs = [];
     return {
+      langs,
       display,
       clicked,
       a: 'А', b: 'Б'
@@ -332,6 +350,11 @@ a.interactive:hover {
     background: black; /* Цвет фона под ссылкой */
     color: #ffe; /* Цвет ссылки */
     border: 1px solid brown;
-   }
+}
+
+.pi-volume-up:before {
+    /* content: "\e977"; */
+    font-size: 2rem;
+}
 
 </style>

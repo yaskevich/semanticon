@@ -2,7 +2,7 @@
 	<div class="p-component p-mt-4">
 		<div class="p-col p-text-center">
 		<div>База данных дискурсивных формул русского языка</div>
-		<div>[Для студентов и преподавателей РКИ]</div>
+		<!-- <div>[Для студентов и преподавателей РКИ]</div> -->
 		</div>
 	</div>
 	<div class="p-grid p-jc-center">

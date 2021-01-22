@@ -100,20 +100,13 @@ body {
   /* line-height: 1.5; */
 }
 
-#app {
-  /* display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background-color: rgb(240, 240, 240);
-  justify-content: center;
-  align-items: center; */
-}
 #main {
-  display: flex;
-  flex-direction: column;
-  min-height: 97vh;
-  max-width: 100vh;
-  margin: auto;
+  /* display: flex;
+  flex-direction: column; */
+  /* min-height: 97vh; */
+  /* max-width: 100vh; */
+  max-width: 1000px;
+  /* margin: auto; */
 }
 #nav {
   /* display: flex;
