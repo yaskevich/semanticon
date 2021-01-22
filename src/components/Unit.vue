@@ -41,9 +41,9 @@
     </div>
 
 
-    <!-- <div>
-      <Dropdown v-model="selectedLang" :options="langs" optionLabel="name" placeholder="Выберите язык" />
-    </div> -->
+    <div>
+      <Dropdown v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" @change="getLangSelection($event)"/>
+    </div>
 
 
 
@@ -255,6 +255,7 @@
 </template>
 <script>
 import { ref } from "vue";
+import { usePrimeVue } from "primevue/config";
 export default {
   name: "Unit",
   props: {
@@ -265,20 +266,35 @@ export default {
     unit: Object,
     last: Boolean
   },
-  setup (){
+  setup (props){
     const display = ref('');
+    let selectedLang = ref();
+    const primevue = usePrimeVue();
     const clicked = (e) => {
       display.value = display.value? '' : 'p-d-none';
       console.log("switch display", display.value, e);
     };
 
-    // console.log(props.unit['translations'].map(x => ({ props.data.trans[x]["lang"] })));
-    // <span v-for="(v, k) in unit['translations']" :key="k">
-    //   <span class="example-text">{{data.trans[v]['txt']}}</span> ({{$primevue.config.locale.lang.hasOwnProperty(data.trans[v]['lang'])?$primevue.config.locale.lang[data.trans[v]['lang']]:data.trans[v]['lang']}})
-    // </span>
-    const langs = [];
+    const getLangSelection = (e) => {
+      console.log(e);
+    };
+
+    let langValues = [];
+    if (props.unit['translations']){
+        const langs = [...new Set((props.unit['translations'].map(x => props.data.trans[x]["lang"])))];
+        let sel = langs.indexOf('eng');
+        if (sel === -1) {
+          sel = 0;
+        }
+        langValues  = langs.map(x => ({ "name": primevue.config.locale.lang[x], "value": x}));
+        selectedLang = langValues[sel];
+    }
+
+
     return {
-      langs,
+      getLangSelection,
+      langValues,
+      selectedLang,
       display,
       clicked,
       a: 'А', b: 'Б'
