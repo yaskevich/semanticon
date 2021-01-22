@@ -105,7 +105,7 @@ body {
   flex-direction: column; */
   /* min-height: 97vh; */
   /* max-width: 100vh; */
-  max-width: 1000px;
+  max-width: 800px;  
   /* margin: auto; */
 }
 #nav {

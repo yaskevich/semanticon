@@ -137,8 +137,8 @@
             <span class="article-field">{{value}} </span>
           </span>
 
-          <!-- drop semtone actclass act1 -->
-          <span v-else-if="['extension', 'gest', 'organ'].includes(name)">
+          <!-- drop semtone actclass act1 organ -->
+          <span v-else-if="['extension', 'gest'].includes(name)">
             <span class="article-field">{{value}}: </span>
               <span v-for="item in unit[name]" :key="item">
                 <!-- <Chip :label="data.features[a]" /> -->
