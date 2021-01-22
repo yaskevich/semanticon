@@ -38,8 +38,46 @@
       </span>
     </div>
     <div class="parts3" v-if="unit.hasOwnProperty('parts') && unit['parts']">
+    <span class="article-field">{{ $primevue.config.locale.phrase.parts}}</span>
       [{{ $primevue.config.locale.parts3}}]
+
+
+      <div class="p-pb-2">
+        <span class="article-field">А: </span>
+        <span v-for="item in unit['act1']" :key="item">
+          <!-- <Chip :label="data.features[a]" /> -->
+          <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+        </span>
+      </div>
+
+      <div class="p-pb-2">
+        <span class="article-field">Б: </span>
+        <span v-for="item in unit['actclass']" :key="item">
+            <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+        </span>
+      </div>
+      <div class="p-pb-2">
+        <span class="article-field">А: </span>
+          {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+          <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
+            <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
+              {{data.features[unit['semfunc']][0]}}
+            </router-link>
+          </span>
+
+
+          <span v-for="item in unit['semtone']" :key="item">
+            <!-- <Chip :label="data.features[a]" /> -->
+            <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
+            <!-- {{item}} -->
+            <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
+              {{data.features[item][0]}}
+            </router-link>
+          </span>
+      </div>
+
     </div>
+
     <div v-else class="parts2">
       <div class="p-pb-2">
       <span class="article-field">{{ $primevue.config.locale.phrase.parts}}</span>
@@ -88,8 +126,8 @@
             <span class="article-field">{{value}} </span>
           </span>
 
-          <!-- drop semtone actclass -->
-          <span v-else-if="['act1', 'extension', 'gest', 'organ'].includes(name)">
+          <!-- drop semtone actclass act1 -->
+          <span v-else-if="['extension', 'gest', 'organ'].includes(name)">
             <span class="article-field">{{value}}: </span>
               <span v-for="item in unit[name]" :key="item">
                 <!-- <Chip :label="data.features[a]" /> -->
