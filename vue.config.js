@@ -1,6 +1,16 @@
 //vue.config.js
 const webpack = require('webpack');
 module.exports = {
+	pages: {
+    index: {
+      entry: 'src/main.js',
+			// the source template
+      template: 'public/index.html',
+      // output as dist/index.html
+      filename: 'index.html',
+      title: 'Прагматикон'
+    }
+  },
 	configureWebpack: {
 		plugins: [
 			// Define Bundler Build Feature Flags

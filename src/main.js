@@ -88,7 +88,7 @@ app.use(PrimeVue, {
 app.use(ToastService);
 // app.use(Panel);
 app.use(router);
-document.title = pvLocale.title;
+// document.title = pvLocale.title;
 
 app.component('Badge', Badge);
 app.component('Dropdown', Dropdown);
