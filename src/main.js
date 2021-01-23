@@ -31,6 +31,8 @@ import Panel from 'primevue/panel';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
+import Badge from 'primevue/badge';
+
 
 const app = createApp(App);
 const pvLocale = {
@@ -88,6 +90,7 @@ app.use(ToastService);
 app.use(router);
 document.title = pvLocale.title;
 
+app.component('Badge', Badge);
 app.component('Dropdown', Dropdown);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
