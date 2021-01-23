@@ -8,6 +8,9 @@
     <!-- <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link> -->
     <!-- <router-link v-else to="/login">Войти</router-link> -->
   </div>
+  <div class="p-component p-pl-3" style="margin-top:-1.5rem;">
+    {{$primevue.config.locale.sub}}
+  </div>
   <div id="content">
     <router-view />
   </div>

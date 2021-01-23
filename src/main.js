@@ -36,6 +36,7 @@ const app = createApp(App);
 const pvLocale = {
     // locale: 'rus',
     // switch: 'RUS/ENG',
+    sub: "База данных дискурсивных формул русского языка",
     home: 'Главная',
     // filtering: 'Расширенный поиск',
     filtering: 'Поиск+',
