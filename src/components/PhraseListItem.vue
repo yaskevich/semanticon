@@ -25,6 +25,6 @@ export default {
   text-decoration: none;
 }
 .black {
-  color: black !important;
+  color: black !important;  
 }
 </style>

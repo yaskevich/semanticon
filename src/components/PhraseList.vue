@@ -20,7 +20,7 @@
     <div class="p-field p-grid" >
       <label for="partsbutton" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0 p-component">Структура</label>
       <div class="p-col-12 p-md-10">
-        <SelectButton v-model="searchState['parts']" :options="partsOptions"  class="" optionLabel="name" optionValue="code" id="partsbutton" @click="updateRoute($event)" />
+        <SelectButton v-model="searchState['parts']" :options="partsOptions"  class="" optionLabel="name" optionValue="code" id="partsbutton" :multiple="true" @click="updateRoute($event)" />
       </div>
     </div>
   </div>
@@ -65,11 +65,6 @@ export default {
     const partsOptions = [{"name": 'двухчастная', "code": false}, {"name":'трёхчастная', "code": true}];
     const data  = store.state.config;
     const searchState = store.state.search;
-    // console.log("setup", store.state.search);
-    // console.log(Object.keys(searchState));
-
-    //
-
 
     let eids = ref([]);
     eids.value = Object.keys(store.state.config.toc);
@@ -115,16 +110,16 @@ export default {
 
       for (const [key, value] of Object.entries(searchState)) {
         // console.log(`${key}: ${value} || ${typeof value} ${Array.isArray(value)}`);
-        if (Array.isArray(value) && value.length) {
+        if (Array.isArray(value) && value.length && key !== 'parts') {
           facet[key] = value.map(x=>x.value);
         } else if (value && value.constructor === Object && Object.keys(value).length) {
           // console.log("!", key, Object.keys(value).length, Object.keys(value));
           facet[key] = key === 'translations'? lang2ids[value.value]: value.value;
         } else if(key === 'parts') {
-          facet[key] = value;
+          facet[key] = value.length === 1 ? value[0] : null;
         }
       }
-      // console.log("facet", facet);
+      console.log("facet", facet);
       const facetArray = Object.entries(facet);
       if (facetArray.length){ //check whether facet is not empty
         for (let [k, v] of Object.entries(store.state.config.toc)) {
