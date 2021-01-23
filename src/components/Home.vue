@@ -29,12 +29,13 @@
 				<Button icon="pi pi-search" class="enter" @click="renderMatches()"/>
 			</div>
 			<div class="p-grid p-jc-center p-col">
-				<div class="p-pr-3">поиск по переводному аналогу</div>
-					<InputSwitch v-model="checked" />
+				<span class="p-pr-3 label-switch">поиск по переводному аналогу</span>
+				<!-- <InputSwitch v-model="checked" @click="handleSwitchState($event)" /> -->
+				<Checkbox v-model="checked" @click="handleSwitchState($event)" :binary="true" />
 			</div>
-			<div class="p-grid p-jc-center p-col">
+			<!-- <div class="p-grid p-jc-center p-col">
 				<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<div class="p-component">
@@ -80,6 +81,7 @@
 import store from "@/modules/store";
 import InputSwitch from 'primevue/inputswitch';
 import SearchResults from "./SearchResults.vue";
+import Checkbox from 'primevue/checkbox';
 // import router from "../router"
 // eslint-disable-next-line no-unused-vars
 import { unref, ref, computed } from "vue";
@@ -87,7 +89,7 @@ export default {
 	name: "Search",
 	setup(){
 		const data = store.state.config;
-		const switchStateOptions = [{"name": 'Русский', "code": 'ru'}, {"name":'Перевод', "code": "none"}];
+		// const switchStateOptions = [{"name": 'Русский', "code": 'ru'}, {"name":'Перевод', "code": "none"}];
 		let searchVariants = ref(null);
 
 		let token =  ref(null);
@@ -101,6 +103,8 @@ export default {
 
 
 		const handleSwitchState = () => {
+			// console.log("switch", checked.value);
+			switchState.value = checked.value ? 'ru': 'none'
 			token.value= '';
 			matches.value = [];
 		};
@@ -259,11 +263,12 @@ export default {
 			searchVariants.value = getMatches(e.query);
 		};
 
-		return { placeholder, autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions, handleSwitchState, renderMatches, searchInstance,
+		return { placeholder, autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, handleSwitchState, renderMatches, searchInstance,
 		InputSwitch, checked  };
 	},
 	components: {
-		SearchResults
+		SearchResults,
+		Checkbox
 	}
 }
 </script>
@@ -279,5 +284,8 @@ export default {
 	height: 1rem;
 	border: 1px solid gray;
 	margin-right: .3rem;
+}
+.label-switch {
+	font-size: 0.75rem;
 }
 </style>
