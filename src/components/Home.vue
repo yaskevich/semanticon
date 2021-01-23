@@ -12,7 +12,7 @@
 					:suggestions="searchVariants"
 					ref="searchInstance"
 					:minLength="Number(2)"
-					placeholder="да ладно"
+					:placeholder="placeholder[switchState]"
 					field="txt"
 					scrollHeight="200"
 					@keyup.enter="renderMatches($event)"
@@ -89,9 +89,12 @@ export default {
 		const data = store.state.config;
 		const switchStateOptions = [{"name": 'Русский', "code": 'ru'}, {"name":'Перевод', "code": "none"}];
 		let searchVariants = ref(null);
+
 		let token =  ref(null);
 		let matches = ref({});
 		let switchState = ref('ru');
+		const placeholder = {'ru': 'да ладно', 'none': 'whatever'};
+
 		let searchInstance = ref();
 
 		let checked = ref(false);
@@ -256,7 +259,7 @@ export default {
 			searchVariants.value = getMatches(e.query);
 		};
 
-		return { autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions, handleSwitchState, renderMatches, searchInstance,
+		return { placeholder, autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, switchStateOptions, handleSwitchState, renderMatches, searchInstance,
 		InputSwitch, checked  };
 	},
 	components: {
