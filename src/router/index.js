@@ -34,7 +34,7 @@ const routes = [
     component: PhraseList
   },
    {
-     path: '/expr/:id',
+     path: '/exp/:id',
      component: UnitList,
      name: 'Phrase',
      props: true
