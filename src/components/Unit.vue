@@ -37,8 +37,11 @@
             ({{data.features[unit['style']][0]}})
         </span>
       </div>
-      <div class="article-langs p-mb-4">
-        <Dropdown v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" @change="getLangSelection($event)" class="lang-combo"/>
+      <div v-if="selectedLang.length" class="article-langs p-mb-4">
+        <Dropdown :disabled="langValues.length === 1" optionValue="value" v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" class="lang-combo"/>
+        <span v-for="item in langValues.filter(x => x.value == selectedLang)[0]['data']" :key="item">
+          ‹{{item.txt}}›&nbsp;
+        </span>
       </div>
       <div class="article-parts p-mb-6">
         <div class="parts3" v-if="unit.hasOwnProperty('parts') && unit['parts']">
@@ -259,16 +262,8 @@ export default {
   },
   setup (props){
     const display = ref('');
-    let selectedLang = ref();
+    const selectedLang = ref({});
     const primevue = usePrimeVue();
-    const clicked = (e) => {
-      display.value = display.value? '' : 'p-d-none';
-      console.log("switch display", display.value, e);
-    };
-
-    const getLangSelection = (e) => {
-      console.log(e);
-    };
 
     let sound;
     if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length){
@@ -281,23 +276,33 @@ export default {
       sound.play();
     };
 
+    const clicked = (e) => {
+      display.value = display.value? '' : 'p-d-none';
+      console.log("switch display", display.value, e);
+    };
 
     let langValues = [];
     if (props.unit['translations']){
-        const langs = [...new Set((props.unit['translations'].map(x => props.data.trans[x]["lang"])))];
+        const lang2Translations  = props.unit['translations']
+          .map(x => props.data.trans[x])
+          .reduce((all, data) => {
+            (all[data.lang] = all[data.lang] || {"value": data.lang, "name": primevue.config.locale.lang[data.lang], "data":[]})["data"]
+            .push(data);
+            return all;
+          }, {});
+        // console.log("res", results);
+        const langs = Object.keys(lang2Translations);
         let sel = langs.indexOf('eng');
-        if (sel === -1) {
-          sel = 0;
-        }
-        langValues  = langs.map(x => ({ "name": primevue.config.locale.lang[x], "value": x}));
-        selectedLang = langValues[sel];
+        if (sel === -1) { sel = 0; }
+        langValues  = Object.values(lang2Translations);
+        selectedLang.value = langs[sel];
+        // console.log("sel", selectedLang);
     }
 
 
     return {
       playClicked,
       sound,
-      getLangSelection,
       langValues,
       selectedLang,
       display,
