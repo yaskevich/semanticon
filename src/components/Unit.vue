@@ -7,109 +7,24 @@
     <Button :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded" @click="clicked($event)"/>
   </div>
 
-  <h3 class="article-title app-title-basic">
+  <div class="article-title app-title-basic p-mb-2">
     <span>
       {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
     </span><span v-if="num"><sup>{{num}}</sup></span>
-    <Button icon="pi pi-volume-up" class="p-button-text p-ml-3" style="padding:0 !important;"/>
-  </h3>
+    <Button v-if="sound" icon="pi pi-volume-up" class="p-button-text p-ml-3" style="padding:0 !important;" @click="playClicked()"/>
+  </div>
 
 
     <!-- <h4>Значение
       <span v-if="num">{{num}}</span>
     </h4> -->
     <div :class="'article-body' + ' ' + display">
-    <div class="p-mb-2">
-      <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
-        <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
-          {{data.features[unit['semfunc']][0]}}
-        </router-link>
-      </span>
-
-
-      <span v-for="item in unit['semtone']" :key="item">
-        <!-- <Chip :label="data.features[a]" /> -->
-        <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
-        <!-- {{item}} -->
-        <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
-          {{data.features[item][0]}}
-        </router-link>
-      </span>
-      <span v-if="data.features[unit['style']] && data.features[unit['style']][0]">
-          ({{data.features[unit['style']][0]}})
-      </span>
-    </div>
-
-
-    <div>
-      <Dropdown v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" @change="getLangSelection($event)"/>
-    </div>
-
-
-
-
-    <div class="parts3" v-if="unit.hasOwnProperty('parts') && unit['parts']">
-    <span class="article-field">{{ $primevue.config.locale.phrase.parts}}</span>
-      [{{ $primevue.config.locale.parts3}}]
-
-
-      <div class="p-pb-2">
-        <span class="article-field">А: </span>
-        <span v-for="item in unit['act1']" :key="item">
-          <!-- <Chip :label="data.features[a]" /> -->
-          <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
-        </span>
-      </div>
-
-      <div class="p-pb-2">
-        <span class="article-field">Б: </span>
-        <span v-for="item in unit['actclass']" :key="item">
-            <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
-        </span>
-      </div>
-      <div class="p-pb-2">
-        <span class="article-field">А: </span>
-          {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
-          <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
-            <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
-              {{data.features[unit['semfunc']][0]}}
-            </router-link>
-          </span>
-
-
-          <span v-for="item in unit['semtone']" :key="item">
-            <!-- <Chip :label="data.features[a]" /> -->
-            <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
-            <!-- {{item}} -->
-            <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
-              {{data.features[item][0]}}
-            </router-link>
-          </span>
-      </div>
-
-    </div>
-
-    <div v-else class="parts2">
-      <div class="p-pb-2">
-      <span class="article-field">{{ $primevue.config.locale.phrase.parts}}</span>
-      [{{ $primevue.config.locale.parts2}}]
-    </div>
-    <div class="p-pb-2">
-      <span class="article-field">Б: </span>
-      <span v-for="item in unit['actclass']" :key="item">
-          <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
-      </span>
-    </div>
-    <div class="p-pb-2">
-      <span class="article-field">А: </span>
-        {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+      <div class="article-tags p-mb-2">
         <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
           <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
             {{data.features[unit['semfunc']][0]}}
           </router-link>
         </span>
-
-
         <span v-for="item in unit['semtone']" :key="item">
           <!-- <Chip :label="data.features[a]" /> -->
           <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
@@ -118,8 +33,86 @@
             {{data.features[item][0]}}
           </router-link>
         </span>
-    </div>
-    </div>
+        <span v-if="data.features[unit['style']] && data.features[unit['style']][0]">
+            ({{data.features[unit['style']][0]}})
+        </span>
+      </div>
+      <div class="article-langs p-mb-4">
+        <Dropdown v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" @change="getLangSelection($event)" class="lang-combo"/>
+      </div>
+      <div class="article-parts p-mb-6">
+        <div class="parts3" v-if="unit.hasOwnProperty('parts') && unit['parts']">
+          <span class="article-field">{{ $primevue.config.locale.phrase.parts}}</span>
+          [{{ $primevue.config.locale.parts3}}]
+
+
+          <div class="p-pb-2">
+            <span class="article-field">А: </span>
+            <span v-for="item in unit['act1']" :key="item">
+              <!-- <Chip :label="data.features[a]" /> -->
+              <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+            </span>
+          </div>
+
+          <div class="p-pb-2">
+            <span class="article-field">Б: </span>
+            <span v-for="item in unit['actclass']" :key="item">
+                <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+            </span>
+          </div>
+          <div class="p-pb-2">
+            <span class="article-field">А: </span>
+              {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+              <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
+                <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
+                  {{data.features[unit['semfunc']][0]}}
+                </router-link>
+              </span>
+
+
+              <span v-for="item in unit['semtone']" :key="item">
+                <!-- <Chip :label="data.features[a]" /> -->
+                <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
+                <!-- {{item}} -->
+                <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
+                  {{data.features[item][0]}}
+                </router-link>
+              </span>
+          </div>
+
+        </div>
+        <div v-else class="parts2">
+          <div class="p-pb-2">
+          <span class="article-field">{{ $primevue.config.locale.phrase.parts}}</span>
+          [{{ $primevue.config.locale.parts2}}]
+        </div>
+          <div class="p-pb-2">
+            <span class="article-field">Б: </span>
+            <span v-for="item in unit['actclass']" :key="item">
+                <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+            </span>
+          </div>
+          <div class="p-pb-2">
+          <span class="article-field">А: </span>
+            {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+            <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
+              <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
+                {{data.features[unit['semfunc']][0]}}
+              </router-link>
+            </span>
+
+
+            <span v-for="item in unit['semtone']" :key="item">
+              <!-- <Chip :label="data.features[a]" /> -->
+              <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
+              <!-- {{item}} -->
+              <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
+                {{data.features[item][0]}}
+              </router-link>
+            </span>
+        </div>
+        </div>
+      </div>
     <div>
       <template v-for="(value, name, index) in $primevue.config.locale.phrase">
 
@@ -222,17 +215,15 @@
             </span>
           </div> -->
 
-          <div v-else-if="name === 'audio' && unit[name].length">
+          <!-- <div v-else-if="name === 'audio' && unit[name].length">
             <div v-for="(v, k) in unit[name]" :key="k" class="audio">
               <audio
                 src="/api/media/horse.ogg"
                 controls>
                 Ваш браузер не поддерживает элемент <code>audio</code>.
               </audio>
-              <!-- https://stackoverflow.com/questions/4126708/is-it-possible-to-style-html5-audio-tag -->
-              <!-- {{data.media[v]}} -->
             </div>
-          </div>
+          </div> -->
 
           <div v-else-if="name === 'video' && unit[name].length" class="video">
             <span v-for="(v, k) in unit[name]" :key="k" class="p-pr-4">
@@ -279,6 +270,18 @@ export default {
       console.log(e);
     };
 
+    let sound;
+    if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length){
+      sound  = new Audio(document.location.origin + "/api/media/horse.ogg");
+      console.log(props.data.media[props.unit.audio[0]]);
+      // sound.value.play();
+    }
+
+    const playClicked = () => {
+      sound.play();
+    };
+
+
     let langValues = [];
     if (props.unit['translations']){
         const langs = [...new Set((props.unit['translations'].map(x => props.data.trans[x]["lang"])))];
@@ -292,6 +295,8 @@ export default {
 
 
     return {
+      playClicked,
+      sound,
       getLangSelection,
       langValues,
       selectedLang,
@@ -350,6 +355,9 @@ export default {
 .example-pubdate {
   color: blue;
 }
+.article-title{
+  font-size: 1.5rem;
+}
 
 a.interactive {
   text-decoration: none;
@@ -368,10 +376,15 @@ a.interactive:hover {
     color: #ffe; /* Цвет ссылки */
     border: 1px solid brown;
 }
-
+.pi-volume-up{
+  /* margin-bottom: -0.1rem; */
+}
 .pi-volume-up:before {
     /* content: "\e977"; */
-    font-size: 2rem;
-}
+    font-size: 2.2rem;
 
+}
+.lang-combo{
+  min-width: 12rem;
+}
 </style>
