@@ -41,6 +41,17 @@
         <Dropdown :disabled="langValues.length === 1" optionValue="value" v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" class="lang-combo"/>
         <span v-for="item in langValues.filter(x => x.value == selectedLang)[0]['data']" :key="item">
           ‹{{item.txt}}›&nbsp;
+          <Inplace v-if="unit.examples" class="article-trans-ex">
+              <template #display>
+                  <span class="pi pi-bookmark" style="vertical-align: middle"></span>
+              </template>
+              <template #content>
+                <div v-for="ex in unit.examples.filter(x => x.lang===selectedLang)" :key="ex" class="p-mt-2 p-text-italic">
+                  {{ex.text}}
+                </div>
+              </template>
+          </Inplace>
+
         </span>
       </div>
       <div class="article-parts p-mb-6">
@@ -187,9 +198,10 @@
               </template>
               <template #content>
                 <div class="example">
-                  <div v-for="(v, k) in unit[name]" :key="k">
+                  <div v-for="(v, index) in unit[name].filter(x=>x.lang==='rus')" :key="index">
                     <span class="example-text">{{v.text}}</span> <span class="example-author">{{v.author}}</span>  <span class="example-pub">{{v.pub}}</span>  <span v-if="v.journal" class="example-journal" title="публикация в журнале">(«{{v.journal}}»)</span> <span class="example-pubdate">{{v.pubdate}}
-                    </span> <span class="">‹{{$primevue.config.locale.lang[v.lang]}}›</span>
+                    </span>
+                    <!-- <span class="">‹{{$primevue.config.locale.lang[v.lang]}}›</span> -->
                   </div>
                 </div>
               </template>
@@ -391,5 +403,8 @@ a.interactive:hover {
 }
 .lang-combo{
   min-width: 12rem;
+}
+.article-trans-ex{
+  display:inline-block;
 }
 </style>

@@ -177,6 +177,9 @@ body {
 .p-autocomplete {
 	text-align:left;
 }
+.p-inplace-display{
+  padding: 0 !important;
+}
 span.p-inputswitch-slider{
 	max-height: 1.5rem;
 	background: red;
