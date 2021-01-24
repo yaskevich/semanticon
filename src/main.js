@@ -19,7 +19,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import Toast from 'primevue/toast';
-import ToastService from 'primevue/toastservice';
+// import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
 import Inplace from 'primevue/inplace';
 import MultiSelect from 'primevue/multiselect';
@@ -32,6 +32,7 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Badge from 'primevue/badge';
+// import ScrollTop from 'primevue/scrolltop';
 
 
 const app = createApp(App);
@@ -85,11 +86,8 @@ app.provide("store", store);
 app.use(PrimeVue, {
     locale: pvLocale
 });
-app.use(ToastService);
-// app.use(Panel);
-app.use(router);
-// document.title = pvLocale.title;
 
+// app.component('ScrollTop', ScrollTop);
 app.component('Badge', Badge);
 app.component('Dropdown', Dropdown);
 app.component('TabView', TabView);
@@ -106,4 +104,9 @@ app.component('Toast', Toast);
 app.component('Divider', Divider);
 app.component('Tag', Tag);
 // app.component('Chip', Chip);
+// app.use(ToastService);
+// app.use(Panel);
+app.use(router);
+// document.title = pvLocale.title;
+
 app.mount('#app')

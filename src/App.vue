@@ -33,6 +33,7 @@
       <!-- <pre>store.state: {{ state }}</pre>
       <pre>store.state: {{ isAuth() }}</pre> -->
   </div>
+  <!-- <ScrollTop /> -->
   <div id="footer" class="p-component back-1">
     <div class="p-grid p-pr-4 p-pl-4">
       <div class="p-col">
