@@ -10,23 +10,23 @@
   "dependencies": {
     "@fontsource/montserrat": "^4.1.0",
     "axios": "^0.21.1",
-    "core-js": "^3.8.2",
+    "core-js": "^3.8.3",
     "mitt": "^2.1.0",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",
-    "primevue": "^3.1.1",
+    "primevue": "^3.1.2",
     "vue": "^3.0.4",
     "vue-router": "^4.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.10",
-    "@vue/cli-plugin-eslint": "~4.5.10",
-    "@vue/cli-plugin-router": "^4.5.10",
-    "@vue/cli-service": "~4.5.10",
+    "@vue/cli-plugin-babel": "~4.5.11",
+    "@vue/cli-plugin-eslint": "~4.5.11",
+    "@vue/cli-plugin-router": "^4.5.11",
+    "@vue/cli-service": "~4.5.11",
     "@vue/compiler-sfc": "^3.0.5",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.17.0",
-    "eslint-plugin-vue": "^7.4.1"
+    "eslint": "^7.18.0",
+    "eslint-plugin-vue": "^7.5.0"
   },
   "eslintConfig": {
     "root": true,
