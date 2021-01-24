@@ -32,7 +32,7 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Badge from 'primevue/badge';
-// import ScrollTop from 'primevue/scrolltop';
+import ScrollTop from 'primevue/scrolltop';
 
 
 const app = createApp(App);
@@ -87,7 +87,7 @@ app.use(PrimeVue, {
     locale: pvLocale
 });
 
-// app.component('ScrollTop', ScrollTop);
+app.component('ScrollTop', ScrollTop);
 app.component('Badge', Badge);
 app.component('Dropdown', Dropdown);
 app.component('TabView', TabView);
