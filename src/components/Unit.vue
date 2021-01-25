@@ -250,13 +250,13 @@
     <!-- <h4>Значение<span v-if="num">{{num}}</span></h4> -->
     <div class="p-ml-auto">
       <div>
-        <Button :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded p-mb-2"  @click="clicked($event)"/>
+        <Button :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded p-mb-2"  @click="doShowHide($event)"/>
       </div>
       <div>
-        <Button icon="pi pi-question" class="p-button-rounded p-button-secondary p-mb-2"  @click="clicked($event)"/>
+        <Button icon="pi pi-question" class="p-button-rounded p-button-secondary p-mb-2"  @click="doGoToHelp($event)"/>
       </div>
       <div>
-        <Button icon="pi pi-sitemap" class="p-button-rounded p-button-secondary p-mb-2"  @click="clicked($event)"/>
+        <Button icon="pi pi-sitemap" class="p-button-rounded p-button-secondary p-mb-2"  @click="doShowHide($event)"/>
       </div>
       <!-- <Button v-bind:icon="auth ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="auth ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" /> -->
     </div>
@@ -267,6 +267,8 @@
 <script>
 import { ref } from "vue";
 import { usePrimeVue } from "primevue/config";
+import store from "@/modules/store";
+import router from "../router"
 export default {
   name: "Unit",
   props: {
@@ -293,9 +295,14 @@ export default {
       sound.play();
     };
 
-    const clicked = (e) => {
+    const doShowHide = (e) => {
       display.value = display.value? '' : 'p-d-none';
       console.log("switch display", display.value, e);
+    };
+
+    const doGoToHelp = () => {
+      store.state.about.active = 3;
+      router.push("/about")
     };
 
     let langValues = [];
@@ -318,12 +325,13 @@ export default {
 
 
     return {
+      doGoToHelp,
       playClicked,
       sound,
       langValues,
       selectedLang,
       display,
-      clicked,
+      doShowHide,
       a: 'А', b: 'Б'
       // a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>", // 🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>
       // b: "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>" //🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>
