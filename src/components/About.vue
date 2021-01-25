@@ -1,10 +1,10 @@
 <template>
   <div class="home p-component">
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <div class="p-text-center">
+    <!-- <div class="p-text-center">
       <h2>Дискурсивные формулы</h2>
-    </div>
-    <TabView>
+    </div> -->
+    <TabView v-model:activeIndex="store.state.about.active" @tab-change="store.state.about.active = $event.index">
 	<TabPanel header="Проект">
 
     <div class="p-component p-p-4 info">
@@ -178,6 +178,7 @@
 
 <script>
 // @ is an alias to /src
+import store from "@/modules/store";
 export default {
   name: 'Home',
   setup(){
@@ -205,36 +206,22 @@ export default {
       ["Как посмотреть похожие формулы?", "..."],
       ["Как посмотреть формулы с тем же переводным аналогом?", "..."],
       ["Как скачать результаты?", "..."],
-    ]
-    return { persons, defs };
+    ];
+    // const tset = (e) => {
+    //   console.log(e);
+    //
+    // };
+    const tabset = (e) => {
+      console.log(e);
+    }
+    // console.log("setup", active);
+    return { persons, defs, tabset, store };
   },
-  // data() {
-  //     return {
-  //         message: null,
-  //         text: null
-  //     }
-  // },
-  // methods: {
-  //     greet() {
-  //         this.$toast.add({severity: 'info', summary: this.text.substring(0,12) + '...'});
-  //         this.message = 'E-mail ' + this.text + ' добавлен в базу';
-  //     }
-  // },
-  // components: {
-  // }
 }
 </script>
 
 <style scoped>
-/* .item{
-  margin:2rem;
-  padding:1rem;
-}
-.form-container{
-  margin-bottom:1rem;
-} */
 .person{
   margin-bottom:10rem;
 }
-
 </style>

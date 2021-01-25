@@ -5,6 +5,9 @@ import router from "../router";
 
 const state = reactive({
   accessed: [],
+  about: {
+    active: 3
+  },
   autocomplete: {
     "checked": false,
     "mode": "ru",
