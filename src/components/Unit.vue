@@ -32,7 +32,7 @@
           <Dropdown :disabled="langValues.length === 1" optionValue="value" v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" class="lang-combo"/>
           <span v-for="item in langValues.filter(x => x.value == selectedLang)[0]['data']" :key="item">
             ‹{{item.txt}}›&nbsp;
-            <Inplace v-if="unit.examples" class="article-trans-ex">
+            <Inplace v-if="unit.examples.filter(x => x.lang===selectedLang).length" class="article-trans-ex">
                 <template #display>
                     <span class="pi pi-bookmark" style="vertical-align: middle"></span>
                 </template>
