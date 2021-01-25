@@ -5,6 +5,11 @@ import router from "../router";
 
 const state = reactive({
   accessed: [],
+  autocomplete: {
+    "checked": false,
+    "mode": "ru",
+    "text": '',
+  },
   search:  {
    'semtone' : [],
    'actclass' : [],

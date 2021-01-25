@@ -8,16 +8,16 @@
 	<div class="p-grid p-jc-center p-mt-2">
 		<div class="p-component">
 			<div class="p-inputgroup p-text-center p-col">
-				<AutoComplete v-model="token"
+				<AutoComplete v-model="autoState['text']"
 					:suggestions="searchVariants"
 					ref="searchInstance"
 					:minLength="Number(2)"
-					:placeholder="placeholder[switchState]"
+					:placeholder="placeholder[autoState['mode']]"
 					field="txt"
 					scrollHeight="200"
 					@keyup.enter="renderMatches($event)"
 					@complete="autocomplete($event)"
-					@item-select="renderSelected[switchState]($event)">
+					@item-select="renderSelected[autoState['mode']]($event)">
 						<template #item="slotProps">
 							<span v-if="slotProps.item.hasOwnProperty('lang')">
 								<!-- <img :alt="slotProps.item.lang" :src="'demo/images/car/' + slotProps.value.brand + '.png'" /> -->
@@ -31,10 +31,10 @@
 			<div class="p-grid p-jc-center p-col">
 				<span class="p-pr-3 label-switch">поиск по переводному аналогу</span>
 				<!-- <InputSwitch v-model="checked" @click="handleSwitchState($event)" /> -->
-				<Checkbox v-model="checked" @click="handleSwitchState($event)" :binary="true" />
+				<Checkbox v-model="autoState['checked']" @click="handleSwitchState($event)" :binary="true" />
 			</div>
 			<!-- <div class="p-grid p-jc-center p-col">
-				<SelectButton v-model="switchState" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
+				<SelectButton v-model="autoState['mode']" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
 			</div> -->
 		</div>
 	</div>
@@ -90,22 +90,17 @@ export default {
 	setup(){
 		const data = store.state.config;
 		// const switchStateOptions = [{"name": 'Русский', "code": 'ru'}, {"name":'Перевод', "code": "none"}];
-		let searchVariants = ref(null);
-
-		let token =  ref(null);
-		let matches = ref({});
-		let switchState = ref('ru');
-		const placeholder = {'ru': 'да ладно', 'none': 'whatever'};
-
 		let searchInstance = ref();
-
-		let checked = ref(false);
-
-
+		let searchVariants = ref(null);
+		let matches = ref({});
+		const placeholder = {'ru': 'да ладно', 'none': 'whatever'};
+		const autoState = store.state.autocomplete;
+		// console.log("setup", autoState);
+		
 		const handleSwitchState = () => {
-			// console.log("switch", checked.value);
-			switchState.value = checked.value ? 'ru': 'none'
-			token.value= '';
+			// console.log("switch", autoState['checked']);
+			autoState["mode"] = autoState['checked'] ? 'ru': 'none';
+			autoState["text"]= '';
 			matches.value = [];
 		};
 
@@ -153,12 +148,12 @@ export default {
 
 		const renderMatches = () => {
 			searchInstance.value.hideOverlay();
-			if (typeof token.value === 'object'){
-				console.log("do nothing: object", token.value);
+			if (typeof autoState["text"] === 'object'){
+				console.log("do nothing: object", autoState["text"]);
 			} else {
-				const tokenMatches  = getMatches(token.value);
+				const tokenMatches  = getMatches(autoState["text"]);
 				// console.log("getMatches: result", tokenMatches);
-				const variants  = getVariants[switchState.value](tokenMatches);
+				const variants  = getVariants[autoState["mode"]](tokenMatches);
 				// console.log("variants", variants);
 				matches.value = variants;
 			}
@@ -193,7 +188,7 @@ export default {
 					.split(/\s|(?=-)/g)
 					.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
 
-				token.value = queryChunks.join(' ').replace(' -', '-');
+				autoState["text"] = queryChunks.join(' ').replace(' -', '-');
 				const queries = queryChunks.filter(x => x);
 				const phraseVariants = new Array(queries.length).fill(null).map(()=>[]);
 
@@ -244,7 +239,7 @@ export default {
 				const results = [];
 				const query = str.replace(/[.*+?^${}()|[\]\\]/g, '');
 				// console.log("in trans", query);
-				token.value = query;
+				autoState["text"] = query;
 				for (let value of Object.values(data.trans)) {
 					if (value.txt.includes(query)) {
 						results.push(value);
@@ -256,15 +251,14 @@ export default {
 
 		const getMatches = (queryString) => {
 			console.log("input", queryString);
-			return token.value ? processInput[switchState.value](queryString) : [];
+			return autoState["text"] ? processInput[autoState["mode"]](queryString) : [];
 		};
 
 		const autocomplete = (e) => {
 			searchVariants.value = getMatches(e.query);
 		};
 
-		return { placeholder, autocomplete, renderSelected, data, searchVariants, token, matches, 	switchState, handleSwitchState, renderMatches, searchInstance,
-		InputSwitch, checked  };
+		return { placeholder, autocomplete, renderSelected, data, searchVariants, autoState, matches, handleSwitchState, renderMatches, searchInstance, InputSwitch,  };
 	},
 	components: {
 		SearchResults,
