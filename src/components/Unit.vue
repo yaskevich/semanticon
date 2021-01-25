@@ -8,8 +8,8 @@
         </span><span v-if="num"><sup>{{num}}</sup></span>
         <Button v-if="sound" icon="pi pi-volume-up" class="p-button-text p-ml-3" style="padding:0 !important;" @click="playClicked()"/>
       </div>
-
-      <div :class="'article-body' + ' ' + display">
+      <transition name="fade">
+      <div class="article-body" v-if="display">
         <div class="article-tags p-mb-2">
           <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
             <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
@@ -246,17 +246,18 @@
 
 
     </div>
+      </transition>
     </div>
     <!-- <h4>Значение<span v-if="num">{{num}}</span></h4> -->
     <div class="p-ml-auto">
       <div>
-        <Button :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded p-mb-2"  @click="doShowHide($event)"/>
+        <Button :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded p-mb-2"  @click="display = !display"/>
       </div>
-      <div>
+      <div v-if="display">
         <Button icon="pi pi-question" class="p-button-rounded p-button-secondary p-mb-2"  @click="doGoToHelp($event)"/>
       </div>
-      <div>
-        <Button icon="pi pi-sitemap" class="p-button-rounded p-button-secondary p-mb-2"  @click="doShowHide($event)"/>
+      <div v-if="display">
+        <Button icon="pi pi-sitemap" class="p-button-rounded p-button-secondary p-mb-2"  @click="doShowSimilar($event)"/>
       </div>
       <!-- <Button v-bind:icon="auth ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="auth ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" /> -->
     </div>
@@ -280,7 +281,7 @@ export default {
     last: Boolean
   },
   setup (props){
-    const display = ref('');
+
     const selectedLang = ref({});
     const primevue = usePrimeVue();
 
@@ -295,9 +296,9 @@ export default {
       sound.play();
     };
 
-    const doShowHide = (e) => {
-      display.value = display.value? '' : 'p-d-none';
-      console.log("switch display", display.value, e);
+    const doShowSimilar = () => {
+      // display.value = display.value? '' : 'p-d-none';
+      // console.log("switch display", display.value, e);
     };
 
     const doGoToHelp = () => {
@@ -323,7 +324,7 @@ export default {
         // console.log("sel", selectedLang);
     }
 
-
+    let display = ref(true);
     return {
       doGoToHelp,
       playClicked,
@@ -331,7 +332,7 @@ export default {
       langValues,
       selectedLang,
       display,
-      doShowHide,
+      doShowSimilar,
       a: 'А', b: 'Б'
       // a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>", // 🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>
       // b: "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>" //🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>
@@ -384,7 +385,13 @@ export default {
 .article-title{
   font-size: 1.5rem;
 }
-
+.article-body.p-d-none{
+   height:0px;
+   background:red;
+   overflow:hidden;
+   transition:0.5s;
+   -webkit-transition:0.5s;
+}
 a.interactive {
   text-decoration: none;
   /* background:yellow; */
@@ -415,5 +422,26 @@ a.interactive:hover {
 }
 .article-trans-ex{
   display:inline-block;
+}
+
+/* .fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+} */
+.fade-enter-active,
+.fade-leave-active {
+  max-height: 500px;
+   transition: max-height 0.25s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  max-height: 0px;
+  transition: max-height 0.15s ease-out;
 }
 </style>
