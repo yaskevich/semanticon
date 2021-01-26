@@ -96,7 +96,7 @@ export default {
 		const placeholder = {'ru': 'да ладно', 'none': 'whatever'};
 		const autoState = store.state.autocomplete;
 		// console.log("setup", autoState);
-		
+
 		const handleSwitchState = () => {
 			// console.log("switch", autoState['checked']);
 			autoState["mode"] = autoState['checked'] ? 'ru': 'none';
@@ -281,5 +281,8 @@ export default {
 }
 .label-switch {
 	font-size: 0.75rem;
+}
+a{
+	color:black;
 }
 </style>
