@@ -104,12 +104,21 @@ body {
   line-height: 1.5;
 }
 
+
+#content {
+  display: flex;
+  flex-direction: column;
+  min-height: 97vh;
+  max-width: 100vh;
+  /* max-width: 800px; */
+  margin: auto;
+}
 #main {
   /* display: flex;
   flex-direction: column; */
   /* min-height: 97vh; */
   /* max-width: 100vh; */
-  max-width: 800px;
+  /* max-width: 1000px; */
   /* margin: auto; */
 }
 #nav {
