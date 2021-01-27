@@ -282,7 +282,4 @@ export default {
 .label-switch {
 	font-size: 0.75rem;
 }
-a{
-	color:black;
-}
 </style>

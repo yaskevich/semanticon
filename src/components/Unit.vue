@@ -53,6 +53,7 @@
 
             <div class="p-pb-2">
               <span class="article-field">А: </span>
+              {{unit.remarks[0]}}
               <span v-for="item in unit['act1']" :key="item">
                 <!-- <Chip :label="data.features[a]" /> -->
                 <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
@@ -61,6 +62,7 @@
 
             <div class="p-pb-2">
               <span class="article-field">Б: </span>
+              {{unit.remarks[1]}}
               <span v-for="item in unit['actclass']" :key="item">
                   <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
               </span>
@@ -93,6 +95,7 @@
           </div>
             <div class="p-pb-2">
               <span class="article-field">Б: </span>
+              {{unit.remarks[0]}}
               <span v-for="item in unit['actclass']" :key="item">
                   <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
               </span>
@@ -208,7 +211,7 @@
                 </span> -->
 
                   {{v.syn}}&nbsp;<span v-if="v.hasOwnProperty('link') && v['link']">
-                    <a :href="v.link" target="_blank"><i class='pi pi-external-link' style='color: blue;'></i></a>
+                    <a :href="v.link" target="_blank"><i class='pi pi-external-link'></i></a>
                   </span>
               </div>
             </div>
