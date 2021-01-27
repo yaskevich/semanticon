@@ -251,7 +251,7 @@
     <!-- <h4>Значение<span v-if="num">{{num}}</span></h4> -->
     <div class="p-ml-auto">
       <div>
-        <Button :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded p-mb-2"  @click="display = !display"/>
+        <Button v-if="num" :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded p-mb-2"  @click="display = !display"/>
       </div>
       <div v-if="display">
         <Button icon="pi pi-question" class="p-button-rounded p-button-secondary p-mb-2"  @click="doGoToHelp($event)"/>
