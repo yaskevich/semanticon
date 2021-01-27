@@ -3,7 +3,7 @@
   <div id="nav" class="p-component p-d-flex p-p-3 card">
     <router-link to="/" class=""><span class="app-title app-title-basic">Pragmaticon</span></router-link>
     <router-link to="/about" class="p-ml-auto p-mr-4 page"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
-    <router-link to="/home" class="page">{{$primevue.config.locale.filtering}}</router-link>
+    <router-link to="/filters" class="page">{{$primevue.config.locale.filtering}}</router-link>
     <!-- | -->
     <!-- <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link> -->
     <!-- <router-link v-else to="/login">Войти</router-link> -->

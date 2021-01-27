@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import About from '../components/About.vue'
 import PhraseList from '../components/PhraseList.vue'
+import SimilarList from '../components/SimilarList.vue'
 import UnitList from '../components/UnitList.vue'
 import Login from '../components/Login.vue'
 import Logout from '../components/Logout.vue'
@@ -9,6 +10,7 @@ import Admin from '../components/Admin.vue'
 import Dashboard from '../components/Dashboard.vue'
 
 const routes = [
+  { path: '/sim', redirect: { name: 'Home' }},
   {
     path: '/',
     name: 'Home',
@@ -24,7 +26,7 @@ const routes = [
     component: About
   },
   {
-    path: '/home',
+    path: '/filters',
     name: 'PhraseListScreen',
     component: PhraseList
   },
@@ -33,6 +35,12 @@ const routes = [
     name: 'List',
     component: PhraseList
   },
+   {
+     path: '/sim/:id',
+     component: SimilarList,
+     name: 'SimilarList',
+     props: true
+   },
    {
      path: '/exp/:id',
      component: UnitList,

@@ -98,7 +98,7 @@ export default {
     // console.log(aggregatedFeatures);
 
     const updateRoute = (e) => {
-      router.replace("/home");
+      router.replace("/filters");
       if (!store.state.accessed.includes('search')){
           store.state.accessed.push('search');
       }
@@ -116,7 +116,7 @@ export default {
           // console.log("!", key, Object.keys(value).length, Object.keys(value));
           facet[key] = key === 'translations'? lang2ids[value.value]: value.value;
         } else if(key === 'parts') {
-          facet[key] = value.length === 1 ? value[0] : null;
+          facet[key] = value && value.length === 1 ? value[0] : null;
         }
       }
       console.log("facet", facet);

@@ -32,7 +32,7 @@
           <Dropdown :disabled="langValues.length === 1" optionValue="value" v-model="selectedLang" :options="langValues" optionLabel="name" placeholder="Выберите язык" class="lang-combo"/>
           <span v-for="item in langValues.filter(x => x.value == selectedLang)[0]['data']" :key="item">
             ‹{{item.txt}}›&nbsp;
-            <Inplace v-if="unit.examples.filter(x => x.lang===selectedLang).length" class="article-trans-ex">
+            <Inplace v-if="unit.hasOwnProperty('examples') && unit.examples.filter(x => x.lang===selectedLang).length" class="article-trans-ex">
                 <template #display>
                     <span class="pi pi-bookmark" style="vertical-align: middle"></span>
                 </template>
@@ -257,7 +257,9 @@
         <Button icon="pi pi-question" class="p-button-rounded p-button-secondary p-mb-2"  @click="doGoToHelp($event)"/>
       </div>
       <div v-if="display">
-        <Button icon="pi pi-sitemap" class="p-button-rounded p-button-secondary p-mb-2"  @click="doShowSimilar($event)"/>
+        <router-link :to="{ name: 'SimilarList', params: { id: unit.id } }" tag="li" class="nounderline">
+          <Button icon="pi pi-sitemap" class="p-button-rounded p-button-secondary p-mb-2" />
+        </router-link>
       </div>
       <!-- <Button v-bind:icon="auth ? 'pi pi-pencil': 'pi pi-heart'" v-bind:class="auth ? 'p-button-rounded p-button-danger': 'p-button-rounded p-button-help'" /> -->
     </div>
@@ -296,11 +298,6 @@ export default {
       sound.play();
     };
 
-    const doShowSimilar = () => {
-      // display.value = display.value? '' : 'p-d-none';
-      // console.log("switch display", display.value, e);
-    };
-
     const doGoToHelp = () => {
       store.state.about.active = 3;
       router.push("/about")
@@ -332,7 +329,6 @@ export default {
       langValues,
       selectedLang,
       display,
-      doShowSimilar,
       a: 'А', b: 'Б'
       // a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>", // 🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>
       // b: "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>" //🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>
