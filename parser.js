@@ -34,6 +34,13 @@ const langCodes = {
 	"ивр": "heb",
 	"ит": "ita",
 	"слвн": "slv",
+	"таджикский": "tgk",
+	"английский": "eng",
+	"финский": "fin",
+	"бурятский": "bua",
+	"иврит": "heb",
+	"итальянский": "ita",
+	"словенский": "slv",
 	"русский": "rus"
 }; // nno | nob
 
@@ -56,9 +63,13 @@ const mappingRuEn = {
   'Примеры': "examples",
   'Аудио' : "audio",
   'Видео': "video",
-  'уст.|груб.|нейтр.': "style",
+  'уст.|груб.|нейтр.': "style", // drop
+  'устар.|груб.|нейтр.': "style",
   'Комментарий': "comment",
-  'конструкция': "construction"
+  'конструкция': "construction",
+  'реплика 1': "remark1",
+  'реплика 2': "remark2",
+  'приоритет': "priority",
 };
 
 const schemes = {
@@ -87,6 +98,7 @@ const schemes = {
     style integer,
     comment text,
     construction jsonb,
+	remarks jsonb,
 	CONSTRAINT fk_phrases
       FOREIGN KEY(pid) 
 	  REFERENCES phrases(pid)
@@ -122,8 +134,10 @@ const tokensInsert = `INSERT INTO tokens (token) VALUES($1) RETURNING id`;
 const transInsert = `INSERT INTO translations (txt, lang) VALUES($1, $2) RETURNING id`;
 const featuresInsert = `INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id`;
 const unitsInsert = `INSERT INTO units (pid, extrequired, semfunc, semtone, act1, 
-					actclass, situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video, style, comment, construction)
-                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+					actclass, 
+					remarks,
+					situation, parts, intonation, extension, mods, gest, organ, translations, examples, audio, video, style, comment, construction)
+                    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
                     RETURNING *`;
 
 async function checkMedia(fld, content){
@@ -320,9 +334,15 @@ async function processExamples(fld, content){
 						if (rest) {
 							error = `DOT SPLITTER (BOOK) ¦${rest}¦`;
 						} else {
-							info["author"] = author.trim();
-							info["pub"] = book.trim();
-							info["pubdate"] = matches[2].trim();
+							
+							if(author && book) {
+								info["author"] = author.trim();
+								info["pub"] = book.trim();
+								info["pubdate"] = matches[2].trim();
+							} else {
+								// console.error(matches[1]);
+								error = `DOT SPLITTER (BOOK|AUTHOR)`;
+							}
 						}
 					}
 					if (Object.keys(info).length < 4){
@@ -350,7 +370,7 @@ async function processConstruction(fld, content) {
 		if (y.length % 2 !== 0) {
 			console.error(rowNumber, "<CONSTRUCTION ANNOTATION ERROR>", arr);
 		}
-		const obj = {"syn": y[0]};
+		const obj = {"syn": y[0].trim()};
 		if (y[1]) {
 			obj["link"] = y[1];
 		}
@@ -366,15 +386,16 @@ async function processFile(fileName) {
         let csvArr  = [];
 
         try {
-            csvArr = await csv.parse(csvString, {delimiter: ","});
+            csvArr = await csv.parse(csvString, {delimiter: ";"});
         }
         catch(e) {
             console.log(e.message);
         }
 
         const fieldRow = csvArr.shift();
-        const dict = fieldRow.map(x => mappingRuEn[x]);
-
+        const dict = fieldRow.map(x => mappingRuEn[x.trim()]); // trim because of BOM
+		
+		
         const dump = {};
         const mappingEnRu = Object.assign({}, ...Object.entries(mappingRuEn).map(([a,b]) => ({ [b]: a })));
 		
@@ -392,6 +413,8 @@ async function processFile(fileName) {
 			rowNumber = n+2;
 			const row = csvArr[n];
             const values = [];
+			
+			const remarks = [];
             
             for (let i=0; i < row.length; i++) {
                 const data  = row[i];
@@ -459,9 +482,18 @@ async function processFile(fileName) {
 						// console.error("=>",result);
 					// }
                     values.push(result);					
-                } else {
+                } else if(fieldEn  === "remark1") {
+					remarks.push(data);
+                } else if(fieldEn  === "remark2") {
+					remarks.push(data);
+                    values.push(JSON.stringify(remarks));
+                } else if(fieldEn  === "priority") {
+					// remarks.push(data);
+					// console.error("pty", data);
+                } 
+				else {
                     // console.log(data);
-					console.error(fieldEn);
+				console.error(fieldEn, `|${fieldRow[i]}|`, i);
 					
 					// 
 					// process.exit();
