@@ -37,9 +37,7 @@
                     <span class="pi pi-bookmark" style="vertical-align: middle"></span>
                 </template>
                 <template #content>
-                  <div v-for="ex in unit.examples.filter(x => x.lang===selectedLang)" :key="ex" class="p-mt-2 p-text-italic">
-                    {{ex.text}}
-                  </div>
+                  <Example v-for="(v, index) in unit.examples.filter(x=>x.lang===selectedLang)" :key="index" :datum="v"/>
                 </template>
             </Inplace>
 
@@ -69,13 +67,13 @@
             </div>
             <div class="p-pb-2">
               <span class="article-field">А: </span>
-                {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+                <span class="last-remark">{{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+                </span>
                 <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
                   <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
                     {{data.features[unit['semfunc']][0]}}
                   </router-link>
                 </span>
-
 
                 <span v-for="item in unit['semtone']" :key="item">
                   <!-- <Chip :label="data.features[a]" /> -->
@@ -102,7 +100,8 @@
             </div>
             <div class="p-pb-2">
             <span class="article-field">А: </span>
-              {{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+            <span class="last-remark">{{data.exprs[$route.params.id].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
+            </span>
               <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
                 <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
                   {{data.features[unit['semfunc']][0]}}
@@ -186,16 +185,12 @@
             <div v-else-if="name === 'examples'">
               <Inplace :closable="false">
                 <template #display>
-                  <span class="article-field" style="vertical-align: middle">Пример{{unit[name].length>1?"ы":''}}</span>
+                  <span class="article-field" style="vertical-align: middle">Пример{{unit[name].filter(x => x.lang==='rus').length>1?"ы":''}}</span>
                   <span className="pi pi-bookmark" style="vertical-align: middle"></span>
                 </template>
                 <template #content>
                   <div class="example">
-                    <div v-for="(v, index) in unit[name].filter(x=>x.lang==='rus')" :key="index">
-                      <span class="example-text">{{v.text}}</span> <span class="example-author">{{v.author}}</span>  <span class="example-pub">{{v.pub}}</span>  <span v-if="v.journal" class="example-journal" title="публикация в журнале">(«{{v.journal}}»)</span> <span class="example-pubdate">{{v.pubdate}}
-                      </span>
-                      <!-- <span class="">‹{{$primevue.config.locale.lang[v.lang]}}›</span> -->
-                    </div>
+                    <Example v-for="(v, index) in unit[name].filter(x=>x.lang==='rus')" :key="index" :datum="v"/>
                   </div>
                 </template>
               </Inplace>
@@ -275,6 +270,7 @@ import { ref } from "vue";
 import { usePrimeVue } from "primevue/config";
 import store from "@/modules/store";
 import router from "../router"
+import Example from "./Example.vue";
 export default {
   name: "Unit",
   props: {
@@ -326,6 +322,7 @@ export default {
 
     let display = ref(true);
     return {
+      Example,
       doGoToHelp,
       playClicked,
       sound,
@@ -361,26 +358,6 @@ export default {
   /* margin-bottom: .5rem; */
   line-height:2;
 }
-.example {
-  border: 1px solid orange;
-}
-.construction {
-  padding-left: 1rem;
-}
-.example-text {
-  /* font-stretch: condensed; */
-  letter-spacing: -1px;
-  font-style: italic;
-}
-.example-author {
-  color: purple;
-}
-.example-pub {
-  color: green;
-}
-.example-pubdate {
-  color: blue;
-}
 .article-title{
   font-size: 1.5rem;
 }
@@ -412,9 +389,13 @@ a.interactive:hover {
   /* margin-bottom: -0.1rem; */
 }
 .pi-volume-up:before {
-    /* content: "\e977"; */
     font-size: 2.2rem;
-
+}
+.last-remark{
+  display: inline-block;
+}
+.last-remark:first-letter {
+    text-transform: uppercase;
 }
 .lang-combo{
   min-width: 12rem;
