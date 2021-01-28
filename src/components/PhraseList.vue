@@ -1,22 +1,16 @@
 <template>
   <!-- <div v-if="errors.phrases">{{ errors.phrases }}</div> -->
   <!-- <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" /> -->
-
-  <div class="p-grid p-m-2">
-    <div class="p-col p-text-center">
-      <Dropdown v-model="searchState['semfunc']" :options="aggregatedFeatures['semfunc']" optionLabel="name" placeholder="Основная функция" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)"/>
-    </div>
+  <div class="p-text-center p-mt-4">
+    <Dropdown v-model="searchState['semfunc']" :options="aggregatedFeatures['semfunc']" optionLabel="name" placeholder="Основная функция" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)"/>
   </div>
-
-  <div class="p-d-flex p-flex-column p-col">
+  <div class="p-fluid p-mt-2">
     <MultiSelect v-model="searchState['semtone']"  filterPlaceholder="Наберите название" :filter="true"  :options="aggregatedFeatures['semtone']" optionLabel="name" placeholder="Дополнительная семантика" display="chip" class="" @change="updateRoute($event)" />
   </div>
-
-  <div class="p-d-flex p-flex-column p-col">
+  <div class="p-fluid p-mt-2">
     <MultiSelect v-model="searchState['actclass']"  filterPlaceholder="Наберите название" :filter="true" :options="aggregatedFeatures['actclass']" optionLabel="name" placeholder="Реплика-стимул" display="comma" @change="updateRoute($event)" />
   </div>
-
-  <div class="p-fluid p-col" >
+  <div class="p-fluid p-mt-2">
     <div class="p-field p-grid" >
       <label for="partsbutton" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0 p-component">Структура</label>
       <div class="p-col-12 p-md-10">
