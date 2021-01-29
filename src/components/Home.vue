@@ -105,22 +105,30 @@ export default {
 		};
 
 		const getBasicExpr = (eid) => {
+			console.log("in eid", eid);
+			console.log("ind", data.titles.exprs.indexOf(eid));
 			const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == eid ? i : []);
-			const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
-			return {
-				"eid1": titles[0],
-				"eid": eid,
-				"main" : !data.exprs[titles[0]].includes(eid)? "eid" : "eid1"
-			};
+			console.log("TI", titlesIndexes);
+
+			if (titlesIndexes.length){
+				const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
+				console.log("tt", titles);
+				return {
+					"eid1": titles[0],
+					"eid": eid,
+					"main" : !data.exprs[titles[0]].includes(eid)? "eid" : "eid1"
+				};
+			}
 		};
 
 		const getVariants = {
 			"ru": (objs) => {
+				console.log("objs", objs);
 			const eids  = objs.map(x => x.eid)
 			const results = [];
 			for (let eid of eids) {
 				const variant  = getBasicExpr(eid);
-				if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+				if (variant && !results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
 						results.push(variant);
 				}
 			}
