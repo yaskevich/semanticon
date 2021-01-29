@@ -33,7 +33,9 @@
         доклад Е. В. Рахилиной на коллоквиуме ОТиПЛа в МГУ
       </div>
       <div class="p-ml-4">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/jUUJmnilqy0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="videoWrapper">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/jUUJmnilqy0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
 
@@ -223,5 +225,17 @@ export default {
 <style scoped>
 .person{
   margin-bottom:10rem;
+}
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
