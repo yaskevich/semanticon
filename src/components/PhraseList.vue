@@ -113,20 +113,29 @@ export default {
           facet[key] = value && value.length === 1 ? value[0] : null;
         }
       }
+
       console.log("facet", facet);
+
       const facetArray = Object.entries(facet);
       if (facetArray.length){ //check whether facet is not empty
-        for (let [k, v] of Object.entries(store.state.config.toc)) {
-          const flatObj  = Object.values(v).flatMap(x=>x);
+        for (let unit of Object.values(data.units)) {
+
           let isOkay  = true;
           for (const [key, value] of facetArray) {
-            const vals  = flatObj.flatMap(x=> data.units[x][key]);
+            // console.log(unit, key);
+            const vals  = unit[key];
+            // console.log("!", vals);
+            if (!Object.prototype.hasOwnProperty.call(unit, key)){
+              isOkay = false;
+              break;
+            }
+
             if(['semtone', 'actclass', 'organ'].includes(key)) { // array
               if (!value.every(y => vals.includes(y))) {
                 isOkay = false;
               }
             } else if (['semfunc', 'intonation'].includes(key)) {
-              if (!vals.includes(value)) {
+              if (vals !== value) {
                 isOkay = false;
               }
             } else if (key === 'translations') {
@@ -134,14 +143,19 @@ export default {
                   isOkay = false;
                 }
             } else if (key === 'parts' && value !== null) {
-                if (!vals.includes(value)) {
+                if (vals !== value) {
                   isOkay = false;
                 }
             }
+
+
+
           }
 
           if (isOkay) {
-            selected.push(k);
+            if (!selected.includes(unit.eid1)) {
+              selected.push(unit.eid1);
+            }
           }
         }
       }
