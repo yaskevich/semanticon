@@ -413,8 +413,8 @@ async function processFile(fileName) {
 			rowNumber = n+2;
 			const row = csvArr[n];
             const values = [];
-			
-			const remarks = [];
+			let remark = '';
+			let skip = false;
             
             for (let i=0; i < row.length; i++) {
                 const data  = row[i];
@@ -450,6 +450,7 @@ async function processFile(fileName) {
                     // empty = error!!!
                     if(!data) {
                         console.error(rowNumber, fieldEn, "<EMPTY>");
+						skip = true
                     }
                     const result = await checkFeatureArray(fieldEn, data);
                     values.push(result);
@@ -462,9 +463,11 @@ async function processFile(fileName) {
                 } else if(["semfunc", "intonation", "style"].includes(fieldEn)) {
 					if(fieldEn=== 'semfunc' && !data) {
                         console.error(rowNumber, fieldEn, "<EMPTY>");
-                    }
-                    const result = await checkFeature(fieldEn, data);
-                    values.push(result);
+						skip = true;
+                    } else {
+						const result = await checkFeature(fieldEn, data);
+						values.push(result);
+					}
                 } else if(fieldEn === "mods") {
                     values.push(data);
                 } else if(fieldEn === "translations") {
@@ -483,19 +486,19 @@ async function processFile(fileName) {
 					// }
                     values.push(result);					
                 } else if(fieldEn  === "remark1") {
-					remarks.push(data);
+					remark = data.trim();
                 } else if(fieldEn  === "remark2") {
-					remarks.push(data);
+					const remarks = [data.trim()];
+					if (remark){
+						remarks.push(remark);
+					}
                     values.push(JSON.stringify(remarks));
                 } else if(fieldEn  === "priority") {
 					// remarks.push(data);
 					// console.error("pty", data);
                 } 
 				else {
-                    // console.log(data);
-				console.error(fieldEn, `|${fieldRow[i]}|`, i);
-					
-					// 
+					console.error(fieldEn, `|${fieldRow[i]}|`, i);
 					// process.exit();
                 }
                 
@@ -514,11 +517,15 @@ async function processFile(fileName) {
                 // aggregate data for debugging
             }
         
-            try {
-              await pool.query(unitsInsert, values);
-            } catch (err) {
-              console.log(err.stack);
-            }
+			if(!skip){
+				try {
+				  await pool.query(unitsInsert, values);
+				} catch (err) {
+				  console.log(err.stack);
+				}
+			} else {
+				console.log("!!!!!!!!!!!", row[0]);
+			}
         }
         
         await pool.end();
