@@ -41,8 +41,8 @@
 <script>
 import store from "@/modules/store";
 import PhraseListItem from "./PhraseListItem.vue";
-// eslint-disable-next-line no-unused-vars
-import { unref, ref, computed, watchEffect, reactive } from "vue";
+
+import { ref } from "vue";
 import { useRoute } from 'vue-router';
 import router from "../router";
 import Dropdown from 'primevue/dropdown';
@@ -53,7 +53,6 @@ export default {
   name: "PhraseList",
   setup() {
     const routerInfo = useRoute();
-    // const id = router.params.id;
     console.log(routerInfo.params);
 
     const partsOptions = [{"name": 'двухчастная', "code": false}, {"name":'трёхчастная', "code": true}];
@@ -64,7 +63,6 @@ export default {
     eids.value = Object.keys(store.state.config.toc);
 
     if (routerInfo.params.id) {
-      // semtone.value = [{"value": routerInfo.params.id, "name": data.features[routerInfo.params.id][0]}];
       const routedProp = data.features[routerInfo.params.id][1];
       const routedName  = data.features[routerInfo.params.id][0];
       const a = {"value": Number(routerInfo.params.id), "name": routedName, "prop": routedProp};
@@ -77,7 +75,6 @@ export default {
       if (!store.state.accessed.includes('search')){
           store.state.accessed.push('search');
       }
-      // console.log("search state", searchState);
     }
 
     const aggregatedFeatures = Object.keys(data.features)
@@ -86,10 +83,7 @@ export default {
 
     const primevue = usePrimeVue();
     const lang2ids = Object.values(data.trans).reduce((obj, x) => ({ ...obj, [x["lang"]]: [...(obj[x["lang"]] || []), x.id, ],}),{},);
-    // console.log(lang2ids);
     const aggregatedLangs = Object.keys(lang2ids).map(x=>({"value": x, name: primevue.config.locale.lang[x], "prop": "translations"}));
-    // console.log(aggregatedLangs);
-    // console.log(aggregatedFeatures);
 
     const updateRoute = (e) => {
       router.replace("/filters");
@@ -107,7 +101,6 @@ export default {
         if (Array.isArray(value) && value.length && key !== 'parts') {
           facet[key] = value.map(x=>x.value);
         } else if (value && value.constructor === Object && Object.keys(value).length) {
-          // console.log("!", key, Object.keys(value).length, Object.keys(value));
           facet[key] = key === 'translations'? lang2ids[value.value]: value.value;
         } else if(key === 'parts') {
           facet[key] = value && value.length === 1 ? value[0] : null;
@@ -117,33 +110,31 @@ export default {
       console.log("facet", facet);
 
       const facetArray = Object.entries(facet);
-      if (facetArray.length){ //check whether facet is not empty
+      if (facetArray.length){ // check whether facet is not empty
         for (let unit of Object.values(data.units)) {
 
           let isOkay  = true;
           for (const [key, value] of facetArray) {
-            // console.log(unit, key);
-            const vals  = unit[key];
-            // console.log("!", vals);
+            
             if (!Object.prototype.hasOwnProperty.call(unit, key)){
               isOkay = false;
               break;
             }
 
             if(['semtone', 'actclass', 'organ'].includes(key)) { // array
-              if (!value.every(y => vals.includes(y))) {
+              if (!value.every(y => unit[key].includes(y))) {
                 isOkay = false;
               }
             } else if (['semfunc', 'intonation'].includes(key)) {
-              if (vals !== value) {
+              if (unit[key] !== value) {
                 isOkay = false;
               }
             } else if (key === 'translations') {
-                if (!value.some(r=> vals.includes(r))) {
+                if (!value.some(r=> unit[key].includes(r))) {
                   isOkay = false;
                 }
             } else if (key === 'parts' && value !== null) {
-                if (vals !== value) {
+                if (unit[key] !== value) {
                   isOkay = false;
                 }
             }
@@ -173,7 +164,6 @@ export default {
   return { updateRoute, data, eids, partsOptions, aggregatedFeatures, aggregatedLangs,  searchState };
 },
   components: {
-    // eslint-disable-next-line vue/no-unused-components
     PhraseListItem,
     Dropdown
   }

@@ -179,7 +179,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import store from "@/modules/store";
 export default {
   name: 'Home',
@@ -209,14 +209,11 @@ export default {
       ["Как посмотреть формулы с тем же переводным аналогом?", "..."],
       ["Как скачать результаты?", "..."],
     ];
-    // const tset = (e) => {
-    //   console.log(e);
-    //
-    // };
+
     const tabset = (e) => {
       console.log(e);
     }
-    // console.log("setup", active);
+
     return { persons, defs, tabset, store };
   },
 }

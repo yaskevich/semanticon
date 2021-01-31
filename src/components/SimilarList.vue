@@ -28,10 +28,7 @@
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
-import { unref, ref, computed } from "vue";
 import { useRoute } from 'vue-router';
-// import router from "../router";
 import store from "@/modules/store";
 import PhraseListItem from "./PhraseListItem.vue";
 
@@ -48,7 +45,6 @@ export default {
       datum["eid"]  = data.units[datum.uid]["eid1"];
       datum["semfunc"]  = data.units[datum.uid]["semfunc"];
       datum["semtone"] = data.units[datum.uid]["semtone"];
-      // console.log(datum.uid, "semfunc", datum.semfunc, "semtone", datum.semtones);
 
       for(let v of Object.values(data.units)) {
         if (v["id"]=== datum.uid ||  v["eid1"] === datum.eid){
@@ -62,7 +58,6 @@ export default {
             ){
               if(!eids.includes(v.eid1)){
                   eids.push(v.eid1);
-                  // console.log(v["id"], datum.uid, "||",  v["eid1"], datum.eid);
               }
             }
         }

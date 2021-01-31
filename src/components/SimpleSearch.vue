@@ -1,6 +1,6 @@
 <template>
   <div class="p-component">
-		<div class="div-container p-text-center" style="margin-top:2rem;">
+		<div class="div-container p-text-center">
       <!-- <h3>Поиск</h3> -->
   <AutoComplete v-model="token"
 		:suggestions="searchVariants"
@@ -27,9 +27,7 @@
 <script>
 import store from "@/modules/store";
 import SearchResults from "./SearchResults.vue";
-// import router from "../router"
-// eslint-disable-next-line no-unused-vars
-import { unref, ref, computed } from "vue";
+import { ref } from "vue";
 export default {
 	name: "Search",
 	setup(){

@@ -14,7 +14,7 @@
 					:minLength="Number(2)"
 					:placeholder="placeholder[autoState['mode']]"
 					field="txt"
-					scrollHeight="200"
+					scrollHeight="600px"
 					@keyup.enter="renderMatches($event)"
 					@complete="autocomplete($event)"
 					@item-select="renderSelected[autoState['mode']]($event)">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="p-component p-p-4 info">
 		<div class="p-text-center">
-			<img src="/api/media/no-meme.jpg" style="max-height:10rem;"/>
+			<img src="/api/media/logo.png" style="max-height:10rem;"/>
 		</div>
 	</div>
 	<div class="p-component back-2 p-p-4 info">
@@ -82,23 +82,18 @@ import store from "@/modules/store";
 import InputSwitch from 'primevue/inputswitch';
 import SearchResults from "./SearchResults.vue";
 import Checkbox from 'primevue/checkbox';
-// import router from "../router"
-// eslint-disable-next-line no-unused-vars
-import { unref, ref, computed } from "vue";
+import { ref } from "vue";
 export default {
 	name: "Search",
 	setup(){
 		const data = store.state.config;
-		// const switchStateOptions = [{"name": 'Русский', "code": 'ru'}, {"name":'Перевод', "code": "none"}];
 		let searchInstance = ref();
 		let searchVariants = ref(null);
 		let matches = ref({});
 		const placeholder = {'ru': 'да ладно', 'none': 'whatever'};
 		const autoState = store.state.autocomplete;
-		// console.log("setup", autoState);
 
 		const handleSwitchState = () => {
-			// console.log("switch", autoState['checked']);
 			autoState["mode"] = autoState['checked'] ? 'ru': 'none';
 			autoState["text"]= '';
 			matches.value = [];
@@ -246,7 +241,6 @@ export default {
 			"none": (str) => {
 				const results = [];
 				const query = str.replace(/[.*+?^${}()|[\]\\]/g, '');
-				// console.log("in trans", query);
 				autoState["text"] = query;
 				for (let value of Object.values(data.trans)) {
 					if (value.txt.includes(query)) {

@@ -6,7 +6,7 @@
         <span>
           {{title}}
         </span><span v-if="num"><sup>{{num}}</sup></span>
-        <Button v-if="sound" icon="pi pi-volume-up" class="p-button-text p-ml-3" style="padding:0 !important;" @click="playClicked()"/>
+        <Button v-if="sound" icon="pi pi-volume-up" class="p-button-text p-ml-3 audiobutton" @click="playClicked()"/>
       </div>
         <transition name="fade">
           <div class="article-body" v-if="display">
@@ -36,7 +36,7 @@
               ‹{{item.txt}}›&nbsp;
               <Inplace v-if="unit.hasOwnProperty('examples') && unit.examples.filter(x => x.lang===selectedLang).length" class="article-trans-ex">
                   <template #display>
-                      <span class="pi pi-bookmark" style="vertical-align: middle"></span>
+                      <span class="pi pi-bookmark valign"></span>
                   </template>
                   <template #content>
                     <Example v-for="(v, index) in unit.examples.filter(x=>x.lang===selectedLang)" :key="index" :datum="v"/>
@@ -124,8 +124,8 @@
               <div v-else-if="name === 'examples'">
                 <Inplace :closable="false">
                   <template #display>
-                    <span class="article-field" style="vertical-align: middle">Пример{{unit[name].filter(x => x.lang==='rus').length>1?"ы":''}}</span>
-                    <span className="pi pi-bookmark" style="vertical-align: middle"></span>
+                    <span class="article-field">Пример{{unit[name].filter(x => x.lang==='rus').length>1?"ы":''}}</span>
+                    <span className="pi pi-bookmark valign"></span>
                   </template>
                   <template #content>
                     <div class="example">
@@ -261,7 +261,6 @@ export default {
     if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length){
       sound  = new Audio(document.location.origin + "/api/media/horse.ogg");
       console.log(props.data.media[props.unit.audio[0]]);
-      // sound.value.play();
     }
 
     const playClicked = () => {
@@ -282,13 +281,12 @@ export default {
             .push(data);
             return all;
           }, {});
-        // console.log("res", results);
+
         const langs = Object.keys(lang2Translations);
         let sel = langs.indexOf('eng');
         if (sel === -1) { sel = 0; }
         langValues  = Object.values(lang2Translations);
         selectedLang.value = langs[sel];
-        // console.log("sel", selectedLang);
     }
 
     let display = ref(true);
@@ -388,5 +386,11 @@ a.interactive:hover {
 .fade-leave-to {
   max-height: 0px;
   transition: max-height 0.15s ease-out;
+}
+.valign{
+  vertical-align: middle;
+}
+.audiobutton{
+  padding:0 !important;  
 }
 </style>

@@ -1,7 +1,6 @@
 <template>
     <div class="p-component">
         <h2>Login</h2>
-        <!-- <Button label="ok" class="p-button-link" @click="say()" /> -->
         <form v-on:submit="login">
             <input type="text" name="email" /><br>
             <input type="password" name="password" /><br>
@@ -12,16 +11,9 @@
 
 <script>
     import store from "@/modules/store";
-    // import store from "@/modules/store";
     export default {
-        name: "Login",
-        // watch: {
-        //  '$route': 'isLog()'
-        // },
-       setup() {
-           // return {
-           //     say: () => store.actions.add("hehe")
-           // }
+      name: "Login",
+      setup() {
        },
         methods: {
             login: (e) => {

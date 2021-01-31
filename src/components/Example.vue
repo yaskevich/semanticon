@@ -22,7 +22,7 @@ export default {
 
 <style scoped>
 .example {
-  border: 1px solid orange;
+  /* border: 1px solid orange; */
   padding: .5rem;
 }
 /* .construction {

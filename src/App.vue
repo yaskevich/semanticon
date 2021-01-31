@@ -8,7 +8,7 @@
     <!-- <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link> -->
     <!-- <router-link v-else to="/login">Войти</router-link> -->
   </div>
-  <div class="p-component p-pl-3" style="margin-top:-1.5rem;">
+  <div class="p-component p-pl-3">
     {{$primevue.config.locale.sub}}
   </div>
   <div id="content">
@@ -51,10 +51,9 @@
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
-import { ref, unref } from "vue";
+import { ref } from "vue";
 import { inject } from "vue";
-import {onBeforeMount} from 'vue'
+import { onBeforeMount } from 'vue'
 
 export default {
   name: "App",
@@ -63,7 +62,6 @@ export default {
     const store = inject("store");
     onBeforeMount(async() => {
       await store.backend.getData();
-      // console.log(store);
       // document.title = $primevue.config.locale.hi;
       // if (errors.features && errors.features.value) {
       //     console.log("error", errors.features);
@@ -219,5 +217,8 @@ span.p-inputswitch-slider{
 }
 a{
 	color:black;
+}
+.subtitle{
+  margin-top:-1.5rem;  
 }
 </style>

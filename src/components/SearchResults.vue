@@ -11,7 +11,6 @@
 </template>
 
 <script>
-// import store from "@/modules/store";
 export default {
   name: "SearchResults",
   props: {
