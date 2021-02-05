@@ -11,6 +11,7 @@ const state = reactive({
     "checked": false,
     "mode": "ru",
     "text": '',
+    "matches": {},
   },
   search:  {
    'semtone' : [],

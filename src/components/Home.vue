@@ -39,7 +39,7 @@
 		</div>
 	</div>
 	<div class="p-component">
-		<SearchResults v-for="(value, key) in matches" :datum="value" :num="Number(key)" :data="data" :key="key"/>
+		<SearchResults v-for="(value, key) in autoState['matches']" :datum="value" :num="Number(key)" :data="data" :key="key"/>
 	</div>
 	<div class="p-component back-1 p-p-4 info">
 		<div class="explain-header">Что такое дискурсивные формулы?</div>
@@ -87,14 +87,14 @@ export default {
 		const data = store.state.config;
 		let searchInstance = ref();
 		let searchVariants = ref(null);
-		let matches = ref({});
+
 		const placeholder = {'ru': 'да ладно', 'none': 'whatever'};
 		const autoState = store.state.autocomplete;
 
 		const handleSwitchState = () => {
 			autoState["mode"] = autoState['checked'] ? 'ru': 'none';
 			autoState["text"]= '';
-			matches.value = [];
+			autoState["matches"] = [];
 		};
 
 		const getBasicExpr = (eid) => {
@@ -160,7 +160,7 @@ export default {
 				// console.log("getMatches: result", tokenMatches);
 				const variants  = getVariants[autoState["mode"]](tokenMatches);
 				// console.log("variants", variants);
-				matches.value = variants;
+				autoState["matches"] = variants;
 			}
 		};
 
@@ -181,9 +181,9 @@ export default {
 		const renderSelected = {
 			//  get clicked autocomplete item and render it in search resuts block
 			"ru": (e) => {
-				matches.value = [getBasicExpr(e.value.eid)];
+				autoState["matches"] = [getBasicExpr(e.value.eid)];
 		}, "none": (e) => {
-				matches.value = getUnitByTrans(e.value.id);
+				autoState["matches"] = getUnitByTrans(e.value.id);
 		}};
 
 		const processInput = {
@@ -262,7 +262,7 @@ export default {
 			searchVariants.value = getMatches(e.query);
 		};
 
-		return { placeholder, autocomplete, renderSelected, data, searchVariants, autoState, matches, handleSwitchState, renderMatches, searchInstance, InputSwitch,  };
+		return { placeholder, autocomplete, renderSelected, data, searchVariants, autoState, handleSwitchState, renderMatches, searchInstance, InputSwitch,  };
 	},
 	components: {
 		SearchResults,
