@@ -14,7 +14,7 @@
 					:minLength="Number(2)"
 					:placeholder="placeholder[autoState['mode']]"
 					field="txt"
-					scrollHeight="600px"
+					scrollHeight="300px"
 					@keyup.enter="renderMatches($event)"
 					@complete="autocomplete($event)"
 					@item-select="renderSelected[autoState['mode']]($event)">
@@ -60,13 +60,8 @@
 			<div>Мы собрали список дискурсивных формул для русского языка и разработали  формат описания, который помогает узнать не только что значит каждая  формула, но и как и когда её употреблять.</div>
 		</div>
 	</div>
-	<div class="p-grid p-p-4 info">
-		<div class="p-col p-text-center">
+	<div class="p-component p-p-4 info p-text-center">
 			<img src="/api/media/constructicon.png" style="max-height:4rem;"/>
-		</div>
-		<div class="p-col">
-			<img src="/api/media/logo_с_hse_cmyk.jpg" style="max-height:5rem;"/>
-		</div>
 	</div>
 	<div class="p-component back-3 p-p-4 info">
 		<div class="explain-header">Как строится описание?</div>
@@ -74,6 +69,9 @@
 			<div>Наша база данных — результат исследовательского проекта Школы Лингвистики НИУ ВШЭ <a href="https://ling.hse.ru/" target="_blank"><i class='pi pi-external-link'></i></a>. Содержательно она является частью Russian Constructicon <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
 			<div>Мы используем теоретические рамки Грамматики конструкций и Московской семантической школы и анализируем употребление формул, используя корпусные данные, прежде всего — Национальный корпус русского языка (НКРЯ) <a href="https://ruscorpora.ru/" target="_blank"><i class='pi pi-external-link'></i></a>.</div>
 		</div>
+	</div>
+	<div class="p-component p-p-4 info p-text-center">
+			<img src="/api/media/logo_с_hse_cmyk.jpg" style="max-height:5rem;"/>
 	</div>
 </template>
 
@@ -101,7 +99,6 @@ export default {
 
 		const getBasicExpr = (eid) => {
 			console.log("in eid", eid);
-			console.log("ind", data.titles.exprs.indexOf(eid));
 			const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == eid ? i : []);
 			console.log("TI", titlesIndexes);
 
@@ -119,10 +116,15 @@ export default {
 		const getVariants = {
 			"ru": (objs) => {
 				console.log("objs", objs);
-			const eids  = objs.map(x => x.eid)
+			const eids  = objs.map(x => x.eid);
 			const results = [];
 			for (let eid of eids) {
 				const variant  = getBasicExpr(eid);
+				// const tt = data.phrases.filter(x => x.phrase.includes(Number(eid))).map(x => x.phrase[0]);
+				const reducer = (b, x) => { x.phrase.includes(Number(eid))?b.push(x.pid):null; return b;  }
+				const tt = data.phrases.reduce(reducer, []);
+				console.log("filtered", eid, tt, variant);
+
 				if (variant && !results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
 						results.push(variant);
 				}

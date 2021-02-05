@@ -8,7 +8,7 @@
     <!-- <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link> -->
     <!-- <router-link v-else to="/login">Войти</router-link> -->
   </div>
-  <div class="p-component p-pl-3">
+  <div class="p-component p-pl-3 subtitle">
     {{$primevue.config.locale.sub}}
   </div>
   <div id="content">
@@ -21,7 +21,7 @@
           discourseformulae@gmail.com
         </div>
         <div class="p-p-2">
-          <img src="/api/media/constructicon.png" style="max-height:5rem;"/>
+          <img src="/api/media/logo.png" style="max-height:5rem;"/>
         </div>
       </div>
     <div class="p-col">
@@ -40,7 +40,9 @@
           2021, Прагматикон
       </div>
       <div class="p-col">
+        <a href="https://ling.hse.ru">
         Школа лингвистики НИУ ВШЭ
+        </a>
       </div>
     </div>
   </div>
@@ -137,16 +139,20 @@ body {
   /* min-height:80vh; */
   flex: 1;
 }
+/*
 #nav a {
-  /* font-weight: bold; */
+  font-weight: bold;
   color: #2c3e50;
   text-decoration: none;
 }
 #nav a.router-link-exact-active {
-  /* color: blue; */
-
+  color: blue;
 }
 #footer {
+}
+*/
+a{
+  text-decoration: none;
 }
 .app-title-basic{
   font-weight: 900;
@@ -219,6 +225,6 @@ a{
 	color:black;
 }
 .subtitle{
-  margin-top:-1.5rem;  
+  margin-top:-1.5rem;
 }
 </style>
