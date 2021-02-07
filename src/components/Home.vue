@@ -72,7 +72,7 @@
 		</div>
 	</div>
 	<div class="p-component p-p-4 info p-text-center">
-			<img src="/api/media/logo_hse.png" style="max-height:10rem;"/>
+			<img src="/api/media/logo_hse.png" style="max-height:8rem;"/>
 	</div>
 </template>
 
