@@ -169,8 +169,9 @@
 
               <div v-else-if="name === 'video' && unit[name].length" class="video">
                 <span v-for="(v, k) in unit[name]" :key="k" class="p-pr-4">
+                  <!-- :src="'/api/media/' + ['crazy.mp4', 'amused-cat.mp4'][k]" -->
                   <video
-                    :src="'/api/media/' + ['crazy.mp4', 'amused-cat.mp4'][k]"
+                    :src="'/api/media/video/' + data.media[v]"
                     width ="200"
                     controls>
                     Ваш браузер не поддерживает элемент <code>video</code>.
@@ -259,8 +260,8 @@ export default {
 
     let sound;
     if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length){
-      sound  = new Audio(document.location.origin + "/api/media/horse.ogg");
-      console.log(props.data.media[props.unit.audio[0]]);
+      // "/api/media/horse.ogg"
+      sound  = new Audio(document.location.origin +   '/api/media/audio/' + props.data.media[props.unit.audio[0]]);      
     }
 
     const playClicked = () => {

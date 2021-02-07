@@ -50,7 +50,7 @@
 	</div>
 	<div class="p-component p-p-4 info">
 		<div class="p-text-center">
-			<img src="/api/media/logo.png" style="max-height:10rem;"/>
+			<img src="/api/media/logo_pragmaticon.png" style="max-height:10rem;"/>
 		</div>
 	</div>
 	<div class="p-component back-2 p-p-4 info">
@@ -61,7 +61,7 @@
 		</div>
 	</div>
 	<div class="p-component p-p-4 info p-text-center">
-			<img src="/api/media/constructicon.png" style="max-height:4rem;"/>
+			<img src="/api/media/logo_constructicon.png" style="max-height:10rem;"/>
 	</div>
 	<div class="p-component back-3 p-p-4 info">
 		<div class="explain-header">Как строится описание?</div>
@@ -71,7 +71,7 @@
 		</div>
 	</div>
 	<div class="p-component p-p-4 info p-text-center">
-			<img src="/api/media/logo_с_hse_cmyk.jpg" style="max-height:5rem;"/>
+			<img src="/api/media/logo_hse.png" style="max-height:10rem;"/>
 	</div>
 </template>
 
