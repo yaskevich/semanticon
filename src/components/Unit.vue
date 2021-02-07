@@ -255,13 +255,13 @@ export default {
 
     const title = props.data.exprs[id]
       .map(x => props.data.tokens.values[props.data.tokens.keys.indexOf(x)])
-      .join(' ');
+      .join(' ').replace(' -','-');
 
 
     let sound;
     if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length){
       // "/api/media/horse.ogg"
-      sound  = new Audio(document.location.origin +   '/api/media/audio/' + props.data.media[props.unit.audio[0]]);      
+      sound  = new Audio(document.location.origin +   '/api/media/audio/' + props.data.media[props.unit.audio[0]]);
     }
 
     const playClicked = () => {

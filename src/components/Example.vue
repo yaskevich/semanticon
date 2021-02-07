@@ -1,12 +1,14 @@
 <template>
   <div class="example">
   <span class="example-text" v-html="datum.text.replace('{', '<strong>').replace('}', '</strong>')"></span>
-  <span v-if="datum.movie" title="кинофильм" class="p-ml-1 valign"><i class="pi pi-video"></i></span>
-  <span v-else title="публикация" class="p-ml-1 valign"><i class="pi pi-book"></i></span>
-  <span class="example-author p-ml-1">{{datum.author}}.</span>
-  <span class="example-pub p-ml-1 p-text-bold">{{datum.pub}}</span>
-  <span v-if="datum.journal" class="p-ml-1 example-journal" title="публикация в журнале">(«{{v.journal}}»)</span>
-  <span class="example-pubdate">, {{datum.pubdate}}</span>
+  <template v-if="datum.length > 2"> 
+    <span v-if="datum.movie" title="кинофильм" class="p-ml-1 valign"><i class="pi pi-video"></i></span>
+    <span v-else title="публикация" class="p-ml-1 valign"><i class="pi pi-book"></i></span>
+    <span class="example-author p-ml-1">{{datum.author}}.</span>
+    <span class="example-pub p-ml-1 p-text-bold">{{datum.pub}}</span>
+    <span v-if="datum.journal" class="p-ml-1 example-journal" title="публикация в журнале">(«{{v.journal}}»)</span>
+    <span class="example-pubdate">, {{datum.pubdate}}</span>
+  </template>
 </div>
 </template>
 

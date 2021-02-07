@@ -15,6 +15,7 @@
 					:placeholder="placeholder[autoState['mode']]"
 					field="txt"
 					scrollHeight="300px"
+					@clear="clearInput()"
 					@keyup.enter="renderMatches($event)"
 					@complete="autocomplete($event)"
 					@item-select="renderSelected[autoState['mode']]($event)">
@@ -61,7 +62,7 @@
 		</div>
 	</div>
 	<div class="p-component p-p-4 info p-text-center">
-			<img src="/api/media/logo_constructicon.png" style="max-height:10rem;"/>
+			<img src="/api/media/logo_constructicon.png" style="max-height:5rem;"/>
 	</div>
 	<div class="p-component back-3 p-p-4 info">
 		<div class="explain-header">Как строится описание?</div>
@@ -190,6 +191,7 @@ export default {
 			"ru": (str) => {
 				const results = [];
 				const queryChunks = str
+					.toLowerCase()
 					.split(/\s|(?=-)/g)
 					.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
 
@@ -242,7 +244,7 @@ export default {
 			},
 			"none": (str) => {
 				const results = [];
-				const query = str.replace(/[.*+?^${}()|[\]\\]/g, '');
+				const query = str.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '');
 				autoState["text"] = query;
 				for (let value of Object.values(data.trans)) {
 					if (value.txt.includes(query)) {
@@ -254,15 +256,19 @@ export default {
 		};
 
 		const getMatches = (queryString) => {
-			console.log("input", queryString);
+			// console.log("input", queryString);
 			return autoState["text"] ? processInput[autoState["mode"]](queryString) : [];
+		};
+
+		const clearInput = () => {
+			autoState['matches'] = [];
 		};
 
 		const autocomplete = (e) => {
 			searchVariants.value = getMatches(e.query);
 		};
 
-		return { placeholder, autocomplete, renderSelected, data, searchVariants, autoState, handleSwitchState, renderMatches, searchInstance, InputSwitch,  };
+		return { placeholder, autocomplete, renderSelected, data, searchVariants, autoState, handleSwitchState, renderMatches, searchInstance, InputSwitch,  clearInput, };
 	},
 	components: {
 		SearchResults,
