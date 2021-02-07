@@ -67,8 +67,8 @@ const mappingRuEn = {
   'устар.|груб.|нейтр.': "style",
   'Комментарий': "comment",
   'конструкция': "construction",
-  'реплика 1': "remark1",
-  'реплика 2': "remark2",
+  'реплика1': "remark1",
+  'реплика2': "remark2",
   'приоритет': "priority",
 };
 
@@ -311,17 +311,22 @@ async function processExamples(fld, content){
 				
 				if (textPlusSource.length>1) {
 					const srcAndDate = textPlusSource[1].trim();
-					let matches = srcAndDate.match(/^(.*?)\(([\d–\.]+)\)\]$/);
+					let matches = srcAndDate.match(/^(.*?)\(([\d–\.\–]+)\)\]$/);
 					
 					if (!matches){
 						const matches  = srcAndDate.match(/^(.*?)\s*\/\/\s*«(.*?)»\,\s+([\d–\.]+)\]$/);
 						if (matches) {
-							const [author, book, rest] = matches[1].split('.');
+							const [author, book, rest] = matches[1].split('.');							
 							if (rest) {
 								error = `DOT SPLITTER (JOURNAL) ¦${rest}¦`;
 							} else {
 								info["author"] = author.trim();
-								info["pub"] = book.trim();
+								if(book){
+									info["pub"] = book.trim();
+								} else {
+									console.log("NO BOOK");
+								}
+								
 								info["journal"] = matches[2].trim();
 								info["pubdate"] = matches[3].trim();
 							}
@@ -330,22 +335,31 @@ async function processExamples(fld, content){
 						}
 					} else {
 						// const dotSplitter = matches[1].lastIndexOf();
-						const [author, book, rest] = matches[1].split('.');
-						if (rest) {
-							error = `DOT SPLITTER (BOOK) ¦${rest}¦`;
-						} else {
-							
-							if(author && book) {
-								info["author"] = author.trim();
-								info["pub"] = book.trim();
-								info["pubdate"] = matches[2].trim();
+						
+						
+						// console.error(`■${matches[1].slice(-6)}■`);	
+						if (matches[1].slice(-6) === ", к/ф "){
+							info["pub"] = matches[1].slice(0, -6);
+							info["movie"] = true;
+						} else{
+							const [author, book, rest] = matches[1].split('.');
+							if (rest) {
+								error = `DOT SPLITTER (BOOK) ¦${rest}¦`;
 							} else {
-								// console.error(matches[1]);
-								error = `DOT SPLITTER (BOOK|AUTHOR)`;
+								
+								if(author && book) {
+									info["author"] = author.trim();
+									info["pub"] = book.trim();
+									info["pubdate"] = matches[2].trim();
+								} else {
+									// console.error(matches[1]);
+									error = `DOT SPLITTER (BOOK|AUTHOR)`;
+								}
 							}
 						}
+						
 					}
-					if (Object.keys(info).length < 4){
+					if (Object.keys(info).length < 3){
 						console.error(rowNumber, "examples <"+error+">", srcAndDate);
 					} else {
 						info["text"] = textPlusSource[0].trim();
@@ -386,7 +400,7 @@ async function processFile(fileName) {
         let csvArr  = [];
 
         try {
-            csvArr = await csv.parse(csvString, {delimiter: ";"});
+            csvArr = await csv.parse(csvString, {delimiter: ","});
         }
         catch(e) {
             console.log(e.message);
