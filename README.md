@@ -1,24 +1,23 @@
-# discourse
-Russian Discourse Phrases Database
-
-Previous Draft
-
-https://formulae.langdoc.net/
+The Database of Russian Discourse Formulas (backend)
 
 
 
+#### Installation and deployment
 
+This is a regular NodeJS/ExpresJS application with PostgreSQL storage.
 
-Under costruction
+`npm install`
 
-https://site.uit.no/russian-constructicon/
+`node parser.js <filename.csv>` – to import data into the database
 
-A constructicon for Russian
+`node index.js` (or other proper way to deploy) to make data available to users
 
-https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus
+#### Structure of .env file 
 
-
-
-Export into Excel
-
-https://blog.aspose.com/2020/08/05/create-excel-files-in-node.js/
+```PGUSER=....
+PGHOST=127.0.0.1
+PGPASSWORD=....
+PGDATABASE=discourse
+PGPORT=5432
+PORT=80
+```
