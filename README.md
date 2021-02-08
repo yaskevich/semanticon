@@ -1,10 +1,8 @@
-The Database of Russian Discourse Formulas (backend)
-
-
+# The Database of Russian Discourse Formulas (backend)
 
 #### Installation and deployment
 
-This is a regular NodeJS/ExpresJS application with PostgreSQL storage.
+This is a regular NodeJS/ExpressJS application with PostgreSQL storage.
 
 `npm install`
 
@@ -15,9 +13,13 @@ This is a regular NodeJS/ExpresJS application with PostgreSQL storage.
 #### Structure of .env file 
 
 ```PGUSER=....
+PGUSER=....
 PGHOST=127.0.0.1
 PGPASSWORD=....
-PGDATABASE=discourse
+PGDATABASE=databasename
 PGPORT=5432
 PORT=80
 ```
+
+**[Frontend code](https://github.com/yaskevich/pragmaticon)**
+
