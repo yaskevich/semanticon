@@ -169,7 +169,7 @@ export default {
 			const results  = [];
 			for (let unit of Object.values(data.units)) {
 				const pd  = Reflect.getOwnPropertyDescriptor(unit, "translations");
-				if (pd && pd.value.includes(id)){
+				if (pd && pd.value.includes(id) && !results.find( x => x['eid1'] === unit.eid1 )){
 					results.push({
 						"eid1": unit.eid1,
 						"main" : 'eid1'
@@ -184,7 +184,9 @@ export default {
 			"ru": (e) => {
 				autoState["matches"] = [getBasicExpr(e.value.eid)];
 		}, "none": (e) => {
-				autoState["matches"] = getUnitByTrans(e.value.id);
+				const uns  = getUnitByTrans(e.value.id);
+				console.log("units", uns);
+				autoState["matches"] = uns;
 		}};
 
 		const processInput = {
