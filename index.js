@@ -81,7 +81,8 @@ let users = [
 	  done(null, user);
 	});
 	
-	app.use('/api/media', express.static(path.join(__dirname, 'public')));
+	app.use('/api/media', express.static(path.join(__dirname, 'media')));
+	app.use(express.static('public'));
 	
 	app.use(compression());
 	app.use(session({
@@ -143,13 +144,14 @@ let users = [
 	app.get("/api/data", async(req, res) =>  {
 	  const features = await db.getFeatures();
 	  const tokens = await db.getTokens();
-	  // const phrases = await db.getPhrases();
+	  const phrases = await db.getPhrases();
 	  const exprs = await db.getExprs();
 	  const units = await db.getUnits();
 	  const idx = await db.getIndex();
 	  const titles = await db.getTitles();
 	  const media = await db.getMedia();
 	  const trans = await db.getTranslations();
+	  
 	  // console.log("data", data);
 	  return res.json({
 			"trans": trans,
@@ -160,7 +162,7 @@ let users = [
 			"titles": titles,
 			"toc": idx,			
 			"tokens": tokens,			
-			// "phrases": phrases,
+			"phrases": phrases,
 			"user": req.isAuthenticated()?getUser(req):{}});
 	});
 
