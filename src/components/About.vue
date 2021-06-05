@@ -1,11 +1,15 @@
 <template>
   <div class="home p-component">
-    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
     <!-- <div class="p-text-center">
       <h2>Дискурсивные формулы</h2>
     </div> -->
     <TabView v-model:activeIndex="store.state.about.active" @tab-change="store.state.about.active = $event.index">
 	<TabPanel header="Проект">
+
+    <div class="p-component p-p-4 back-1 info">
+      <div class="explain-header">Для цитирования</div>
+      <div class="p-ml-4">Alyaxey Yaskevich, Polina Bychkova, Evgenia Koziuk, Ekaterina Rakhilina, Evgenia Slepak, Alevtina Utkina, Svetlana Zhukova, Tatiana Zotova. The Russian Pragmaticon. An electronic database of the Russian pragmatic constructions. Available at <a href="https://pragmaticon.ruscorpora.ru/" target="_blank">https://pragmaticon.ruscorpora.ru/</a></div>
+    </div>
 
     <div class="p-component p-p-4 info">
       <div class="explain-header">Pragmaticon</div>
@@ -211,11 +215,7 @@ export default {
       ["Как скачать результаты?", "..."],
     ];
 
-    const tabset = (e) => {
-      console.log(e);
-    }
-
-    return { persons, defs, tabset, store };
+    return { persons, defs, store };
   },
 }
 </script>

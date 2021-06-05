@@ -25,8 +25,9 @@
         </div>
       </div>
     <div class="p-col">
-      <div>О проекте</div>
-      <div>Как пользоваться сайтом</div>
+      <div><router-link to="/about">О проекте</router-link></div>
+      <div><router-link to="/about">Как пользоваться сайтом</router-link></div>
+      <div><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">Обратная связь</a></div>
       <div>Русский Конструктикон</div>
     </div>
     </div>
