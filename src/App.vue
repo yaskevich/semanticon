@@ -28,7 +28,7 @@
       <div><router-link to="/about">О проекте</router-link></div>
       <div><router-link to="/about">Как пользоваться сайтом</router-link></div>
       <div><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">Обратная связь</a></div>
-      <div>Русский Конструктикон</div>
+      <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон</a></div>
     </div>
     </div>
       <!-- <pre>store.state: {{ state }}</pre>
@@ -41,7 +41,7 @@
           2021, Прагматикон
       </div>
       <div class="p-col">
-        <a href="https://ling.hse.ru">
+        <a target="_blank" href="https://ling.hse.ru">
         Школа лингвистики НИУ ВШЭ
         </a>
       </div>
