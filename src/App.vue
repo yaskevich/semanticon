@@ -21,12 +21,12 @@
           discourseformulae@gmail.com
         </div>
         <div class="p-p-2">
-          <img src="/api/media/logo.png" style="max-height:5rem;"/>
+          <img src="@/assets/logo_pragmaticon.png" style="max-height:5rem;"/>
         </div>
       </div>
     <div class="p-col">
-      <div><router-link to="/about">О проекте</router-link></div>
-      <div><router-link to="/about">Как пользоваться сайтом</router-link></div>
+      <div><a href="#" @click="doGoToHelp(0)">О проекте</a></div>
+      <div><a href="#" @click="doGoToHelp(3)">Как пользоваться сайтом</a></div>
       <div><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">Обратная связь</a></div>
       <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон</a></div>
     </div>
@@ -57,6 +57,7 @@
 import { ref } from "vue";
 import { inject } from "vue";
 import { onBeforeMount } from 'vue'
+import router from "./router";
 
 export default {
   name: "App",
@@ -74,11 +75,19 @@ export default {
    })
     console.log("app → setup");
     let dataReady = ref(false);
+
+
+    const doGoToHelp = (tab) => {
+      store.state.about.active = tab || 0;
+      router.push("/about")
+    };
+
     console.log("auth:", store.actions.isAuth());
     return {
       dataReady,
       isAuth: store.actions.isAuth,
       state: store.state,
+      doGoToHelp,
     };
   },
 };
