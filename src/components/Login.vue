@@ -24,7 +24,7 @@
             },
         },  computed: {
           isLog() {
-            console.log("is Logged check!");
+            // console.log("is Logged check!");
             return store.actions.isAuth();
           }
         }

@@ -53,7 +53,7 @@ export default {
   name: "PhraseList",
   setup() {
     const routerInfo = useRoute();
-    console.log(routerInfo.params);
+    // console.log(routerInfo.params);
 
     const partsOptions = [{"name": 'двухчастная', "code": false}, {"name":'трёхчастная', "code": true}];
     const data  = store.state.config;
@@ -66,7 +66,7 @@ export default {
       const routedProp = data.features[routerInfo.params.id][1];
       const routedName  = data.features[routerInfo.params.id][0];
       const a = {"value": Number(routerInfo.params.id), "name": routedName, "prop": routedProp};
-      console.log("route IN", a);
+      // console.log("route IN", a);
       if (['semfunc'].includes(routedProp)){
           searchState[routedProp] = a;
       } else if (['semtone'].includes(routedProp)){
@@ -85,14 +85,14 @@ export default {
     const lang2ids = Object.values(data.trans).reduce((obj, x) => ({ ...obj, [x["lang"]]: [...(obj[x["lang"]] || []), x.id, ],}),{},);
     const aggregatedLangs = Object.keys(lang2ids).map(x=>({"value": x, name: primevue.config.locale.lang[x], "prop": "translations"}));
 
-    const updateRoute = (e) => {
+    const updateRoute = () => {
       router.replace("/filters");
       if (!store.state.accessed.includes('search')){
           store.state.accessed.push('search');
       }
 
-      console.log("update", e.value);
-      console.log("search state", searchState);
+      // console.log("update", e.value);
+      // console.log("search state", searchState);
       const selected = [];
       const facet = {};
 
@@ -107,7 +107,7 @@ export default {
         }
       }
 
-      console.log("facet", facet);
+      // console.log("facet", facet);
 
       const facetArray = Object.entries(facet);
       if (facetArray.length){ // check whether facet is not empty
@@ -115,7 +115,7 @@ export default {
 
           let isOkay  = true;
           for (const [key, value] of facetArray) {
-            
+
             if (!Object.prototype.hasOwnProperty.call(unit, key)){
               isOkay = false;
               break;
@@ -157,9 +157,9 @@ export default {
     if (store.state.accessed.includes('search')){
       updateRoute({"value": "back"});
     }
-    if (routerInfo.params.id){
-      console.log("router", routerInfo.params.id);
-    }
+    // if (routerInfo.params.id){
+    //   console.log("router", routerInfo.params.id);
+    // }
 
   return { updateRoute, data, eids, partsOptions, aggregatedFeatures, aggregatedLangs,  searchState };
 },

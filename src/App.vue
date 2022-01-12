@@ -76,9 +76,9 @@ export default {
       //     console.log("error", errors.features);
       // }
       dataReady.value = true;
-      console.log('app → mounted!')
+      // console.log('app → mounted!')
    })
-    console.log("app → setup");
+    // console.log("app → setup");
     let dataReady = ref(false);
 
 
@@ -87,7 +87,7 @@ export default {
       router.push("/about")
     };
 
-    console.log("auth:", store.actions.isAuth());
+    // console.log("auth:", store.actions.isAuth());
     return {
       dataReady,
       isAuth: store.actions.isAuth,

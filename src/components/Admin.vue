@@ -20,14 +20,14 @@
 </template>
 
 <script>
-import { usePrimeVue } from "primevue/config";
+// import { usePrimeVue } from "primevue/config";
 
 export default {
   name: 'Admin',
   setup(){
-    const primevue = usePrimeVue();
-    const dos = (x) => {
-      console.log("kek", x, primevue.config.locale.phrase[x]);
+    // const primevue = usePrimeVue();
+    const dos = () => {
+      // console.log("admin", x, primevue.config.locale.phrase[x]);
     };
     return {dos};
   },

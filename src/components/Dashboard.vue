@@ -1,9 +1,11 @@
 <template>
+
     <div class="p-component">
         <!-- <h2>Dashboard</h2> -->
         <h3>Пользователь</h3>
         <!-- <p>Имя: {{ data.user.name }}</p> -->
     </div>
+
 </template>
 <script>
     import { onBeforeMount } from 'vue';

@@ -13,7 +13,8 @@
 
           <div class="article-tags p-mb-2">
             <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
-              <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
+              <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }"
+               class="interactive back-3">
                 {{data.features[unit['semfunc']][0]}}
               </router-link>
             </span>
@@ -21,7 +22,7 @@
               <!-- <Chip :label="data.features[a]" /> -->
               <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
               <!-- {{item}} -->
-              <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
+              <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }"  class="interactive back-2">
                 {{data.features[item][0]}}
               </router-link>
             </span>
@@ -75,7 +76,7 @@
               <span class="article-field">{{$primevue.config.locale.p1}}:</span>
                 <span class="last-remark p-pr-2">{{title}}</span>
                 <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
-                  <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" tag="li" class="interactive back-3">
+                  <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }" class="interactive back-3">
                     {{data.features[unit['semfunc']][0]}}
                   </router-link>
                 </span>
@@ -84,7 +85,7 @@
                   <!-- <Chip :label="data.features[a]" /> -->
                   <!-- <Tag class="p-mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
                   <!-- {{item}} -->
-                  <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
+                  <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }"  class="interactive back-2">
                     {{data.features[item][0]}}
                   </router-link>
                 </span>
@@ -194,7 +195,7 @@
         <Button icon="pi pi-question" class="p-button-rounded p-button-secondary p-mb-2"  @click="doGoToHelp($event)"/>
       </div>
       <div v-if="display">
-        <router-link :to="{ name: 'SimilarList', params: { id: unit.id } }" tag="li" class="nounderline">
+        <router-link :to="{ name: 'SimilarList', params: { id: unit.id } }" class="nounderline">
           <Button icon="pi pi-sitemap" class="p-button-rounded p-button-secondary p-mb-2" />
         </router-link>
       </div>
@@ -306,6 +307,8 @@ export default {
       // b:  "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>"
       // "🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>"
     }
+  }, components: {
+    Example,
   }
 };
 </script>

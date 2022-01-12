@@ -65,13 +65,13 @@ export default {
       // router.push("/results")
 		};
 		const search = (e) => {
-			console.log("query", `|${e.query}|`);
+			// console.log("query", `|${e.query}|`);
 			const queries = e.query
 				.split(' ') // что-то!
 				.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''))
 				.filter(x => x);
 
-			console.log("split", queries);
+			// console.log("split", queries);
 			// const str = e.query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 			const str = e.query.replace(/[.*+?^${}()|[\]\\]/g, '');
 			token.value = queries.join(' ');

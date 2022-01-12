@@ -99,13 +99,13 @@ export default {
 		};
 
 		const getBasicExpr = (eid) => {
-			console.log("in eid", eid);
+			// console.log("in eid", eid);
 			const titlesIndexes = data.titles.exprs.flatMap((x, i) => x == eid ? i : []);
-			console.log("TI", titlesIndexes);
+			// console.log("TI", titlesIndexes);
 
 			if (titlesIndexes.length){
 				const titles = titlesIndexes.map(x=>data.titles.eid1[x]);
-				console.log("tt", titles);
+				// console.log("tt", titles);
 				return {
 					"eid1": titles[0],
 					"eid": eid,
@@ -116,15 +116,15 @@ export default {
 
 		const getVariants = {
 			"ru": (objs) => {
-				console.log("objs", objs);
+				// console.log("objs", objs);
 			const eids  = objs.map(x => x.eid);
 			const results = [];
 			for (let eid of eids) {
 				const variant  = getBasicExpr(eid);
 				// const tt = data.phrases.filter(x => x.phrase.includes(Number(eid))).map(x => x.phrase[0]);
-				const reducer = (b, x) => { x.phrase.includes(Number(eid))?b.push(x.pid):null; return b;  }
-				const tt = data.phrases.reduce(reducer, []);
-				console.log("filtered", eid, tt, variant);
+				// const reducer = (b, x) => { x.phrase.includes(Number(eid))?b.push(x.pid):null; return b;  }
+				// const tt = data.phrases.reduce(reducer, []);
+				// console.log("filtered", eid, tt, variant);
 
 				if (variant && !results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
 						results.push(variant);
@@ -155,7 +155,7 @@ export default {
 		const renderMatches = () => {
 			searchInstance.value.hideOverlay();
 			if (typeof autoState["text"] === 'object'){
-				console.log("do nothing: object", autoState["text"]);
+				// console.log("do nothing: object", autoState["text"]);
 			} else {
 				const tokenMatches  = getMatches(autoState["text"]);
 				// console.log("getMatches: result", tokenMatches);
@@ -185,7 +185,7 @@ export default {
 				autoState["matches"] = [getBasicExpr(e.value.eid)];
 		}, "none": (e) => {
 				const uns  = getUnitByTrans(e.value.id);
-				console.log("units", uns);
+				// console.log("units", uns);
 				autoState["matches"] = uns;
 		}};
 
@@ -241,7 +241,7 @@ export default {
 							}
 					}
 				}
-				console.log("results qty", results.length);
+				// console.log("results qty", results.length);
 				return results;
 			},
 			"none": (str) => {

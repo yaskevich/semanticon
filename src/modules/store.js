@@ -79,7 +79,7 @@ const getData = async () => {
       const endpoint  = "/api/data";
       const getApiData = await fetch(endpoint);
       const datum = await getApiData.json();
-      console.log(`API [${endpoint}] →  app`);
+      // console.log(`API [${endpoint}] →  app`);
       state.config = datum;
       // if (Object.keys(datum.user).length){
       //   state.actions.set("user", datum.user);
