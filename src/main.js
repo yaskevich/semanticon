@@ -1,9 +1,9 @@
 import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
-import App from './App.vue'
+import App from './App.vue';
 import store from "./modules/store";
-import router from './router'
-
+import router from './router';
+import VueGtag from "vue-gtag";
 import 'primeflex/primeflex.css';
 import 'primevue/resources/themes/saga-orange/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -33,7 +33,6 @@ import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Badge from 'primevue/badge';
 import ScrollTop from 'primevue/scrolltop';
-
 
 const app = createApp(App);
 const pvLocale = {
@@ -89,7 +88,9 @@ app.provide("store", store);
 app.use(PrimeVue, {
     locale: pvLocale
 });
-
+app.use(VueGtag, {
+  config: { id: "G-KVXRMMT1N6" }
+});
 app.component('ScrollTop', ScrollTop);
 app.component('Badge', Badge);
 app.component('Dropdown', Dropdown);
