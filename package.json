@@ -1,6 +1,6 @@
 {
   "name": "pragmaticon-ui",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -15,6 +15,7 @@
     "primeicons": "^5.0.0",
     "primevue": "^3.1.2",
     "vue": "^3.0.4",
+    "vue-gtag": "^2.0.1",
     "vue-router": "^4.0.1"
   },
   "devDependencies": {
