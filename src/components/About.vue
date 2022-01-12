@@ -6,6 +6,18 @@
     <TabView v-model:activeIndex="store.state.about.active" @tab-change="store.state.about.active = $event.index">
 	<TabPanel header="Проект">
 
+    <div class="p-component p-p-4 info">
+      <div class="explain-header">Короткое видео о проекте</div>
+      <div class="p-ml-4">
+        Презентация сайта на конференции <i>Slavic Cognitive Linguistics Conference 2021</i>
+      </div>
+      <div class="p-ml-4">
+        <div class="videoWrapper">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/-j7krkUHTt8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
     <div class="p-component p-p-4 back-1 info">
       <div class="explain-header">Для цитирования</div>
       <div class="p-ml-4">Alyaxey Yaskevich, Polina Bychkova, Evgenia Koziuk, Ekaterina Rakhilina, Evgenia Slepak, Alevtina Utkina, Svetlana Zhukova, Tatiana Zotova. The Russian Pragmaticon. An electronic database of the Russian pragmatic constructions. Available at <a href="https://pragmaticon.ruscorpora.ru/" target="_blank">https://pragmaticon.ruscorpora.ru/</a></div>
@@ -34,7 +46,7 @@
     <div class="p-component back-1 p-p-4 info">
       <div class="explain-header">Всё о дискурсивных формулах</div>
       <div class="p-ml-4">
-        доклад Е. В. Рахилиной на коллоквиуме ОТиПЛа в МГУ
+        Доклад Е. В. Рахилиной на коллоквиуме ОТиПЛа в МГУ
       </div>
       <div class="p-ml-4">
         <div class="videoWrapper">
@@ -63,7 +75,7 @@
       </div>
     </div>
 
-    <div class="p-component p-p-4 info">
+    <div class="p-component p-p-4 back-1 info">
       <div class="explain-header">Список</div>
       <div class="p-ml-4">Список дискурсивных формул мы собрали из драматических текстов и детской литературы — при помощи ручной разметки и машинного обучения.</div>
       <div class="p-ml-4">В итоговый список <strong>не</strong> включали: реплики-реакции на конкретные ситуации, а не на речь (например, <span class="cite">Кто там?</span> в ответ на стук в дверь), формулы вежливости (<span class="cite">Благодарю вас</span>, <span class="cite">Прости меня</span>) и выражения, при помощи которых мы регулируем диалог (<span class="cite">Подожди минуту</span>, <span class="cite">Вот так вот</span>).</div>
@@ -72,7 +84,7 @@
     <div class="p-component back-3 p-p-4 info">
       <div class="explain-header">Курс РКИ «Как скажешь»</div>
       <div class="p-ml-4">
-        Результаты проекта используются в бесплатном онлайн-курсе разговорного русского языка на образовательной платформе «Верные слова». В каждом модуле курса есть раздел с заданиями, по одному из семантических классов дискурсивных формул.
+        Результаты проекта используются в бесплатном онлайн-курсе разговорного русского языка на образовательной платформе «Верные слова» <a href="https://vsrussian.com/courses/5c0d40d765a47aa367cbfb4c" target="_blank"><i class='pi pi-external-link'></i></a>. Каждый модуль курса содержит задания по одному из семантических классов дискурсивных формул.
       </div>
     </div>
 
