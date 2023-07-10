@@ -1,32 +1,32 @@
 {
   "name": "pragmaticon-ui",
-  "version": "0.2.2",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
+    "dev": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@fontsource/montserrat": "^4.5.1",
-    "axios": "^0.24.0",
-    "core-js": "^3.20.2",
+    "@fontsource/montserrat": "^5.0.5",
+    "core-js": "^3.31.1",
     "primeflex": "^2.0.0",
-    "primeicons": "^5.0.0",
-    "primevue": "^3.1.2",
-    "vue": "^3.0.4",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.30.0",
+    "vue": "^3.3.4",
     "vue-gtag": "^2.0.1",
-    "vue-router": "^4.0.1"
+    "vue-router": "^4.2.4"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.15",
-    "@vue/cli-plugin-eslint": "~4.5.15",
-    "@vue/cli-plugin-router": "^4.5.15",
-    "@vue/cli-service": "~4.5.15",
-    "@vue/compiler-sfc": "^3.2.26",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.5.0"
+    "@babel/eslint-parser": "^7.22.7",
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-plugin-eslint": "~5.0.8",
+    "@vue/cli-plugin-router": "^5.0.8",
+    "@vue/cli-service": "~5.0.8",
+    "@vue/compiler-sfc": "^3.3.4",
+    "eslint": "^8.44.0",
+    "eslint-plugin-vue": "^9.15.1"
   },
   "eslintConfig": {
     "root": true,
@@ -38,10 +38,10 @@
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@babel/eslint-parser"
     },
     "rules": {
-      "multi-word-component-names": "off"
+      "vue/multi-word-component-names": 0
     }
   },
   "browserslist": [
