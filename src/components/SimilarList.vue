@@ -1,27 +1,30 @@
 <template>
-  <div class="p-component p-p-3 p-text-center">
-    <div class="p-mb-4">
-      <span class="p-text-italic">Похожи на </span>
+  <div class="p-component p-3 text-center">
+    <div class="mb-4">
+      <span class="font-italic">Похожи на </span>
       <span class="app-title-basic">
-        {{data.exprs[data.units[datum.uid]["eid1"]].map(x => data.tokens.values[data.tokens.keys.indexOf(x)]).join('&#8239;')}}
-    </span>
-
-    <div class="article-tags p-mb-2">
-
-      <span v-if="data.features[datum.semfunc] && data.features[datum.semfunc][0]">
-        <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: datum.semfunc } }" tag="li" class="interactive back-3">
-          {{data.features[datum.semfunc][0]}}
-        </router-link>
+        {{
+          data.exprs[data.units[datum.uid]['eid1']]
+            .map(x => data.tokens.values[data.tokens.keys.indexOf(x)])
+            .join('&#8239;')
+        }}
       </span>
 
-      <span v-for="item in datum.semtone" :key="item">
-        <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" tag="li" class="interactive back-2">
-          {{data.features[item][0]}}
-        </router-link>
-      </span>
+      <div class="article-tags mb-2">
+        <span v-if="data.features[datum.semfunc] && data.features[datum.semfunc][0]">
+          <router-link
+            :to="{ name: 'List', params: { prop: 'semfunc', id: datum.semfunc } }"
+            class="li interactive back-3">
+            {{ data.features[datum.semfunc][0] }}
+          </router-link>
+        </span>
 
-    </div>
-
+        <span v-for="item in datum.semtone" :key="item">
+          <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" class="li interactive back-2">
+            {{ data.features[item][0] }}
+          </router-link>
+        </span>
+      </div>
     </div>
     <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" />
   </div>
@@ -29,11 +32,11 @@
 
 <script>
 import { useRoute } from 'vue-router';
-import store from "@/modules/store";
-import PhraseListItem from "./PhraseListItem.vue";
+import store from '@/modules/store';
+import PhraseListItem from './PhraseListItem.vue';
 
 export default {
-  name: "SimilarList",
+  name: 'SimilarList',
   setup() {
     const vuerouter = useRoute();
     const id = vuerouter.params.id;
@@ -41,33 +44,32 @@ export default {
     const eids = [];
     const datum = {};
     if (id) {
-      datum["uid"] = Number(id);
-      datum["eid"]  = data.units[datum.uid]["eid1"];
-      datum["semfunc"]  = data.units[datum.uid]["semfunc"];
-      datum["semtone"] = data.units[datum.uid]["semtone"];
+      datum['uid'] = Number(id);
+      datum['eid'] = data.units[datum.uid]['eid1'];
+      datum['semfunc'] = data.units[datum.uid]['semfunc'];
+      datum['semtone'] = data.units[datum.uid]['semtone'];
 
-      for(let v of Object.values(data.units)) {
-        if (v["id"]=== datum.uid ||  v["eid1"] === datum.eid){
+      for (let v of Object.values(data.units)) {
+        if (v['id'] === datum.uid || v['eid1'] === datum.eid) {
           continue;
         }
-        if (v["semfunc"] === datum.semfunc) {
-            if (
-              (datum.semtone && v["semtone"] && v["semtone"].some(r=> datum.semtone.includes(r)))
-              ||
-              (!datum.semtone && !v["semtone"])
-            ){
-              if(!eids.includes(v.eid1)){
-                  eids.push(v.eid1);
-              }
+        if (v['semfunc'] === datum.semfunc) {
+          if (
+            (datum.semtone && v['semtone'] && v['semtone'].some(r => datum.semtone.includes(r))) ||
+            (!datum.semtone && !v['semtone'])
+          ) {
+            if (!eids.includes(v.eid1)) {
+              eids.push(v.eid1);
             }
+          }
         }
       }
     }
     return { datum, eids, data };
   },
   components: {
-    PhraseListItem
-  }
+    PhraseListItem,
+  },
 };
 </script>
 
@@ -75,10 +77,10 @@ export default {
 .phrase {
   color: red;
 }
-.variant{
+.variant {
   color: gray;
 }
-.variants{
-  margin-top:-1rem;
+.variants {
+  margin-top: -1rem;
 }
 </style>

@@ -1,24 +1,25 @@
 <template>
-  <div class="p-shadow-12 p-component result-item p-text-center">
-    <router-link :to="{ name: 'Phrase', params: { id: datum.eid1 } }" tag="li" class="nounderline">
-      <Button class="p-button-link">
+  <div class="shadow-4 p-component result-item text-center">
+    <router-link :to="{ name: 'Phrase', params: { id: datum.eid1 } }" class="li nounderline">
+      <PrimeButton class="p-button-link">
         <span v-for="(v, k) in data.exprs[datum[datum.main]]" :key="k">
-          {{data.tokens.values[data.tokens.keys.indexOf(v)].charAt(0)==='-'?'':'&nbsp;'}}{{ data.tokens.values[data.tokens.keys.indexOf(v)]}}
+          {{ data.tokens.values[data.tokens.keys.indexOf(v)].charAt(0) === '-' ? '' : '&nbsp;'
+          }}{{ data.tokens.values[data.tokens.keys.indexOf(v)] }}
         </span>
-    </Button>
+      </PrimeButton>
     </router-link>
   </div>
 </template>
 
 <script>
 export default {
-  name: "SearchResults",
+  name: 'SearchResults',
   props: {
     datum: Object,
     num: Number,
-    data: Object
-  }
-}
+    data: Object,
+  },
+};
 </script>
 
 <style scoped>
