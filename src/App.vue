@@ -1,97 +1,89 @@
-<template >
+<template>
   <div id="main" v-if="dataReady">
-  <div id="nav" class="p-component p-d-flex p-p-3 card">
-    <router-link to="/" class=""><span class="app-title app-title-basic">Pragmaticon</span></router-link>
-    <router-link to="/about" class="p-ml-auto p-mr-4 page"><span class="nowrap">{{$primevue.config.locale.about}}</span></router-link>
-    <router-link to="/filters" class="page">{{$primevue.config.locale.filtering}}</router-link>
-    <!-- | -->
-    <!-- <router-link v-if="isAuth()" to="/logout">{{$primevue.config.locale.logout}}</router-link> -->
-    <!-- <router-link v-else to="/login">Войти</router-link> -->
-  </div>
-  <div class="p-component p-pl-3 subtitle">
-    {{$primevue.config.locale.sub}}
-  </div>
-  <div id="content">
-    <router-view />
-  </div>
-  <div id="footer" class="p-component p-mt-4 back-1">
-    <div class="p-grid p-p-4">
-      <div class="p-col">
-      <div>Контакты:
-          discourseformulae@gmail.com
+    <div id="nav" class="p-component flex p-3 card">
+      <router-link to="/"><span class="app-title app-title-basic">Pragmaticon</span></router-link>
+      <router-link to="/about" class="ml-auto mr-4 page"
+        ><span class="nowrap">{{ $primevue.config.locale.about }}</span></router-link
+      >
+      <router-link to="/filters" class="page">{{ $primevue.config.locale.filtering }}</router-link>
+    </div>
+    <div class="p-component pl-3 subtitle">
+      {{ $primevue.config.locale.sub }}
+    </div>
+    <div id="content">
+      <router-view />
+    </div>
+    <div id="footer" class="p-component mt-4 back-1">
+      <div class="grid p-4">
+        <div class="col">
+          <div>Контакты: discourseformulae@gmail.com</div>
+          <div class="p-2">
+            <img src="@/assets/logo_pragmaticon.png" style="max-height: 5rem" />
+          </div>
         </div>
-        <div class="p-p-2">
-          <img src="@/assets/logo_pragmaticon.png" style="max-height:5rem;"/>
+        <div class="col">
+          <div><a href="#" @click="doGoToHelp(0)">О проекте</a></div>
+          <div><a href="#" @click="doGoToHelp(3)">Как пользоваться сайтом</a></div>
+          <div>
+            <a
+              target="_blank"
+              href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform"
+              >Обратная связь</a
+            >
+          </div>
+          <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон</a></div>
         </div>
       </div>
-    <div class="p-col">
-      <div><a href="#" @click="doGoToHelp(0)">О проекте</a></div>
-      <div><a href="#" @click="doGoToHelp(3)">Как пользоваться сайтом</a></div>
-      <div><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">Обратная связь</a></div>
-      <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон</a></div>
     </div>
-    </div>
-      <!-- <pre>store.state: {{ state }}</pre>
-      <pre>store.state: {{ isAuth() }}</pre> -->
-  </div>
-  <ScrollTop />
-  <div id="footer" class="p-component back-1">
-    <div class="p-grid p-pr-4 p-pl-4">
-      <div class="p-col">
-          2021, Прагматикон
+    <ScrollTop />
+    <div id="footer" class="p-component back-1">
+      <div class="grid pr-4 pl-4">
+        <div class="col">2021, Прагматикон [v{{ store?.version }}]</div>
+        <div class="col">
+          <a target="_blank" href="https://ling.hse.ru"> Школа лингвистики НИУ ВШЭ </a>
+        </div>
       </div>
-      <div class="p-col">
-        <a target="_blank" href="https://ling.hse.ru">
-        Школа лингвистики НИУ ВШЭ
-        </a>
+      <div class="grid p-4">
+        <div class="col">
+          Работа над ресурсом поддержана Министерством науки и высшего образования в рамках Соглашения № 075-15-2020-793
+        </div>
       </div>
     </div>
-    <div class="p-grid p-p-4">
-      <div class="p-col">
-      Работа над ресурсом поддержана Министерством науки и высшего образования в рамках Соглашения № 075-15-2020-793
-      </div>
-    </div>
-  </div>
   </div>
   <div v-else>
-    {{$primevue.config.locale.loading}}
+    {{ $primevue.config.locale.loading }}
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
-import { inject } from "vue";
-import { onBeforeMount } from 'vue'
-import router from "./router";
+import { ref, inject, onBeforeMount } from 'vue';
+import router from './router';
 
 export default {
-  name: "App",
+  name: 'App',
 
-   setup() {
-    const store = inject("store");
-    onBeforeMount(async() => {
-      await store.backend.getData();
-      // document.title = $primevue.config.locale.hi;
-      // if (errors.features && errors.features.value) {
-      //     console.log("error", errors.features);
-      // }
+  setup() {
+    const store = inject('store');
+    const dataReady = ref(false);
+
+    if (process.env.VUE_APP_DATA) {
       dataReady.value = true;
-      // console.log('app → mounted!')
-   })
-    // console.log("app → setup");
-    let dataReady = ref(false);
+    } else {
+      onBeforeMount(async () => {
+        await store.getData();
+        dataReady.value = true;
+      });
+    }
 
-
-    const doGoToHelp = (tab) => {
+    const doGoToHelp = tab => {
       store.state.about.active = tab || 0;
-      router.push("/about")
+      router.push('/about');
     };
 
-    // console.log("auth:", store.actions.isAuth());
     return {
       dataReady,
       isAuth: store.actions.isAuth,
-      state: store.state,
+      store,
       doGoToHelp,
     };
   },
@@ -99,26 +91,23 @@ export default {
 </script>
 
 <style>
-body {
-}
-
 .back-1 {
-  background-color:#E8EDDF;
+  background-color: #e8eddf;
 }
 .back-2 {
-  background-color:#CFDBD5;
+  background-color: #cfdbd5;
 }
 .back-3 {
-  background-color:#F5CB5C;
+  background-color: #f5cb5c;
 }
 .chapter {
   font-size: 1.5rem;
 }
-.p-inputtext, .p-component {
+.p-inputtext,
+.p-component {
   font-family: 'Montserrat', sans-serif !important;
   line-height: 1.5;
 }
-
 
 #content {
   display: flex;
@@ -128,19 +117,19 @@ body {
   /* max-width: 800px; */
   margin: auto;
 }
-#main {
-  /* display: flex;
-  flex-direction: column; */
-  /* min-height: 97vh; */
-  /* max-width: 100vh; */
-  /* max-width: 1000px; */
-  /* margin: auto; */
-}
+/* #main {
+  display: flex;
+  flex-direction: column;
+  min-height: 97vh;
+  max-width: 100vh;
+  max-width: 1000px;
+  margin: auto;
+} */
 #nav {
   /* display: flex;
     flex-direction: row;
     flex-wrap: nowrap; */
-    align-items: baseline;
+  align-items: baseline;
   /* padding: 2rem; */
   /* display: flex;
   flex-direction: row;
@@ -166,80 +155,76 @@ body {
 #footer {
 }
 */
-a{
+a {
   text-decoration: none;
 }
-.app-title-basic{
+.app-title-basic {
   font-weight: 900;
   text-transform: uppercase;
 }
-@media only screen and (max-width : 420px) {
-  .app-title{
-
+@media only screen and (max-width: 420px) {
+  .app-title {
     font-size: 1rem;
     line-height: 1rem;
   }
-  .page{
+  .page {
     display: inline-block;
   }
 }
-@media only screen and (min-width : 421px) {
-  .app-title{
-      font-size: 2rem;
-      line-height: 2rem;
-      align-items: baseline;
+@media only screen and (min-width: 421px) {
+  .app-title {
+    font-size: 2rem;
+    line-height: 2rem;
+    align-items: baseline;
   }
-  .page{
+  .page {
     line-height: 2rem;
   }
 }
 
-/* vertical-align: bottom;
- display: inline-block;
-} */
 .nowrap {
   white-space: nowrap;
 }
-.p-panel-title{
-  font-weight:400 !important;
+.panel-title {
+  font-weight: 400 !important;
 }
-.p-dropdown-items{
-  text-align:left;
+.p-dropdown-items {
+  text-align: left;
 }
 .p-autocomplete {
-	text-align:left;
+  text-align: left;
 }
-.p-inplace-display{
+.p-inplace-display {
   padding: 0 !important;
 }
-span.p-inputswitch-slider{
-	max-height: 1.5rem;
-	background: red;
+span.p-inputswitch-slider {
+  max-height: 1.5rem;
+  background: red;
 }
-.explain-header{
-	font-weight: bold;
+.explain-header {
+  font-weight: bold;
 }
-.cite{
-	font-style: italic;
+.cite {
+  font-style: italic;
 }
-.info{
-	line-height: 1.5rem;
+.info {
+  line-height: 1.5rem;
 }
-.article-title{
+.article-title {
   text-transform: uppercase;
 }
 .article-field {
-    display: inline-block;
-    font-weight: bold;
-    padding-right: .3rem;
+  display: inline-block;
+  font-weight: bold;
+  padding-right: 0.3rem;
 }
 .article-field:first-letter {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
-a{
-	color:black;
+a {
+  color: black;
 }
-.subtitle{
-  margin-top:-1.5rem;
+.subtitle {
+  margin-top: -1.5rem;
 }
 </style>
