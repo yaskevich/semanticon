@@ -1,12 +1,17 @@
-# Frontend for the Database of Russian Discourse Formulas
+# Pragmaticon Frontend
+### Pragmaticon is a Database of Russian Discourse Formulae
 
-Code for data processing, as well as a backend server app is [here](https://github.com/yaskevich/pragmaticon-database).
+Code for data processing, as well as a backend server app is [here](https://github.com/yaskevich/pragmaticon-database). However, the latest version of the app can be built statically.
 
-## Project setup
+Two environment variables could be set up:
 
-Project is written in **Vue 3** (Composition API).
+`VITE_MEDIA` &ndash; the URL where [mediafiles](https://github.com/yaskevich/pragmaticon-media) are served. If not, the [backend](https://github.com/yaskevich/pragmaticon-database) serving files is required.
 
-The UI library is [PrimeVue](https://primefaces.org/primevue/).
+`VITE_DATA` &ndash; the path to the JSON file containing the dataset. It will be hard-coded into application. If not, the [backend](https://github.com/yaskevich/pragmaticon-database) providing API is required.
+
+## Framework
+
+Project is written in [Vue 3](https://vitejs.dev/) (Composition API). The UI library is [PrimeVue](https://primefaces.org/primevue/). The build tool is [Vite](https://vitejs.dev/).
 
 ## Project setup
 ```
@@ -15,18 +20,10 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
