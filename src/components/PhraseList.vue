@@ -2,91 +2,43 @@
   <!-- <div v-if="errors.phrases">{{ errors.phrases }}</div> -->
   <!-- <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" /> -->
   <div class="text-center mt-4">
-    <Dropdown
-      v-model="searchState['semfunc']"
-      :options="aggregatedFeatures['semfunc']"
-      optionLabel="name"
-      placeholder="Основная функция"
-      scrollHeight="300"
-      :showClear="true"
-      class="combo"
-      @change="updateRoute($event)" />
+    <Dropdown v-model="searchState['semfunc']" :options="aggregatedFeatures['semfunc']" optionLabel="name"
+      placeholder="Основная функция" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)" />
   </div>
   <div class="p-fluid mt-2">
-    <MultiSelect
-      v-model="searchState['semtone']"
-      filterPlaceholder="Наберите название"
-      :filter="true"
-      :options="aggregatedFeatures['semtone']"
-      optionLabel="name"
-      placeholder="Дополнительная семантика"
-      display="chip"
-      class=""
-      @change="updateRoute($event)" />
+    <MultiSelect v-model="searchState['semtone']" filterPlaceholder="Наберите название" :filter="true"
+      :options="aggregatedFeatures['semtone']" optionLabel="name" placeholder="Дополнительная семантика" display="chip"
+      class="" @change="updateRoute($event)" />
   </div>
   <div class="p-fluid mt-2">
-    <MultiSelect
-      v-model="searchState['actclass']"
-      filterPlaceholder="Наберите название"
-      :filter="true"
-      :options="aggregatedFeatures['actclass']"
-      optionLabel="name"
-      placeholder="Реплика-стимул"
-      display="comma"
+    <MultiSelect v-model="searchState['actclass']" filterPlaceholder="Наберите название" :filter="true"
+      :options="aggregatedFeatures['actclass']" optionLabel="name" placeholder="Реплика-стимул" display="comma"
       @change="updateRoute($event)" />
   </div>
   <div class="p-fluid mt-2">
     <div class="p-field grid">
       <label for="partsbutton" class="col-12 mb-2 md-2 mb-md-0 p-component">Структура</label>
       <div class="col-12 md-10">
-        <SelectButton
-          v-model="searchState['parts']"
-          :options="partsOptions"
-          class=""
-          optionLabel="name"
-          optionValue="code"
-          id="partsbutton"
-          :multiple="true"
-          @click="updateRoute($event)" />
+        <SelectButton v-model="searchState['parts']" :options="partsOptions" class="" optionLabel="name"
+          optionValue="code" id="partsbutton" :multiple="true" @click="updateRoute($event)" />
       </div>
     </div>
   </div>
 
   <Panel header="Ещё фильтры" :toggleable="true" :collapsed="true">
     <div class="flex flex-column col">
-      <MultiSelect
-        v-model="searchState['organ']"
-        filterPlaceholder="Наберите название"
-        :filter="true"
-        :options="aggregatedFeatures['organ']"
-        optionLabel="name"
-        placeholder="Жесты"
-        display="chip"
-        class=""
+      <MultiSelect v-model="searchState['organ']" filterPlaceholder="Наберите название" :filter="true"
+        :options="aggregatedFeatures['organ']" optionLabel="name" placeholder="Жесты" display="chip" class=""
         @change="updateRoute($event)" />
     </div>
     <div class="grid">
       <div class="col text-center">
-        <Dropdown
-          v-model="searchState['intonation']"
-          :options="aggregatedFeatures['intonation']"
-          optionLabel="name"
-          placeholder="Интонация"
-          scrollHeight="300"
-          :showClear="true"
-          class="combo"
-          @change="updateRoute($event)" />
+        <Dropdown v-model="searchState['intonation']" :options="aggregatedFeatures['intonation']" optionLabel="name"
+          placeholder="Интонация" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)" />
       </div>
       <div class="col text-center">
-        <Dropdown
-          v-model="searchState['translations']"
-          :options="aggregatedLangs"
-          optionLabel="name"
-          placeholder="Языки"
-          scrollHeight="300"
-          :showClear="true"
-          class="combo"
-          @change="updateRoute($event)" />
+        <Dropdown v-model="searchState['translations']" :options="aggregatedLangs" optionLabel="name"
+          placeholder="Языки" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)" />
       </div>
     </div>
     <!-- <Dropdown v-model="semfunc" :options="semfuncOptions" optionLabel="name" placeholder="Жесты" scrollHeight="300" :showClear="true" class="semfunc mr-4" @change="updateRoute($event, 'semfunc')"/>
@@ -97,7 +49,7 @@
   <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" />
 </template>
 <script>
-import store from '@/modules/store';
+import store from '../store';
 import PhraseListItem from './PhraseListItem.vue';
 
 import { ref } from 'vue';

@@ -2,15 +2,8 @@
   <div class="p-component">
     <div class="div-container text-center">
       <!-- <h3>Поиск</h3> -->
-      <AutoComplete
-        v-model="token"
-        :suggestions="searchVariants"
-        :minLength="Number(2)"
-        placeholder="Впишите слово"
-        field="name"
-        scrollHeight="200"
-        @complete="search($event)"
-        @item-select="getSelection($event)">
+      <AutoComplete v-model="token" :suggestions="searchVariants" :minLength="Number(2)" placeholder="Впишите слово"
+        field="name" scrollHeight="200" @complete="search($event)" @item-select="getSelection($event)">
         <template #option="slotProps">
           <span v-for="(v, i) in slotProps.option.arr" :key="i">
             <span v-if="v === token" class="match">{{ v }}</span>
@@ -26,7 +19,7 @@
 </template>
 
 <script>
-import store from '@/modules/store';
+import store from '../store';
 import SearchResults from './SearchResults.vue';
 import { ref } from 'vue';
 export default {

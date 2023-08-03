@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
 import App from './App.vue';
-import store from './modules/store';
+import store from './store';
 import router from './router';
 import VueGtag from 'vue-gtag';
 import 'primeflex/primeflex.css';

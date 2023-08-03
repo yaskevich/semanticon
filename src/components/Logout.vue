@@ -3,13 +3,13 @@
 </template>
 
 <script>
-import store from "@/modules/store";
+import store from "../store";
 
 export default {
-    name: "Logout",
-    setup() {
-        store.backend.doLogout();
-        // router.push("/")
-    }
+  name: "Logout",
+  setup() {
+    store.backend.doLogout();
+    // router.push("/")
+  }
 }
 </script>

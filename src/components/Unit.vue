@@ -3,22 +3,15 @@
     <div class="flex">
       <div class="mr-2">
         <div class="article-title app-title-basic mb-2">
-          <span> {{ title }} </span
-          ><span v-if="num"
-            ><sup>{{ num }}</sup></span
-          >
-          <PrimeButton
-            v-if="sound"
-            icon="pi pi-volume-up"
-            class="p-button-text ml-3 audiobutton"
+          <span> {{ title }} </span><span v-if="num"><sup>{{ num }}</sup></span>
+          <PrimeButton v-if="sound" icon="pi pi-volume-up" class="p-button-text ml-3 audiobutton"
             @click="playClicked()" />
         </div>
         <transition name="fade">
           <div class="article-body" v-if="display">
             <div class="article-tags mb-2">
               <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
-                <router-link
-                  :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }"
+                <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }"
                   class="interactive back-3">
                   {{ data.features[unit['semfunc']][0] }}
                 </router-link>
@@ -37,16 +30,10 @@
             </div>
 
             <div v-if="selectedLang.length" class="article-langs mb-4">
-              <Dropdown
-                :disabled="langValues.length === 1"
-                optionValue="value"
-                v-model="selectedLang"
-                :options="langValues"
-                optionLabel="name"
-                placeholder="Выберите язык"
-                class="lang-combo" />
+              <Dropdown :disabled="langValues.length === 1" optionValue="value" v-model="selectedLang"
+                :options="langValues" optionLabel="name" placeholder="Выберите язык" class="lang-combo" />
               <span v-for="item in langValues.filter(x => x.value == selectedLang)[0]['data']" :key="item">
-                ‹{{ item.txt }}›&nbsp;
+                ‹<span v-html="store.italic(item.txt)"></span>›&nbsp;
                 <Inplace
                   v-if="unit.hasOwnProperty('examples') && unit.examples.filter(x => x.lang === selectedLang).length"
                   class="article-trans-ex">
@@ -54,9 +41,7 @@
                     <span class="pi pi-bookmark valign"></span>
                   </template>
                   <template #content>
-                    <Example
-                      v-for="(v, index) in unit.examples.filter(x => x.lang === selectedLang)"
-                      :key="index"
+                    <Example v-for="(v, index) in unit.examples.filter(x => x.lang === selectedLang)" :key="index"
                       :datum="v" />
                   </template>
                 </Inplace>
@@ -92,8 +77,7 @@
                 <span class="article-field">{{ $primevue.config.locale.p1 }}:</span>
                 <span class="last-remark pr-2">{{ title }}</span>
                 <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
-                  <router-link
-                    :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }"
+                  <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }"
                     class="interactive back-3">
                     {{ data.features[unit['semfunc']][0] }}
                   </router-link>
@@ -137,16 +121,14 @@
                 <div v-else-if="name === 'examples'">
                   <Inplace :closable="false">
                     <template #display>
-                      <span class="article-field"
-                        >Пример{{ unit[name].filter(x => x.lang === 'rus').length > 1 ? 'ы' : '' }}</span
-                      >
+                      <span class="article-field">Пример{{ unit[name].filter(x => x.lang === 'rus').length > 1 ? 'ы' :
+                          ''
+                      }}</span>
                       <span className="pi pi-bookmark valign"></span>
                     </template>
                     <template #content>
                       <div class="example">
-                        <Example
-                          v-for="(v, index) in unit[name].filter(x => x.lang === 'rus')"
-                          :key="index"
+                        <Example v-for="(v, index) in unit[name].filter(x => x.lang === 'rus')" :key="index"
                           :datum="v" />
                       </div>
                     </template>
@@ -177,7 +159,7 @@
 
                 <div v-else-if="name === 'video' && unit[name].length" class="video">
                   <span v-for="(v, k) in unit[name]" :key="k" class="pr-4">
-                    <video :src="`${store.media}/video/${data.media[v]}`" width="200" controls>
+                    <video :src="getResource('video', v)" width="200" controls>
                       Ваш браузер не поддерживает элемент <code>video</code>.
                     </video>
                   </span>
@@ -189,16 +171,11 @@
       </div>
       <div class="ml-auto">
         <div>
-          <PrimeButton
-            v-if="num"
-            :icon="'pi pi-' + (display ? 'minus' : 'plus')"
-            class="p-button-rounded mb-2"
+          <PrimeButton v-if="num" :icon="'pi pi-' + (display ? 'minus' : 'plus')" class="p-button-rounded mb-2"
             @click="display = !display" />
         </div>
         <div v-if="display">
-          <PrimeButton
-            icon="pi pi-question"
-            class="p-button-rounded p-button-secondary mb-2"
+          <PrimeButton icon="pi pi-question" class="p-button-rounded p-button-secondary mb-2"
             @click="doGoToHelp($event)" />
         </div>
         <div v-if="display">
@@ -208,14 +185,12 @@
         </div>
       </div>
     </div>
-    <div
-      class="article-notes mt-4"
-      v-if="
-        (unit.hasOwnProperty('extrequired') && unit['extrequired']) ||
-        unit.hasOwnProperty('extension') ||
-        unit.hasOwnProperty('comment') ||
-        unit.hasOwnProperty('mods')
-      ">
+    <div class="article-notes mt-4" v-if="
+      (unit.hasOwnProperty('extrequired') && unit['extrequired']) ||
+      unit.hasOwnProperty('extension') ||
+      unit.hasOwnProperty('comment') ||
+      unit.hasOwnProperty('mods')
+    ">
       <Panel header="Комментарий" :toggleable="true" :collapsed="true" v-if="display">
         <div v-if="unit['comment']">
           <!-- <span class="article-field">{{$primevue.config.locale.phrase.comment}}:</span> -->
@@ -244,7 +219,7 @@
 <script>
 import { ref } from 'vue';
 import { usePrimeVue } from 'primevue/config';
-import store from '@/modules/store';
+import store from '../store';
 import router from '../router';
 import { useRoute } from 'vue-router';
 import Example from './Example.vue';
@@ -307,7 +282,11 @@ export default {
     }
 
     let display = ref(true);
+
+    const getResource = (type, x) => new URL(`${store.media}/${type}/${props.data.media[x]}`, import.meta.url);
+
     return {
+      getResource,
       store,
       title,
       Example,
@@ -351,9 +330,11 @@ export default {
   /* margin-bottom: .5rem; */
   line-height: 2;
 }
+
 .article-title {
   font-size: 1.5rem;
 }
+
 a.interactive {
   text-decoration: none;
   /* background:yellow; */
@@ -367,25 +348,33 @@ a.interactive {
 }
 
 a.interactive:hover {
-  background: black; /* Цвет фона под ссылкой */
-  color: #ffe; /* Цвет ссылки */
+  background: black;
+  /* Цвет фона под ссылкой */
+  color: #ffe;
+  /* Цвет ссылки */
   border: 1px solid brown;
 }
+
 .pi-volume-up {
   /* margin-bottom: -0.1rem; */
 }
+
 .pi-volume-up:before {
   font-size: 2.2rem;
 }
+
 .last-remark {
   display: inline-block;
 }
+
 .last-remark:first-letter {
   text-transform: uppercase;
 }
+
 .lang-combo {
   min-width: 12rem;
 }
+
 .article-trans-ex {
   display: inline-block;
 }
@@ -410,9 +399,11 @@ a.interactive:hover {
   max-height: 0px;
   transition: max-height 0.15s ease-out;
 }
+
 .valign {
   vertical-align: middle;
 }
+
 .audiobutton {
   padding: 0 !important;
 }

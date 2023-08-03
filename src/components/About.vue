@@ -10,11 +10,7 @@
           <div class="ml-4">Презентация сайта на конференции <i>Slavic Cognitive Linguistics Conference 2021</i></div>
           <div class="ml-4">
             <div class="videoWrapper">
-              <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/-j7krkUHTt8"
-                frameborder="0"
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/-j7krkUHTt8" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
             </div>
@@ -66,11 +62,7 @@
           <div class="ml-4">Доклад Е. В. Рахилиной на коллоквиуме ОТиПЛа в МГУ</div>
           <div class="ml-4">
             <div class="videoWrapper">
-              <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/jUUJmnilqy0"
-                frameborder="0"
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/jUUJmnilqy0" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
             </div>
@@ -105,12 +97,8 @@
           <div class="ml-4">
             В итоговый список <strong>не</strong> включали: реплики-реакции на конкретные ситуации, а не на речь
             (например, <span class="cite">Кто там?</span> в ответ на стук в дверь), формулы вежливости (<span
-              class="cite"
-              >Благодарю вас</span
-            >, <span class="cite">Прости меня</span>) и выражения, при помощи которых мы регулируем диалог (<span
-              class="cite"
-              >Подожди минуту</span
-            >, <span class="cite">Вот так вот</span>).
+              class="cite">Благодарю вас</span>, <span class="cite">Прости меня</span>) и выражения, при помощи которых
+            мы регулируем диалог (<span class="cite">Подожди минуту</span>, <span class="cite">Вот так вот</span>).
           </div>
         </div>
 
@@ -119,23 +107,19 @@
           <div class="ml-4">
             Результаты проекта используются в бесплатном онлайн-курсе разговорного русского языка на образовательной
             платформе «Верные слова»
-            <a href="https://vsrussian.com/courses/5c0d40d765a47aa367cbfb4c" target="_blank"
-              ><i class="pi pi-external-link"></i></a
-            >. Каждый модуль курса содержит задания по одному из семантических классов дискурсивных формул.
+            <a href="https://vsrussian.com/courses/5c0d40d765a47aa367cbfb4c" target="_blank"><i
+                class="pi pi-external-link"></i></a>. Каждый модуль курса содержит задания по одному из семантических
+            классов дискурсивных формул.
           </div>
         </div>
       </TabPanel>
       <TabPanel header="Участники">
         <div class="person"></div>
         <!-- <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" /> -->
-        <div
-          v-for="(person, index) in persons"
-          :key="index"
+        <div v-for="(person, index) in persons" :key="index"
           :class="'flex align-items-end mt-4  flex-column md:flex-row person back-' + ((index % 2) + 1)">
           <div class="pb-4">
-            <img
-              :src="require(`@/assets/people/${person[3]}.jpg`)"
-              style="max-height: 15rem; margin-top: -4rem; text-align: left" />
+            <img :src="getImage(person[3])" style="max-height: 15rem; margin-top: -4rem; text-align: left" />
           </div>
           <div class="pl-2 pb-2">
             <div class="font-bold">{{ person[0] }}</div>
@@ -169,10 +153,8 @@
         </div>
         <div class="info mb-4">
           П. А. Бычкова.
-          <strong
-            >Свойства дискурсивных формул на примере русских конструкций <span class="cite">ты что</span> и
-            <span class="cite">что ты</span></strong
-          >
+          <strong>Свойства дискурсивных формул на примере русских конструкций <span class="cite">ты что</span> и
+            <span class="cite">что ты</span></strong>
           // Русский язык в научном освещении. 2020. № 2 (40). – С. 88-111.
         </div>
 
@@ -190,10 +172,8 @@
         </div>
         <div class="info mb-4">
           С. Ю. Жукова.
-          <strong
-            >Дискурсивные формулы русского языка <span class="cite">как хочешь</span>,
-            <span class="cite">как знаешь</span> в диахроническом аспекте</strong
-          >
+          <strong>Дискурсивные формулы русского языка <span class="cite">как хочешь</span>,
+            <span class="cite">как знаешь</span> в диахроническом аспекте</strong>
           // Acta Linguistica Petropolitana. Труды института лингвистических исследований. – 2019. – Т. 3. – №. 15. – С.
           295-319.
         </div>
@@ -211,10 +191,8 @@
         </div>
         <div class="info mb-4">
           П. А. Бычкова.
-          <strong
-            >Источники прагматикализации дискурсивных формул отрицания в типологическом освещении: русский и
-            словенский</strong
-          >
+          <strong>Источники прагматикализации дискурсивных формул отрицания в типологическом освещении: русский и
+            словенский</strong>
           // Филологические заметки. 2020. Т. 2. № 18. – С. 187-211.
         </div>
 
@@ -234,7 +212,7 @@
         <template v-for="(value, index) in defs">
           <div v-if="value.length === 1" class="chapter mb-4" :key="index">{{ value[0] }}</div>
           <Panel v-else :header="value[0]" :toggleable="true" :collapsed="true" class="mb-4" :key="index + 10">{{
-            value[1]
+              value[1]
           }}</Panel>
         </template>
       </TabPanel>
@@ -243,7 +221,7 @@
 </template>
 
 <script>
-import store from '@/modules/store';
+import store from '../store';
 export default {
   name: 'Home',
   setup() {
@@ -318,7 +296,9 @@ export default {
       ['Как скачать результаты?', '...'],
     ];
 
-    return { persons, defs, store };
+
+    const getImage = (x) => new URL(`../assets/people/${x}.jpg`, import.meta.url);
+    return { persons, defs, store, getImage };
   },
 };
 </script>
@@ -327,11 +307,14 @@ export default {
 .person {
   margin-bottom: 10rem;
 }
+
 .videoWrapper {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%;
+  /* 16:9 */
   height: 0;
 }
+
 .videoWrapper iframe {
   position: absolute;
   top: 0;

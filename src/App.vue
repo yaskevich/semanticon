@@ -2,9 +2,8 @@
   <div id="main" v-if="dataReady">
     <div id="nav" class="p-component flex p-3 card">
       <router-link to="/"><span class="app-title app-title-basic">Pragmaticon</span></router-link>
-      <router-link to="/about" class="ml-auto mr-4 page"
-        ><span class="nowrap">{{ $primevue.config.locale.about }}</span></router-link
-      >
+      <router-link to="/about" class="ml-auto mr-4 page"><span class="nowrap">{{ $primevue.config.locale.about }}</span>
+      </router-link>
       <router-link to="/filters" class="page">{{ $primevue.config.locale.filtering }}</router-link>
     </div>
     <div class="p-component pl-3 subtitle">
@@ -18,18 +17,16 @@
         <div class="col">
           <div>Контакты: discourseformulae@gmail.com</div>
           <div class="p-2">
-            <img src="@/assets/logo_pragmaticon.png" style="max-height: 5rem" />
+            <img src="./assets/logo_pragmaticon.png" style="max-height: 5rem" />
           </div>
         </div>
         <div class="col">
           <div><a href="#" @click="doGoToHelp(0)">О проекте</a></div>
           <div><a href="#" @click="doGoToHelp(3)">Как пользоваться сайтом</a></div>
           <div>
-            <a
-              target="_blank"
-              href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform"
-              >Обратная связь</a
-            >
+            <a target="_blank"
+              href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">Обратная
+              связь</a>
           </div>
           <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон</a></div>
         </div>
@@ -66,7 +63,7 @@ export default {
     const store = inject('store');
     const dataReady = ref(false);
 
-    if (process.env.VUE_APP_DATA) {
+    if (import.meta.env.VITE_DATA) {
       dataReady.value = true;
     } else {
       onBeforeMount(async () => {
@@ -94,15 +91,19 @@ export default {
 .back-1 {
   background-color: #e8eddf;
 }
+
 .back-2 {
   background-color: #cfdbd5;
 }
+
 .back-3 {
   background-color: #f5cb5c;
 }
+
 .chapter {
   font-size: 1.5rem;
 }
+
 .p-inputtext,
 .p-component {
   font-family: 'Montserrat', sans-serif !important;
@@ -117,6 +118,7 @@ export default {
   /* max-width: 800px; */
   margin: auto;
 }
+
 /* #main {
   display: flex;
   flex-direction: column;
@@ -139,10 +141,12 @@ export default {
   /* width: 100%; */
   /* background-color: lightblue; */
 }
+
 #content {
   /* min-height:80vh; */
   flex: 1;
 }
+
 /*
 #nav a {
   font-weight: bold;
@@ -158,25 +162,30 @@ export default {
 a {
   text-decoration: none;
 }
+
 .app-title-basic {
   font-weight: 900;
   text-transform: uppercase;
 }
+
 @media only screen and (max-width: 420px) {
   .app-title {
     font-size: 1rem;
     line-height: 1rem;
   }
+
   .page {
     display: inline-block;
   }
 }
+
 @media only screen and (min-width: 421px) {
   .app-title {
     font-size: 2rem;
     line-height: 2rem;
     align-items: baseline;
   }
+
   .page {
     line-height: 2rem;
   }
@@ -185,45 +194,58 @@ a {
 .nowrap {
   white-space: nowrap;
 }
+
 .panel-title {
   font-weight: 400 !important;
 }
+
 .p-dropdown-items {
   text-align: left;
 }
+
 .p-autocomplete {
   text-align: left;
 }
+
 .p-inplace-display {
   padding: 0 !important;
 }
+
 span.p-inputswitch-slider {
   max-height: 1.5rem;
   background: red;
 }
+
 .explain-header {
   font-weight: bold;
 }
+
 .cite {
   font-style: italic;
 }
+
 .info {
   line-height: 1.5rem;
 }
+
 .article-title {
   text-transform: uppercase;
 }
+
 .article-field {
   display: inline-block;
   font-weight: bold;
   padding-right: 0.3rem;
 }
+
 .article-field:first-letter {
   text-transform: uppercase;
 }
+
 a {
   color: black;
 }
+
 .subtitle {
   margin-top: -1.5rem;
 }

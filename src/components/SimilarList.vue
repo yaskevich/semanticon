@@ -4,16 +4,15 @@
       <span class="font-italic">Похожи на </span>
       <span class="app-title-basic">
         {{
-          data.exprs[data.units[datum.uid]['eid1']]
-            .map(x => data.tokens.values[data.tokens.keys.indexOf(x)])
-            .join('&#8239;')
+            data.exprs[data.units[datum.uid]['eid1']]
+              .map(x => data.tokens.values[data.tokens.keys.indexOf(x)])
+              .join('&#8239;')
         }}
       </span>
 
       <div class="article-tags mb-2">
         <span v-if="data.features[datum.semfunc] && data.features[datum.semfunc][0]">
-          <router-link
-            :to="{ name: 'List', params: { prop: 'semfunc', id: datum.semfunc } }"
+          <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: datum.semfunc } }"
             class="li interactive back-3">
             {{ data.features[datum.semfunc][0] }}
           </router-link>
@@ -32,7 +31,7 @@
 
 <script>
 import { useRoute } from 'vue-router';
-import store from '@/modules/store';
+import store from '../store';
 import PhraseListItem from './PhraseListItem.vue';
 
 export default {
@@ -77,9 +76,11 @@ export default {
 .phrase {
   color: red;
 }
+
 .variant {
   color: gray;
 }
+
 .variants {
   margin-top: -1rem;
 }

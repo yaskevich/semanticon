@@ -1,6 +1,6 @@
 <template>
   <div class="example">
-    <span class="example-text" v-html="datum.text.replace('{', '<strong>').replace('}', '</strong>')"></span>
+    <span class="example-text" v-html="store.italic(datum.text)"></span>
     <template v-if="datum.length > 2">
       <span v-if="datum.movie" title="кинофильм" class="ml-1 valign"><i class="pi pi-video"></i></span>
       <span v-else title="публикация" class="ml-1 valign"><i class="pi pi-book"></i></span>
@@ -13,12 +13,16 @@
 </template>
 
 <script>
+import store from '../store';
+
 export default {
   name: 'Example',
   props: {
     datum: Object,
   },
-  setup() {},
+  setup() {
+    return { store }
+  },
   components: {},
 };
 </script>
@@ -28,6 +32,7 @@ export default {
   /* border: 1px solid orange; */
   padding: 0.5rem;
 }
+
 /* .construction {
   padding-left: 1rem;
 } */
@@ -36,13 +41,16 @@ export default {
   letter-spacing: -1px;
   font-style: italic;
 }
+
 .example-author {
   /* color: purple; */
 }
+
 .example-pub {
   color: #f5cb5c;
   text-shadow: black 0 0 0.5px;
 }
+
 .example-pubdate {
   /* color: blue; */
 }

@@ -8,24 +8,14 @@
   <div class="grid justify-content-center mt-2">
     <div class="p-component">
       <div class="p-inputgroup text-center col">
-        <AutoComplete
-          v-model="autoState['text']"
-          :suggestions="searchVariants"
-          ref="searchInstance"
-          :minLength="Number(2)"
-          :placeholder="placeholder[autoState['mode']]"
-          field="txt"
-          scrollHeight="300px"
-          @clear="clearInput()"
-          @keyup.enter="renderMatches($event)"
-          @complete="autocomplete($event)"
+        <AutoComplete v-model="autoState['text']" :suggestions="searchVariants" ref="searchInstance"
+          :minLength="Number(2)" :placeholder="placeholder[autoState['mode']]" field="txt" scrollHeight="300px"
+          @clear="clearInput()" @keyup.enter="renderMatches($event)" @complete="autocomplete($event)"
           @item-select="renderSelected[autoState['mode']]($event)">
           <template #option="slotProps">
             <div class="flex align-options-center">
               <span v-if="slotProps.option.hasOwnProperty('lang')">
-                <img
-                  :alt="$primevue.config.locale.lang[slotProps.option.lang]"
-                  :src="flags[slotProps.option.lang]"
+                <img :alt="$primevue.config.locale.lang[slotProps.option.lang]" :src="flags[slotProps.option.lang]"
                   class="mini-flag" />
               </span>
               <span>{{ slotProps.option.txt }}</span>
@@ -33,11 +23,7 @@
           </template>
         </AutoComplete>
         <PrimeButton icon="pi pi-search" class="enter" @click="renderMatches()" />
-        <PrimeButton
-          :disabled="!autoState?.['text']"
-          icon="pi pi-trash"
-          class="enter"
-          @click="clearInput()"
+        <PrimeButton :disabled="!autoState?.['text']" icon="pi pi-trash" class="enter" @click="clearInput()"
           severity="secondary" />
       </div>
 
@@ -52,11 +38,7 @@
     </div>
   </div>
   <div class="p-component">
-    <SearchResults
-      v-for="(value, key) in autoState['matches']"
-      :datum="value"
-      :num="Number(key)"
-      :data="data"
+    <SearchResults v-for="(value, key) in autoState['matches']" :datum="value" :num="Number(key)" :data="data"
       :key="key" />
   </div>
   <div class="p-component back-1 p-4 info">
@@ -75,7 +57,7 @@
   </div>
   <div class="p-component p-4 info">
     <div class="text-center">
-      <img src="@/assets/logo_pragmaticon.png" style="max-height: 10rem" />
+      <img src="../assets/logo_pragmaticon.png" style="max-height: 10rem" />
     </div>
   </div>
   <div class="p-component back-2 p-4 info">
@@ -89,7 +71,7 @@
     </div>
   </div>
   <div class="p-component p-4 info text-center">
-    <img src="@/assets/logo_constructicon.png" style="max-height: 5rem" />
+    <img src="../assets/logo_constructicon.png" style="max-height: 5rem" />
   </div>
   <div class="p-component back-3 p-4 info">
     <div class="explain-header">Как строится описание?</div>
@@ -98,9 +80,8 @@
         Наша база данных &mdash; результат исследовательского проекта Школы Лингвистики НИУ ВШЭ
         <a href="https://ling.hse.ru/" target="_blank"><i class="pi pi-external-link"></i></a>. Содержательно она
         является частью Russian Constructicon
-        <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"
-          ><i class="pi pi-external-link"></i></a
-        >.
+        <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i
+            class="pi pi-external-link"></i></a>.
       </div>
       <div>
         Мы используем теоретические рамки Грамматики конструкций и Московской семантической школы и анализируем
@@ -110,7 +91,7 @@
     </div>
   </div>
   <div class="p-component p-4 info text-center">
-    <img src="@/assets/logo_hse.png" style="max-height: 8rem" />
+    <img src="../assets/logo_hse.png" style="max-height: 8rem" />
   </div>
 </template>
 
@@ -118,7 +99,7 @@
 import { ref } from 'vue';
 import Checkbox from 'primevue/checkbox';
 import InputSwitch from 'primevue/inputswitch';
-import store from '@/modules/store';
+import store from '../store';
 import SearchResults from './SearchResults.vue';
 import eng from '../assets/flags/eng.svg';
 import bua from '../assets/flags/bua.svg';
@@ -348,15 +329,18 @@ export default {
 .match {
   font-weight: bold;
 }
+
 .switcher {
   line-height: 0.3rem;
 }
+
 .mini-flag {
   height: 1rem;
   border: 1px solid gray;
   margin-right: 0.3rem;
   vertical-align: middle;
 }
+
 .label-switch {
   font-size: 0.75rem;
 }

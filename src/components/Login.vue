@@ -10,23 +10,23 @@
 </template>
 
 <script>
-    import store from "@/modules/store";
-    export default {
-      name: "Login",
-      setup() {
-       },
-        methods: {
-            login: (e) => {
-                e.preventDefault()
-                let email = "user@email.com"
-                let password = "password"
-                store.backend.doLogin(email, password);
-            },
-        },  computed: {
-          isLog() {
+import store from "../store";
+export default {
+    name: "Login",
+    setup() {
+    },
+    methods: {
+        login: (e) => {
+            e.preventDefault()
+            let email = "user@email.com"
+            let password = "password"
+            store.backend.doLogin(email, password);
+        },
+    }, computed: {
+        isLog() {
             // console.log("is Logged check!");
             return store.actions.isAuth();
-          }
         }
     }
+}
 </script>

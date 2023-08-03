@@ -9,7 +9,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 // import Admin from '../components/Admin.vue';
 // import Dashboard from '../components/Dashboard.vue';
 
-const load = view => () => import(`@/components/${view}.vue`);
+const load = view => () => import(`./components/${view}.vue`);
 
 const routes = [
   { path: '/sim', redirect: { name: 'Home' } },
@@ -68,7 +68,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 
