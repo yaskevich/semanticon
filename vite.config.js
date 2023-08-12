@@ -25,10 +25,10 @@ function dataLoader() {
 
 export default defineConfig({
   server: {
-    port: 3010,
+    port: loadEnv('', process.cwd(), 'VITE_PORT')?.['VITE_PORT'] || 8080,
     proxy: {
       '/api': {
-        target: 'http://localhost:3011',
+        target: 'http://localhost:' + loadEnv('', process.cwd(), 'VITE_PROXY')?.['VITE_PROXY'] || 8081,
         changeOrigin: true,
         secure: false,
         ws: true,
