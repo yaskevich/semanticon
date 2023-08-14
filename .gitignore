@@ -1,6 +1,4 @@
-.remote-sync.json
-.ftpignore
-.ftpconfig 
+*.csv
 package-lock.json
 # Logs
 logs
