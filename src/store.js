@@ -51,13 +51,9 @@ const getData = async () => {
 const italic = (x) => x.replace('{', '<strong>').replace('}', '</strong>').replace('[', '<em>').replace(']', '</em>');
 
 export default {
-  // state: readonly(state),
-  // backend: {
-  // getUser,
-  // doLogin,
-  // doLogout,
-  // getData,
-  // },
+  title: import.meta.env.VITE_TITLE || project?.name || 'App Title',
+  name: import.meta.env.VITE_NAME || project?.name || 'App Name',
+  sub: import.meta.env.VITE_SUB,
   italic,
   getData,
   version: project.version,
