@@ -7,6 +7,7 @@
           <PrimeButton v-if="sound" icon="pi pi-volume-up" class="p-button-text ml-3 audiobutton"
             @click="playClicked()" />
         </div>
+
         <transition name="fade">
           <div class="article-body" v-if="display">
             <div class="article-tags mb-2">
@@ -48,7 +49,49 @@
               </span>
             </div>
 
-            <div class="article-parts mb-6">
+            <div class="pb-2" v-if="data.features?.[unit?.struct]?.length">
+              <Tag v-tooltip="'Структура ситуации'" class="mr-2" severity="warning"
+                :value="data.features[unit?.struct][0]" rounded></Tag>
+            </div>
+
+            <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
+              <Tag v-tooltip="'Действие говорящего'" class="mr-2" severity="success" :value="unit?.action" rounded>
+              </Tag>
+            </div>
+
+            <div class="pb-2" v-if="unit?.challenge && unit?.challenge !== 'N/A'">
+              <!-- <Tag class="mr-2" severity="danger" :value="unit?.challenge" rounded></Tag> -->
+              <span class="article-field">Стимул:</span>
+              <span class="pr-2">{{ unit?.challenge }}</span>
+            </div>
+
+            <div class="pb-2" v-if="unit?.description && unit?.description !== 'N/A'">
+              <span class="article-field">Описание ситуации:</span>
+              <span class="pr-2">{{ unit?.description }}</span>
+            </div>
+
+            <div class="pb-2" v-if="unit?.effect && unit?.effect !== 'N/A'">
+              <span class="article-field">Ожидаемый эффект:</span>
+              <span class="pr-2">{{ unit?.effect }}</span>
+            </div>
+
+            <div class="pb-2" v-if="unit?.pragma && unit?.pragma !== 'N/A'">
+              <span class="article-field">Прагматика:</span>
+              <Tag class="mr-2" severity="success" :value="data.features?.[item]?.[0]" rounded
+                v-for="item in unit.pragma" />
+            </div>
+
+            <div class="pb-2" v-if="data.features?.[unit?.area]?.length">
+              <Tag v-tooltip="'Сфера употребления'" class="mr-2" severity="danger" :value="data.features[unit?.area][0]"
+                rounded></Tag>
+            </div>
+
+            <div class="pb-2" v-if="unit?.conditions && unit?.conditions !== 'N/A'">
+              <span class="article-field">Условия употребления:</span>
+              <span class="pr-2">{{ unit?.conditions }}</span>
+            </div>
+
+            <div class="article-parts mb-2" v-if="unit?.semfunc">
               <span class="article-field">{{ $primevue.config.locale.phrase.parts }}</span>
               <template v-if="unit.hasOwnProperty('parts') && unit['parts']">
                 [{{ $primevue.config.locale.parts3 }}]
@@ -68,11 +111,12 @@
 
               <div class="pb-2">
                 <span class="article-field">{{ $primevue.config.locale.p2 }}:</span>
-                <span class="pr-2">{{ unit.remarks[0] }}</span>
+                <span class="pr-2">{{ unit?.remarks?.[0] }}</span>
                 <span v-for="item in unit['actclass']" :key="item">
                   <Tag class="mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
                 </span>
               </div>
+
               <div class="pb-2">
                 <span class="article-field">{{ $primevue.config.locale.p1 }}:</span>
                 <span class="last-remark pr-2">{{ title }}</span>
@@ -98,7 +142,10 @@
               <div v-if="unit.hasOwnProperty(name) && unit[name]" class="item" :key="index">
                 <span v-if="['gest'].includes(name)">
                   <span class="article-field">{{ value }}: </span>
-                  <span v-for="item in unit[name]" :key="item" class="pr-4"> ·{{ data.features[item][0] }}· </span>
+                  <span class="article-tags mb-2">
+                    <span v-for="item in unit[name]" :key="item" class="interactive back-1">
+                      {{ data.features[item][0] }}</span>
+                  </span>
                 </span>
                 <!-- drop style -->
                 <span v-else-if="['intonation'].includes(name)">
@@ -121,13 +168,15 @@
                 <div v-else-if="name === 'examples'">
                   <Inplace :closable="false">
                     <template #display>
-                      <span class="article-field">Пример{{ unit[name].filter(x => x.lang === 'rus').length > 1 ? 'ы' :
-                          ''
-                      }}</span>
-                      <span className="pi pi-bookmark valign"></span>
+                      <div>
+                        <span class="article-field">Пример{{ unit[name].filter(x => x.lang === 'rus').length > 1 ? 'ы' :
+                            ''
+                        }}</span>
+                        <span className="pi pi-bookmark valign"></span>
+                      </div>
                     </template>
                     <template #content>
-                      <div class="example">
+                      <div class="example-holder">
                         <Example v-for="(v, index) in unit[name].filter(x => x.lang === 'rus')" :key="index"
                           :datum="v" />
                       </div>
@@ -191,7 +240,7 @@
       unit.hasOwnProperty('comment') ||
       unit.hasOwnProperty('mods')
     ">
-      <Panel header="Комментарий" :toggleable="true" :collapsed="true" v-if="display">
+      <Panel header="Комментарий" :toggleable="true" :collapsed="true" v-if="display" class="comment">
         <div v-if="unit['comment']">
           <!-- <span class="article-field">{{$primevue.config.locale.phrase.comment}}:</span> -->
           <span class="font-bold">{{ unit['comment'] }}</span>
@@ -335,6 +384,7 @@ export default {
   font-size: 1.5rem;
 }
 
+span.interactive,
 a.interactive {
   text-decoration: none;
   /* background:yellow; */
@@ -406,5 +456,15 @@ a.interactive:hover {
 
 .audiobutton {
   padding: 0 !important;
+}
+
+.comment>.p-panel-header>.p-panel-title {
+  font-weight: normal;
+}
+
+.example-holder {
+  font-family: Courier;
+  border: 1px dashed lightgray;
+  border-radius: 5px;
 }
 </style>
