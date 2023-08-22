@@ -4,6 +4,7 @@ import App from './App.vue';
 import store from './store';
 import router from './router';
 import VueGtag from 'vue-gtag';
+
 import 'primeflex/primeflex.css';
 import 'primevue/resources/themes/saga-orange/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -14,18 +15,17 @@ import '@fontsource/montserrat/700.css'; // Bold variant.
 import '@fontsource/montserrat/700-italic.css'; // Bold italic variant.
 import '@fontsource/montserrat/900.css'; // Black variant.
 
+import ru from '../texts/ru.json'; // Russian locale
+
 import SelectButton from 'primevue/selectbutton';
 import InputText from 'primevue/inputtext';
 import PrimeButton from 'primevue/button';
 import Divider from 'primevue/divider';
 import Toast from 'primevue/toast';
-// import ToastService from 'primevue/toastservice';
 import AutoComplete from 'primevue/autocomplete';
 import Inplace from 'primevue/inplace';
 import MultiSelect from 'primevue/multiselect';
 import Tag from 'primevue/tag';
-// import Chip from 'primevue/chip';
-// import Panel from 'primevue/panel';
 import InputSwitch from 'primevue/inputswitch';
 import Panel from 'primevue/panel';
 import TabView from 'primevue/tabview';
@@ -33,64 +33,19 @@ import TabPanel from 'primevue/tabpanel';
 import Dropdown from 'primevue/dropdown';
 import Badge from 'primevue/badge';
 import ScrollTop from 'primevue/scrolltop';
+import Tooltip from 'primevue/tooltip';
 
 const app = createApp(App);
-const pvLocale = {
-  // locale: 'rus',
-  // switch: 'RUS/ENG',
-  p1: 'А',
-  p2: 'Б',
-  sub: 'Русские дискурсивные формулы',
-  // sub: "База данных дискурсивных формул русского языка",
-  home: 'Главная',
-  // filtering: 'Расширенный поиск',
-  filtering: 'Поиск+',
-  about: 'О проекте',
-  title: 'Дискурсивные формулы',
-  logout: 'Выйти',
-  loading: 'загрузка...',
-  yes: 'да',
-  parts2: 'двухчастная',
-  parts3: 'трёхчастная',
-  lang: {
-    tgk: 'таджикский',
-    eng: 'английский',
-    fin: 'финский',
-    bua: 'бурятский',
-    heb: 'иврит',
-    ita: 'итальянский',
-    slv: 'словенский',
-    rus: 'русский',
-  },
-  phrase: {
-    extrequired: 'требуется продолжение',
-    semfunc: 'функция',
-    semtone: 'оттенок',
-    translations: 'переводные аналоги',
-    parts: 'структура',
-    situation: 'фон',
-    examples: 'примеры',
-    act1: 'речевой акт 1',
-    actclass: 'тип речевого акта',
-    intonation: 'интонация',
-    mods: 'модификации',
-    gest: 'жесты',
-    organ: 'активный орган',
-    style: 'пометы',
-    audio: 'аудио',
-    video: 'видео',
-    construction: 'См. в Russian Constructicon',
-    comment: 'комментарий',
-    extension: 'продолжение',
-  },
-};
 app.provide('store', store);
-app.use(PrimeVue, {
-  locale: pvLocale,
-});
-app.use(VueGtag, {
-  config: { id: 'G-KVXRMMT1N6' },
-});
+app.use(PrimeVue, { locale: ru, });
+
+if (import.meta.env.MODE === 'production' && import.meta.env.VITE_GTAG) {
+  app.use(VueGtag, {
+    config: { id: import.meta.env.VITE_GTAG },
+  });
+}
+
+app.directive('tooltip', Tooltip);
 app.component('ScrollTop', ScrollTop);
 app.component('Badge', Badge);
 app.component('Dropdown', Dropdown);
