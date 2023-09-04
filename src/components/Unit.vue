@@ -32,7 +32,8 @@
 
             <div v-if="selectedLang.length" class="article-langs mb-4">
               <Dropdown :disabled="langValues.length === 1" optionValue="value" v-model="selectedLang"
-                :options="langValues" optionLabel="name" placeholder="Выберите язык" class="lang-combo" />
+                :options="langValues" optionLabel="name" :placeholder="$primevue.config.locale.chooselang"
+                class="lang-combo" />
               <span v-for="item in langValues.filter(x => x.value == selectedLang)[0]['data']" :key="item">
                 ‹<span v-html="store.italic(item.txt)"></span>›&nbsp;
                 <Inplace
@@ -50,44 +51,45 @@
             </div>
 
             <div class="pb-2" v-if="data.features?.[unit?.struct]?.length">
-              <Tag v-tooltip="'Структура ситуации'" class="mr-2" severity="warning"
+              <Tag v-tooltip="$primevue.config.locale.phrase.struct" class="mr-2" severity="warning"
                 :value="data.features[unit?.struct][0]" rounded></Tag>
             </div>
 
             <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
-              <Tag v-tooltip="'Действие говорящего'" class="mr-2" severity="success" :value="unit?.action" rounded>
+              <Tag v-tooltip="$primevue.config.locale.phrase.action" class="mr-2" severity="success"
+                :value="unit?.action" rounded>
               </Tag>
             </div>
 
             <div class="pb-2" v-if="unit?.challenge && unit?.challenge !== 'N/A'">
               <!-- <Tag class="mr-2" severity="danger" :value="unit?.challenge" rounded></Tag> -->
-              <span class="article-field">Стимул:</span>
+              <span class="article-field">{{ $primevue.config.locale.phrase.challenge }}:</span>
               <span class="pr-2">{{ unit?.challenge }}</span>
             </div>
 
             <div class="pb-2" v-if="unit?.description && unit?.description !== 'N/A'">
-              <span class="article-field">Описание ситуации:</span>
+              <span class="article-field">{{ $primevue.config.locale.phrase.description }}:</span>
               <span class="pr-2">{{ unit?.description }}</span>
             </div>
 
             <div class="pb-2" v-if="unit?.effect && unit?.effect !== 'N/A'">
-              <span class="article-field">Ожидаемый эффект:</span>
+              <span class="article-field">{{ $primevue.config.locale.phrase.effect }}:</span>
               <span class="pr-2">{{ unit?.effect }}</span>
             </div>
 
             <div class="pb-2" v-if="unit?.pragma && unit?.pragma !== 'N/A'">
-              <span class="article-field">Прагматика:</span>
+              <span class="article-field">{{ $primevue.config.locale.phrase.pragma }}:</span>
               <Tag class="mr-2" severity="success" :value="data.features?.[item]?.[0]" rounded
                 v-for="item in unit.pragma" />
             </div>
 
             <div class="pb-2" v-if="data.features?.[unit?.area]?.length">
-              <Tag v-tooltip="'Сфера употребления'" class="mr-2" severity="danger" :value="data.features[unit?.area][0]"
-                rounded></Tag>
+              <Tag v-tooltip="$primevue.config.locale.phrase.area" class="mr-2" severity="danger"
+                :value="data.features[unit?.area][0]" rounded></Tag>
             </div>
 
             <div class="pb-2" v-if="unit?.conditions && unit?.conditions !== 'N/A'">
-              <span class="article-field">Условия употребления:</span>
+              <span class="article-field">{{ $primevue.config.locale.phrase.conditions }}:</span>
               <span class="pr-2">{{ unit?.conditions }}</span>
             </div>
 
@@ -169,8 +171,8 @@
                   <Inplace :closable="false">
                     <template #display>
                       <div>
-                        <span class="article-field">Пример{{ unit[name].filter(x => x.lang === 'rus').length > 1 ? 'ы' :
-                            ''
+                        <span class="article-field">{{ $primevue.config.locale.phrase.example }}{{ getEnding
+                            (unit[name].filter((x) => x.lang === 'rus'))
                         }}</span>
                         <span className="pi pi-bookmark valign"></span>
                       </div>
@@ -209,7 +211,8 @@
                 <div v-else-if="name === 'video' && unit[name].length" class="video">
                   <span v-for="(v, k) in unit[name]" :key="k" class="pr-4">
                     <video :src="getResource('video', v)" width="200" controls>
-                      Ваш браузер не поддерживает элемент <code>video</code>.
+                      {{ $primevue.config.locale.videowarning }}
+                      <code>video</code>.
                     </video>
                   </span>
                 </div>
@@ -240,7 +243,8 @@
       unit.hasOwnProperty('comment') ||
       unit.hasOwnProperty('mods')
     ">
-      <Panel header="Комментарий" :toggleable="true" :collapsed="true" v-if="display" class="comment">
+      <Panel :header="$primevue.config.locale.phrase.comment" :toggleable="true" :collapsed="true" v-if="display"
+        class="comment">
         <div v-if="unit['comment']">
           <!-- <span class="article-field">{{$primevue.config.locale.phrase.comment}}:</span> -->
           <span class="font-bold">{{ unit['comment'] }}</span>
@@ -334,7 +338,10 @@ export default {
 
     const getResource = (type, x) => new URL(`${store.media}/${type}/${props.data.media[x]}`, import.meta.url);
 
+    const getEnding = (x) => x?.length > 1 ? primevue.config.locale.plural : '';
+
     return {
+      getEnding,
       getResource,
       store,
       title,
@@ -363,8 +370,8 @@ export default {
 .video {
   /* float:left; */
   padding: 1rem;
-  align: left;
-  /* right: 0;
+  /* align: left;
+    right: 0;
     bottom: 0;
     min-width: 100%;
     min-height: 100%;
@@ -399,15 +406,13 @@ a.interactive {
 
 a.interactive:hover {
   background: black;
-  /* Цвет фона под ссылкой */
   color: #ffe;
-  /* Цвет ссылки */
   border: 1px solid brown;
 }
 
-.pi-volume-up {
-  /* margin-bottom: -0.1rem; */
-}
+/* .pi-volume-up {
+  margin-bottom: -0.1rem;
+} */
 
 .pi-volume-up:before {
   font-size: 2.2rem;
