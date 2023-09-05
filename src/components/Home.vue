@@ -1,10 +1,4 @@
 <template>
-  <!-- <div class="p-component mt-4">
-		<div class="col text-center">
-		<div>База данных дискурсивных формул русского языка</div>
-		<div>[Для студентов и преподавателей РКИ]</div>
-		</div>
-	</div> -->
   <div class="grid justify-content-center mt-2">
     <div class="p-component">
       <div class="p-inputgroup text-center col">
@@ -28,7 +22,7 @@
       </div>
 
       <div class="grid justify-content-center col">
-        <span class="pr-3 label-switch">поиск по переводному аналогу</span>
+        <span class="pr-3 label-switch">{{ $primevue.config.locale.searchsim }}</span>
         <!-- <InputSwitch v-model="checked" @click="handleSwitchState($event)" /> -->
         <Checkbox v-model="autoState['checked']" @click="handleSwitchState($event)" :binary="true" />
       </div>
@@ -118,8 +112,16 @@ export default {
     let searchInstance = ref();
     let searchVariants = ref(null);
 
-    const placeholder = { ru: 'да ладно', none: 'whatever' };
+    const getExp = () => String(Math.floor(Math.random() * Object.keys(store.state.config.exprs).length));
+
+    const randomExpression = store.state.config.exprs[getExp()].map(x =>
+      store.state.config.tokens.values[store.state.config.tokens.keys.indexOf(x)]).join(' ');
+
+    // const placeholder = { ru: 'да ладно', none: 'whatever' };
+    const placeholder = { ru: randomExpression, none: 'whatever' };
     const autoState = store.state.autocomplete;
+
+
 
     const handleSwitchState = () => {
       autoState['mode'] = autoState['checked'] ? 'ru' : 'none';
@@ -237,7 +239,9 @@ export default {
 
         for (let i = 0; i < data.tokens.values.length; i++) {
           for (let ii = 0; ii < queriesLength; ii++) {
-            if (ii === last ? data.tokens.values[i].startsWith(queries[ii]) : data.tokens.values[i] === queries[ii]) {
+            // bad for performance, though not for that amount of data
+            const item = data.tokens.values[i].toLowerCase();
+            if (ii === last ? item.startsWith(queries[ii]) : item === queries[ii]) {
               phraseVariants[ii].push(data.tokens.keys[i]);
             }
           }
