@@ -3,21 +3,23 @@
   <!-- <AsyncItemData v-else v-for="item in data.phrases" :key="item.pid" :item="item" /> -->
   <div class="text-center mt-4">
     <Dropdown v-model="searchState['semfunc']" :options="aggregatedFeatures['semfunc']" optionLabel="name"
-      placeholder="Основная функция" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)" />
-  </div>
-  <div class="p-fluid mt-2">
-    <MultiSelect v-model="searchState['semtone']" filterPlaceholder="Наберите название" :filter="true"
-      :options="aggregatedFeatures['semtone']" optionLabel="name" placeholder="Дополнительная семантика" display="chip"
-      class="" @change="updateRoute($event)" />
-  </div>
-  <div class="p-fluid mt-2">
-    <MultiSelect v-model="searchState['actclass']" filterPlaceholder="Наберите название" :filter="true"
-      :options="aggregatedFeatures['actclass']" optionLabel="name" placeholder="Реплика-стимул" display="comma"
+      :placeholder="$primevue.config.locale.search.mainfunc" scrollHeight="300" :showClear="true" class="combo"
       @change="updateRoute($event)" />
   </div>
   <div class="p-fluid mt-2">
+    <MultiSelect v-model="searchState['semtone']" :filterPlaceholder="$primevue.config.locale.search.inputtitle"
+      :filter="true" :options="aggregatedFeatures['semtone']" optionLabel="name"
+      :placeholder="$primevue.config.locale.search.addsem" display="chip" class="" @change="updateRoute($event)" />
+  </div>
+  <div class="p-fluid mt-2">
+    <MultiSelect v-model="searchState['actclass']" :filterPlaceholder="$primevue.config.locale.search.inputtitle"
+      :filter="true" :options="aggregatedFeatures['actclass']" optionLabel="name"
+      :placeholder="$primevue.config.locale.search.challengephrase" display="comma" @change="updateRoute($event)" />
+  </div>
+  <div class="p-fluid mt-2">
     <div class="p-field grid">
-      <label for="partsbutton" class="col-12 mb-2 md-2 mb-md-0 p-component">Структура</label>
+      <label for="partsbutton" class="col-12 mb-2 md-2 mb-md-0 p-component">{{ $primevue.config.locale.search.struct
+      }}</label>
       <div class="col-12 md-10">
         <SelectButton v-model="searchState['parts']" :options="partsOptions" class="" optionLabel="name"
           optionValue="code" id="partsbutton" :multiple="true" @click="updateRoute($event)" />
@@ -25,25 +27,24 @@
     </div>
   </div>
 
-  <Panel header="Ещё фильтры" :toggleable="true" :collapsed="true">
+  <Panel :header="$primevue.config.locale.search.morefilters" :toggleable="true" :collapsed="true">
     <div class="flex flex-column col">
-      <MultiSelect v-model="searchState['organ']" filterPlaceholder="Наберите название" :filter="true"
-        :options="aggregatedFeatures['organ']" optionLabel="name" placeholder="Жесты" display="chip" class=""
-        @change="updateRoute($event)" />
+      <MultiSelect v-model="searchState['organ']" :filterPlaceholder="$primevue.config.locale.search.inputtitle"
+        :filter="true" :options="aggregatedFeatures['organ']" optionLabel="name"
+        :placeholder="$primevue.config.locale.search.gests" display="chip" class="" @change="updateRoute($event)" />
     </div>
     <div class="grid">
       <div class="col text-center">
         <Dropdown v-model="searchState['intonation']" :options="aggregatedFeatures['intonation']" optionLabel="name"
-          placeholder="Интонация" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)" />
+          :placeholder="$primevue.config.locale.search.intonation" scrollHeight="300" :showClear="true" class="combo"
+          @change="updateRoute($event)" />
       </div>
       <div class="col text-center">
         <Dropdown v-model="searchState['translations']" :options="aggregatedLangs" optionLabel="name"
-          placeholder="Языки" scrollHeight="300" :showClear="true" class="combo" @change="updateRoute($event)" />
+          :placeholder="$primevue.config.locale.search.langs" scrollHeight="300" :showClear="true" class="combo"
+          @change="updateRoute($event)" />
       </div>
     </div>
-    <!-- <Dropdown v-model="semfunc" :options="semfuncOptions" optionLabel="name" placeholder="Жесты" scrollHeight="300" :showClear="true" class="semfunc mr-4" @change="updateRoute($event, 'semfunc')"/>
-    <Dropdown v-model="semfunc" :options="semfuncOptions" optionLabel="name" placeholder="Интонация" scrollHeight="300" :showClear="true" class="semfunc" @change="updateRoute($event, 'semfunc')"/>
-    <Dropdown v-model="semfunc" :options="semfuncOptions" optionLabel="name" placeholder="Язык" scrollHeight="300" :showClear="true" class="semfunc" @change="updateRoute($event, 'semfunc')"/> -->
   </Panel>
 
   <PhraseListItem v-for="eid in eids" :key="eid" :data="data" :eid="Number(eid)" />
@@ -62,11 +63,11 @@ export default {
   name: 'PhraseList',
   setup() {
     const routerInfo = useRoute();
-    // console.log(routerInfo.params);
+    const primevue = usePrimeVue();
 
     const partsOptions = [
-      { name: 'двухчастная', code: false },
-      { name: 'трёхчастная', code: true },
+      { name: primevue.config.locale.parts2, code: false },
+      { name: primevue.config.locale.parts3, code: true },
     ];
     const data = store.state.config;
     const searchState = store.state.search;
@@ -93,7 +94,6 @@ export default {
       .map(key => ({ value: Number(key), name: data.features[key][0], prop: data.features[key][1] }))
       .reduce((obj, x) => ({ ...obj, [x['prop']]: [...(obj[x['prop']] || []), x] }), {});
 
-    const primevue = usePrimeVue();
     const lang2ids = Object.values(data.trans).reduce(
       (obj, x) => ({ ...obj, [x['lang']]: [...(obj[x['lang']] || []), x.id] }),
       {}
