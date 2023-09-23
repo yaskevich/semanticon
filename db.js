@@ -81,11 +81,11 @@ const langCodes = {
 //   приоритет: 'priority',
 // };
 
-const statements = {
-  phrases: 'CREATE TABLE phrases (pid SERIAL PRIMARY KEY, phrase jsonb)',
-  exprs: 'CREATE TABLE exprs (eid SERIAL PRIMARY KEY, expr jsonb UNIQUE)',
-  tokens: 'CREATE TABLE tokens (id SERIAL PRIMARY KEY, token text UNIQUE)',
-  units: `CREATE TABLE units (
+const schemes = {
+  phrases: 'pid SERIAL PRIMARY KEY, phrase jsonb',
+  exprs: 'eid SERIAL PRIMARY KEY, expr jsonb UNIQUE',
+  tokens: 'id SERIAL PRIMARY KEY, token text UNIQUE',
+  units: `
     id SERIAL PRIMARY KEY,
     pid integer not null,
     extrequired boolean not null default false,
@@ -121,26 +121,31 @@ const statements = {
     CONSTRAINT fk_phrases
       FOREIGN KEY(pid) 
       REFERENCES phrases(pid)
-    )`,
-  features: `CREATE TABLE features (
+    `,
+  features: `
         id SERIAL PRIMARY KEY,
         groupid text,
         ru text not null,
         en text,
         UNIQUE (groupid, ru)
-    )`,
-  translations: `CREATE TABLE translations (
+        `,
+  translations: `
         id SERIAL PRIMARY KEY,
         txt text not null,
         lang text not null,
         UNIQUE (txt, lang)
-    )`,
-  media: `CREATE TABLE media (
+        `,
+  media: `
         id SERIAL PRIMARY KEY,
         filename text not null,
         filehash text not null UNIQUE,
-        fileext text not null        
-    )`,
+        fileext text not null
+        `,
+  settings: `
+      filename text not null,
+      mode text not null,
+      updated TIMESTAMPTZ
+      `,
 };
 
 const mediaInsert = 'INSERT INTO media (filename, filehash, fileext) VALUES($1, $2, $3) RETURNING id';
@@ -149,6 +154,7 @@ const phrasesInsert = 'INSERT INTO phrases (phrase) VALUES($1) RETURNING pid';
 const tokensInsert = 'INSERT INTO tokens (token) VALUES($1) RETURNING id';
 const transInsert = 'INSERT INTO translations (txt, lang) VALUES($1, $2) RETURNING id';
 const featuresInsert = 'INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id';
+const settingsInsert = 'INSERT INTO settings (filename, mode, updated) VALUES($1, $2, NOW())';
 
 async function checkMedia(fld, content) {
   const thisIdsArr = [];
@@ -402,23 +408,23 @@ async function processConstruction(fld, content) {
   return JSON.stringify(arr);
 }
 
-async function processCSV(csvContent, schemeName) {
+async function processCSV(csvContent, contentCode, csvName) {
   let csvArr = [];
   // 'ДФ', 'структура', 'активный орган', 'речевой акт 1 (для трехчастных)', 'тип речевого акта (собеседник)', 'дополнительная семантика', 'основная семантика', 'о ситуации', 'жестикуляция', 'Комментарий', 'Примеры'
-  const schemes = {
+  const contentTypes = {
     f: ['pid', null, 'extrequired', 'semfunc', 'semtone', 'act1', 'remark1', 'actclass', 'remark2', 'situation', 'parts', 'intonation', 'extension', 'mods', 'gest', 'organ', 'translations', 'examples', 'audio', 'video', 'style', 'comment', 'construction',],
     r: ['pid', 'struct', 'action', 'challenge', 'effect', 'pragma', 'area', 'conditions', 'tags', 'description', 'examples', null]
   };
-  const columns = schemes[schemeName];
+  const columns = contentTypes[contentCode];
   try {
     csvArr = await csv.parse(csvContent, { delimiter: ',', columns, skip_empty_lines: true });
   } catch (e) {
     console.log(e.message);
   }
 
-  for (const table of Object.keys(statements)) {
+  for (const table of Object.keys(schemes)) {
     await pool.query(`DROP table IF EXISTS ${table} CASCADE`);
-    await pool.query(statements[table]);
+    await pool.query(`CREATE TABLE ${table} (${schemes[table]})`);
   }
 
   for (let n = 1; n < csvArr.length; n++) {
@@ -562,6 +568,8 @@ async function processCSV(csvContent, schemeName) {
     }
   }
 
+  await pool.query(settingsInsert, [csvName, contentCode]);
+
   // console.log(featuresTree);
   // await pool.end();
   // let out = '';
@@ -666,6 +674,11 @@ const getPhrases = async () => {
   return res.rows;
 };
 
+const getSettings = async () => {
+  const res = await pool.query('SELECT filename, mode, updated FROM settings');
+  return res.rows.shift();
+};
+
 const getTokens = async () => {
   const res = await pool.query('SELECT * FROM tokens');
   const keys = [];
@@ -720,6 +733,7 @@ const getUnits = async () => {
 };
 
 const getData = async () => {
+  const settings = await getSettings();
   const features = await getFeatures();
   const featuresFlat = await pool.query('SELECT * from features');
   const tree = groupBy(featuresFlat.rows, (x) => x.groupid);
@@ -732,7 +746,17 @@ const getData = async () => {
   const media = await getMedia();
   const trans = await getTranslations();
   const data = {
-    trans, media, exprs, units, features, titles, tokens, phrases, toc, tree,
+    settings,
+    trans,
+    media,
+    exprs,
+    units,
+    features,
+    titles,
+    tokens,
+    phrases,
+    toc,
+    tree,
   };
   return data;
 };
