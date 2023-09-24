@@ -1,25 +1,25 @@
 <template>
   <div class="p-component p-3 text-center">
     <div class="mb-4">
-      <span class="font-italic">Похожи на </span>
-      <span class="app-title-basic">
-        {{
-            data.exprs[data.units[datum.uid]['eid1']]
-              .map(x => data.tokens.values[data.tokens.keys.indexOf(x)])
-              .join('&#8239;')
-        }}
-      </span>
-
-      <div class="article-tags mb-2">
-        <span v-if="data.features[datum.semfunc] && data.features[datum.semfunc][0]">
-          <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: datum.semfunc } }"
-            class="li interactive back-3">
-            {{ data.features[datum.semfunc][0] }}
+      <div class="mb-2">
+        <span>{{ $primevue.config.locale.similar }}</span>
+        <span class="ml-1 app-title-basic">
+          {{
+              data.exprs[data.units[datum.uid]['eid1']]
+                .map(x => data.tokens.values[data.tokens.keys.indexOf(x)])
+                .join('&#8239;')
+          }}
+        </span>
+      </div>
+      <div class="mb-2">
+        <span v-if="data.features[datum[major]] && data.features[datum[major]][0]">
+          <router-link :to="{ name: 'List', params: { prop: major, id: datum[major] } }"
+            class="interactive back-3 mr-1">
+            {{ data.features[datum[major]][0] }}
           </router-link>
         </span>
-
-        <span v-for="item in datum.semtone" :key="item">
-          <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" class="li interactive back-2">
+        <span v-for="item in datum[minor]" :key="item">
+          <router-link :to="{ name: 'List', params: { prop: minor, id: item } }" class="interactive back-2">
             {{ data.features[item][0] }}
           </router-link>
         </span>
@@ -29,47 +29,42 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRoute } from 'vue-router';
 import store from '../store';
 import PhraseListItem from './PhraseListItem.vue';
 
-export default {
-  name: 'SimilarList',
-  setup() {
-    const vuerouter = useRoute();
-    const id = vuerouter.params.id;
-    const data = store.state.config;
-    const eids = [];
-    const datum = {};
-    if (id) {
-      datum['uid'] = Number(id);
-      datum['eid'] = data.units[datum.uid]['eid1'];
-      datum['semfunc'] = data.units[datum.uid]['semfunc'];
-      datum['semtone'] = data.units[datum.uid]['semtone'];
+const vuerouter = useRoute();
+const id = vuerouter.params.id;
+const data = store.state.config;
+const eids = [];
+const datum = {};
+const similarity = { f: ['semfunc', 'semtone'], r: ['area', 'pragma'] };
+const [major, minor] = similarity[store?.state?.config?.settings?.mode || 'f'];
 
-      for (let v of Object.values(data.units)) {
-        if (v['id'] === datum.uid || v['eid1'] === datum.eid) {
-          continue;
-        }
-        if (v['semfunc'] === datum.semfunc) {
-          if (
-            (datum.semtone && v['semtone'] && v['semtone'].some(r => datum.semtone.includes(r))) ||
-            (!datum.semtone && !v['semtone'])
-          ) {
-            if (!eids.includes(v.eid1)) {
-              eids.push(v.eid1);
-            }
-          }
+if (id) {
+  datum['uid'] = Number(id);
+  datum['eid'] = data.units[datum.uid]['eid1'];
+  datum[major] = data.units[datum.uid][major];
+  datum[minor] = data.units[datum.uid][minor];
+
+  for (let unit of Object.values(data.units)) {
+    if (unit['id'] === datum.uid || unit['eid1'] === datum.eid) {
+      continue;
+    }
+    if (unit[major] === datum[major]) {
+      if (
+        (datum?.[minor] && unit[minor] && unit[minor].some(r => datum?.[minor].includes(r))) ||
+        (!datum?.[minor] && !unit[minor])
+      ) {
+        if (!eids.includes(unit.eid1)) {
+          eids.push(unit.eid1);
         }
       }
     }
-    return { datum, eids, data };
-  },
-  components: {
-    PhraseListItem,
-  },
-};
+  }
+}
+
 </script>
 
 <style>
