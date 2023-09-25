@@ -2,7 +2,8 @@
   <div class="p-component p-3 text-center">
     <div class="mb-4">
       <div class="mb-2">
-        <span>{{ $primevue.config.locale.similar }}</span>
+        <span v-if="eids?.length" class="upper">{{ $primevue.config.locale.similar }}</span>
+        <span v-else class="upper"> {{ $primevue.config.locale.nosimilar }} </span>
         <span class="ml-1 app-title-basic">
           {{
               data.exprs[data.units[datum.uid]['eid1']]
@@ -39,8 +40,7 @@ const id = vuerouter.params.id;
 const data = store.state.config;
 const eids = [];
 const datum = {};
-const similarity = { f: ['semfunc', 'semtone'], r: ['area', 'pragma'] };
-const [major, minor] = similarity[store?.state?.config?.settings?.mode || 'f'];
+const [major, minor] = store?.similarity[store?.state?.config?.settings?.mode || 'f'];
 
 if (id) {
   datum['uid'] = Number(id);
@@ -78,5 +78,9 @@ if (id) {
 
 .variants {
   margin-top: -1rem;
+}
+
+.upper {
+  text-transform: uppercase;
 }
 </style>
