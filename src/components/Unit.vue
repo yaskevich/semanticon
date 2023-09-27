@@ -50,15 +50,17 @@
               </span>
             </div>
 
-            <div class="pb-2" v-if="data.features?.[unit?.struct]?.length">
-              <Tag v-tooltip="$primevue.config.locale.phrase.struct" class="mr-2" severity="warning"
-                :value="data.features[unit?.struct][0]" rounded></Tag>
+
+            <div class="pb-2" v-if="unit?.tags && unit?.tags !== 'N/A'">
+              <span class="article-field">{{ $primevue.config.locale.phrase.tags }}:</span>
+              <Tag class="mr-2" severity="info" :value="data.features?.[item]?.[0]" rounded
+                v-for="item in unit.tags" />
             </div>
 
-            <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
-              <Tag v-tooltip="$primevue.config.locale.phrase.action" class="mr-2" severity="success"
-                :value="unit?.action" rounded>
-              </Tag>
+            <div class="pb-2" v-if="data.features?.[unit?.struct]?.length">
+              <span class="article-field">{{ $primevue.config.locale.phrase.struct }}:</span>
+              <Tag v-tooltip="$primevue.config.locale.phrase.struct" class="mr-2" severity="warning"
+                :value="data.features[unit?.struct][0]" rounded></Tag>
             </div>
 
             <div class="pb-2" v-if="unit?.challenge && unit?.challenge !== 'N/A'">
@@ -67,14 +69,11 @@
               <span class="pr-2">{{ unit?.challenge }}</span>
             </div>
 
-            <div class="pb-2" v-if="unit?.description && unit?.description !== 'N/A'">
-              <span class="article-field">{{ $primevue.config.locale.phrase.description }}:</span>
-              <span class="pr-2">{{ unit?.description }}</span>
-            </div>
-
-            <div class="pb-2" v-if="unit?.effect && unit?.effect !== 'N/A'">
-              <span class="article-field">{{ $primevue.config.locale.phrase.effect }}:</span>
-              <span class="pr-2">{{ unit?.effect }}</span>
+            <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
+              <span class="article-field">{{ $primevue.config.locale.phrase.action }}:</span>
+              <Tag v-tooltip="$primevue.config.locale.phrase.action" class="mr-2" severity="success"
+                :value="unit?.action" rounded>
+              </Tag>
             </div>
 
             <div class="pb-2" v-if="unit?.pragma && unit?.pragma !== 'N/A'">
@@ -83,7 +82,13 @@
                 v-for="item in unit.pragma" />
             </div>
 
+            <div class="pb-2" v-if="unit?.effect && unit?.effect !== 'N/A'">
+              <span class="article-field">{{ $primevue.config.locale.phrase.effect }}:</span>
+              <span class="pr-2">{{ unit?.effect }}</span>
+            </div>
+
             <div class="pb-2" v-if="data.features?.[unit?.area]?.length">
+              <span class="article-field">{{ $primevue.config.locale.phrase.area }}:</span>
               <Tag v-tooltip="$primevue.config.locale.phrase.area" class="mr-2" severity="danger"
                 :value="data.features[unit?.area][0]" rounded></Tag>
             </div>
@@ -91,6 +96,11 @@
             <div class="pb-2" v-if="unit?.conditions && unit?.conditions !== 'N/A'">
               <span class="article-field">{{ $primevue.config.locale.phrase.conditions }}:</span>
               <span class="pr-2">{{ unit?.conditions }}</span>
+            </div>
+
+            <div class="pb-2" v-if="unit?.description && unit?.description !== 'N/A'">
+              <span class="article-field">{{ $primevue.config.locale.phrase.description }}:</span>
+              <span class="pr-2">{{ unit?.description }}</span>
             </div>
 
             <div class="article-parts mb-2" v-if="unit?.semfunc">
@@ -140,84 +150,78 @@
               </div>
             </div>
 
-            <template v-for="(value, name, index) in $primevue.config.locale.phrase">
-              <div v-if="unit.hasOwnProperty(name) && unit[name]" class="item" :key="index">
-                <span v-if="['gest'].includes(name)">
-                  <span class="article-field">{{ value }}: </span>
-                  <span class="article-tags mb-2">
-                    <span v-for="item in unit[name]" :key="item" class="interactive back-1">
-                      {{ data.features[item][0] }}</span>
-                  </span>
-                </span>
-                <!-- drop style -->
-                <span v-else-if="['intonation'].includes(name)">
-                  <span v-if="data.features[unit[name]] && data.features[unit[name]][0]">
-                    <span class="article-field">{{ value }}: </span>
-                    {{ data.features[unit[name]][0] }}
-                  </span>
-                </span>
-                <!-- <span v-else-if="['mods', 'comment'].includes(name)">
-                <span class="article-field">{{value}}: </span>
-                <span>
-                  {{unit[name]}}
-                </span>
-              </span> -->
-                <span v-else-if="name === 'situation'">
-                  <span class="article-field">{{ value }}: </span>
-                  <span v-html="unit[name].split('А').join(a).split('Б').join(b)"></span>
-                </span>
+            <div v-if="unit['examples']">
+              <Inplace :closable="false">
+                <template #display>
+                  <div>
+                    <span class="article-field">{{ $primevue.config.locale.phrase.example
+                    }}{{ getEnding(unit['examples'].filter(x => x.lang === 'rus')) }}</span>
+                    <span className="pi pi-bookmark valign"></span>
+                  </div>
+                </template>
+                <template #content>
+                  <div class="example-holder">
+                    <Example v-for="(v, index) in unit['examples'].filter(x => x.lang === 'rus')" :key="index"
+                      :datum="v" />
+                  </div>
+                </template>
+              </Inplace>
+            </div>
 
-                <div v-else-if="name === 'examples'">
-                  <Inplace :closable="false">
-                    <template #display>
-                      <div>
-                        <span class="article-field">{{ $primevue.config.locale.phrase.example }}{{ getEnding
-                            (unit[name].filter((x) => x.lang === 'rus'))
-                        }}</span>
-                        <span className="pi pi-bookmark valign"></span>
-                      </div>
-                    </template>
-                    <template #content>
-                      <div class="example-holder">
-                        <Example v-for="(v, index) in unit[name].filter(x => x.lang === 'rus')" :key="index"
-                          :datum="v" />
-                      </div>
-                    </template>
-                  </Inplace>
-                </div>
+            <div v-if="unit['intonation']">
+              <span>
+                <span v-if="data.features[unit['intonation']] && data.features[unit['intonation']][0]">
+                  <span class="article-field">{{ $primevue.config.locale.phrase['intonation'] }}: </span>
+                  {{ data.features[unit['intonation']][0] }}
+                </span>
+              </span>
+            </div>
 
-                <div v-else-if="name === 'construction' && unit[name].length">
-                  <span class="article-field">{{ value }}: </span>
-                  <div v-for="(v, k) in unit[name]" :key="k" class="construction">
-                    <!-- <span v-if="v.hasOwnProperty('link') && v['link']">
+            <div v-if="unit['situation']">
+              <span>
+                <span class="article-field">{{ $primevue.config.locale.phrase['situation'] }}: </span>
+                <span v-html="unit['situation'].split('А').join(a).split('Б').join(b)"></span>
+              </span>
+            </div>
+
+            <div v-if="unit['construction'] && unit['construction'].length">
+              <span class="article-field">{{ $primevue.config.locale.phrase['construction'] }}: </span>
+              <div v-for="(v, k) in unit['construction']" :key="k" class="construction">
+                <!-- <span v-if="v.hasOwnProperty('link') && v['link']">
                     <a href="v.link">{{v.syn}}</a>
                   </span>
                   <span v-else>{{v.syn}}
                   </span> -->
 
-                    {{ v.syn }}&nbsp;<span v-if="v.hasOwnProperty('link') && v['link']">
-                      <a :href="v.link" target="_blank"><i class="pi pi-external-link"></i></a>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- <div v-else-if="name === 'translations' && unit[name].length">
-                <span class="article-field">{{value}}: </span>
-                <span v-for="(v, k) in unit[name]" :key="k">
-                  <span class="example-text">{{data.trans[v]['txt']}}</span> ({{$primevue.config.locale.lang.hasOwnProperty(data.trans[v]['lang'])?$primevue.config.locale.lang[data.trans[v]['lang']]:data.trans[v]['lang']}})
+                {{ v.syn }}&nbsp;<span v-if="v.hasOwnProperty('link') && v['link']">
+                  <a :href="v.link" target="_blank"><i class="pi pi-external-link"></i></a>
                 </span>
-              </div> -->
-
-                <div v-else-if="name === 'video' && unit[name].length" class="video">
-                  <span v-for="(v, k) in unit[name]" :key="k" class="pr-4">
-                    <video :src="getResource('video', v)" width="200" controls>
-                      {{ $primevue.config.locale.videowarning }}
-                      <code>video</code>.
-                    </video>
-                  </span>
-                </div>
               </div>
-            </template>
+            </div>
+
+            <div v-if="unit['video'] && unit['video'].length" class="video">
+              <span v-for="(v, k) in unit['video']" :key="k" class="pr-4">
+                <video :src="getResource('video', v)" width="200" controls>
+                  {{ $primevue.config.locale.videowarning }}
+                  <code>video</code>.
+                </video>
+              </span>
+            </div>
+
+            <span v-if="unit['gest']">
+              <span class="article-field">{{ $primevue.config.locale.phrase['gest'] }}: </span>
+              <span class="article-tags mb-2">
+                <span v-for="item in unit['gest']" :key="item" class="interactive back-1">
+                  {{ data.features[item][0] }}</span>
+              </span>
+            </span>
+
+            <!-- <span v-else-if="['mods', 'comment'].includes(name)">
+                <span class="article-field">{{value}}: </span>
+                <span>
+                  {{unit[name]}}
+                </span>
+              </span> -->
           </div>
         </transition>
       </div>
@@ -338,7 +342,7 @@ export default {
 
     const getResource = (type, x) => new URL(`${store.media}/${type}/${props.data.media[x]}`, import.meta.url);
 
-    const getEnding = (x) => x?.length > 1 ? primevue.config.locale.plural : '';
+    const getEnding = x => (x?.length > 1 ? primevue.config.locale.plural : '');
 
     return {
       getEnding,
@@ -389,25 +393,6 @@ export default {
 
 .article-title {
   font-size: 1.5rem;
-}
-
-span.interactive,
-a.interactive {
-  text-decoration: none;
-  /* background:yellow; */
-  border-radius: 25px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.3rem;
-  /* margin-left:.3rem; */
-  color: black;
-  border: 1px solid white;
-}
-
-a.interactive:hover {
-  background: black;
-  color: #ffe;
-  border: 1px solid brown;
 }
 
 /* .pi-volume-up {
