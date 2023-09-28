@@ -1,18 +1,18 @@
 <template>
   <div id="main" v-if="dataReady">
     <div id="nav" class="p-component flex p-3 card">
-      <router-link to="/"><span class="app-title app-title-basic">Pragmaticon</span></router-link>
+      <router-link to="/"><span class="app-title app-title-basic">{{ store.title }}</span></router-link>
       <router-link to="/about" class="ml-auto mr-4 page"><span class="nowrap">{{ $primevue.config.locale.about }}</span>
       </router-link>
       <router-link to="/filters" class="page">{{ $primevue.config.locale.filtering }}</router-link>
     </div>
-    <div class="p-component pl-3 subtitle">
-      {{ $primevue.config.locale.sub }}
+    <div class="p-component pl-3 subtitle" v-if="store?.sub">
+      {{ store.sub }}
     </div>
     <div id="content">
       <router-view />
     </div>
-    <div id="footer" class="p-component mt-4 back-1">
+    <div id="footer1" class="p-component mt-4 back-1">
       <div class="grid p-4">
         <div class="col">
           <div>Контакты: discourseformulae@gmail.com</div>
@@ -26,18 +26,25 @@
           <div>
             <a target="_blank"
               href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">Обратная
-              связь</a>
+              связь <i class="pi pi-external-link"></i></a>
           </div>
-          <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон</a></div>
+          <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон <i
+                class="pi pi-external-link"></i></a></div>
         </div>
       </div>
     </div>
     <ScrollTop />
-    <div id="footer" class="p-component back-1">
+    <div id="footer2" class="p-component back-1">
       <div class="grid pr-4 pl-4">
-        <div class="col">2021, Прагматикон [v{{ store?.version }}]</div>
+        <div class="col">2021, Прагматикон
+          <button type="button" v-tooltip="(new Date(store.state.config.settings.updated)).toLocaleString()"> {{
+              store?.version
+          }}</button>
+          <span></span>
+        </div>
         <div class="col">
-          <a target="_blank" href="https://ling.hse.ru"> Школа лингвистики НИУ ВШЭ </a>
+          <a target="_blank" href="https://ling.hse.ru">Школа лингвистики НИУ ВШЭ <i
+              class="pi pi-external-link"></i></a>
         </div>
       </div>
       <div class="grid p-4">
@@ -52,39 +59,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, inject, onBeforeMount } from 'vue';
 import router from './router';
 
-export default {
-  name: 'App',
+const store = inject('store');
+const dataReady = ref(false);
 
-  setup() {
-    const store = inject('store');
-    const dataReady = ref(false);
+if (import.meta.env.VITE_DATA) {
+  dataReady.value = true;
+} else {
+  onBeforeMount(async () => {
+    await store.getData();
+    dataReady.value = true;
+  });
+}
 
-    if (import.meta.env.VITE_DATA) {
-      dataReady.value = true;
-    } else {
-      onBeforeMount(async () => {
-        await store.getData();
-        dataReady.value = true;
-      });
-    }
-
-    const doGoToHelp = tab => {
-      store.state.about.active = tab || 0;
-      router.push('/about');
-    };
-
-    return {
-      dataReady,
-      isAuth: store.actions.isAuth,
-      store,
-      doGoToHelp,
-    };
-  },
+const doGoToHelp = tab => {
+  store.state.about.active = tab || 0;
+  router.push('/about');
 };
+
 </script>
 
 <style>
@@ -248,5 +243,24 @@ a {
 
 .subtitle {
   margin-top: -1.5rem;
+}
+
+span.interactive,
+a.interactive {
+  text-decoration: none;
+  /* background:yellow; */
+  border-radius: 25px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem;
+  /* margin-left:.3rem; */
+  color: black;
+  border: 1px solid white;
+}
+
+a.interactive:hover {
+  background: black;
+  color: #ffe;
+  border: 1px solid brown;
 }
 </style>
