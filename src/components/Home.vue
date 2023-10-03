@@ -1,5 +1,5 @@
 <template>
-  <div class="grid justify-content-center mt-2">
+  <div class="grid justify-content-center mt-2 mb-3">
     <div class="p-component">
       <div class="p-inputgroup text-center col">
         <AutoComplete v-model="autoState['text']" :suggestions="searchVariants" ref="searchInstance"
@@ -21,80 +21,32 @@
           severity="secondary" />
       </div>
 
-      <div class="grid justify-content-center col">
+      <div class="grid justify-content-center col" v-if="store.state.config.settings.mode === 'f'">
         <span class="pr-3 label-switch">{{ $primevue.config.locale.searchsim }}</span>
         <!-- <InputSwitch v-model="checked" @click="handleSwitchState($event)" /> -->
         <Checkbox v-model="autoState['checked']" @click="handleSwitchState($event)" :binary="true" />
       </div>
       <!-- <div class="grid justify-content-center col">
-				<SelectButton v-model="autoState['mode']" :options="switchStateOptions"  class="switcher" optionLabel="name" optionValue="code"  @click="handleSwitchState($event)"/>
-			</div> -->
+        <SelectButton v-model="autoState['mode']" :options="switchStateOptions" class="switcher" optionLabel="name"
+          optionValue="code" @click="handleSwitchState($event)" />
+      </div> -->
     </div>
   </div>
   <div class="p-component">
     <SearchResults v-for="(value, key) in autoState['matches']" :datum="value" :num="Number(key)" :data="data"
       :key="key" />
   </div>
-  <div class="p-component back-1 p-4 info">
-    <div class="explain-header">Что такое дискурсивные формулы?</div>
-    <div class="ml-4">
-      Короткие устойчивые ответы, которые мы используем в разговорной речи.
-      <div>
-        Например &mdash; <span class="cite">Не говори!</span> <span class="cite">Как скажешь!</span> или
-        <span class="cite">Да ладно!</span>
-      </div>
-      <div>
-        В основном формулы выражают положительные или отрицательные реакции на слова собеседника. Можно сказать, что в
-        большинстве они &mdash; синонимы Да и Нет, но с дополнительными оттенками значения.
-      </div>
-    </div>
-  </div>
-  <div class="p-component p-4 info">
-    <div class="text-center">
-      <img src="../assets/logo_pragmaticon.png" style="max-height: 10rem" />
-    </div>
-  </div>
-  <div class="p-component back-2 p-4 info">
-    <div class="explain-header">В чем задача Прагматикона?</div>
-    <div class="ml-4">
-      <div>Формулы редко попадают в словари, а угадать их значение бывает непросто.</div>
-      <div>
-        Мы собрали список дискурсивных формул для русского языка и разработали формат описания, который помогает узнать
-        не только что значит каждая формула, но и как и когда её употреблять.
-      </div>
-    </div>
-  </div>
-  <div class="p-component p-4 info text-center">
-    <img src="../assets/logo_constructicon.png" style="max-height: 5rem" />
-  </div>
-  <div class="p-component back-3 p-4 info">
-    <div class="explain-header">Как строится описание?</div>
-    <div class="ml-4">
-      <div>
-        Наша база данных &mdash; результат исследовательского проекта Школы Лингвистики НИУ ВШЭ
-        <a href="https://ling.hse.ru/" target="_blank"><i class="pi pi-external-link"></i></a>. Содержательно она
-        является частью Russian Constructicon
-        <a href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i
-            class="pi pi-external-link"></i></a>.
-      </div>
-      <div>
-        Мы используем теоретические рамки Грамматики конструкций и Московской семантической школы и анализируем
-        употребление формул, используя корпусные данные, прежде всего &mdash; Национальный корпус русского языка (НКРЯ)
-        <a href="https://ruscorpora.ru/" target="_blank"><i class="pi pi-external-link"></i></a>.
-      </div>
-    </div>
-  </div>
-  <div class="p-component p-4 info text-center">
-    <img src="../assets/logo_hse.png" style="max-height: 8rem" />
-  </div>
+  <Intro />
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import Checkbox from 'primevue/checkbox';
-import InputSwitch from 'primevue/inputswitch';
+// import InputSwitch from 'primevue/inputswitch';
 import store from '../store';
 import SearchResults from './SearchResults.vue';
+import Intro from './Intro.vue';
+
 import eng from '../assets/flags/eng.svg';
 import bua from '../assets/flags/bua.svg';
 import fin from '../assets/flags/fin.svg';
@@ -104,236 +56,206 @@ import rus from '../assets/flags/rus.svg';
 import slv from '../assets/flags/slv.svg';
 import tgk from '../assets/flags/tgk.svg';
 
-export default {
-  name: 'Search',
-  setup() {
-    const flags = { eng, bua, fin, heb, ita, rus, slv, tgk };
-    const data = store.state.config;
-    let searchInstance = ref();
-    let searchVariants = ref(null);
 
-    const getExp = () => String(Math.floor(Math.random() * Object.keys(store.state.config.exprs).length));
+const flags = { eng, bua, fin, heb, ita, rus, slv, tgk };
+const data = store.state.config;
+let searchInstance = ref();
+let searchVariants = ref(null);
 
-    const randomExpression = store.state.config.exprs[getExp()].map(x =>
-      store.state.config.tokens.values[store.state.config.tokens.keys.indexOf(x)]).join(' ');
+const getRandomExpIndex = () => String(Math.floor(Math.random() * (Object.keys(store.state.config.exprs).length - 1)) || 0);
 
-    // const placeholder = { ru: 'да ладно', none: 'whatever' };
-    const placeholder = { ru: randomExpression, none: 'whatever' };
-    const autoState = store.state.autocomplete;
+const randomExpression = store.state.config.exprs[getRandomExpIndex()].map(x =>
+  store.state.config.tokens.values[store.state.config.tokens.keys.indexOf(x)]).join(' ');
 
+// const placeholder = { native: 'да ладно', trans: 'whatever' };
+const placeholder = { native: randomExpression, trans: 'whatever' };
+const autoState = store.state.autocomplete;
 
+const handleSwitchState = () => {
+  autoState['mode'] = autoState['checked'] ? 'native' : 'trans';
+  autoState['text'] = '';
+  autoState['matches'] = [];
+};
 
-    const handleSwitchState = () => {
-      autoState['mode'] = autoState['checked'] ? 'ru' : 'none';
-      autoState['text'] = '';
-      autoState['matches'] = [];
-    };
+const getBasicExpr = eid => {
+  // console.log("in eid", eid);
+  const titlesIndexes = data.titles.exprs.flatMap((x, i) => (x == eid ? i : []));
+  // console.log("TI", titlesIndexes);
 
-    const getBasicExpr = eid => {
-      // console.log("in eid", eid);
-      const titlesIndexes = data.titles.exprs.flatMap((x, i) => (x == eid ? i : []));
-      // console.log("TI", titlesIndexes);
-
-      if (titlesIndexes.length) {
-        const titles = titlesIndexes.map(x => data.titles.eid1[x]);
-        // console.log("tt", titles);
-        return {
-          eid1: titles[0],
-          eid: eid,
-          main: !data.exprs[titles[0]].includes(eid) ? 'eid' : 'eid1',
-        };
-      }
-    };
-
-    const getVariants = {
-      ru: objs => {
-        // console.log('objs', objs);
-        const eids = objs.map(x => x.eid);
-        const results = [];
-        for (let eid of eids) {
-          const variant = getBasicExpr(eid);
-          // const tt = data.phrases.filter(x => x.phrase.includes(Number(eid))).map(x => x.phrase[0]);
-          // const reducer = (b, x) => { x.phrase.includes(Number(eid))?b.push(x.pid):null; return b;  }
-          // const tt = data.phrases.reduce(reducer, []);
-          // console.log("filtered", eid, tt, variant);
-
-          if (variant && !results.some(x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
-            results.push(variant);
-          }
-        }
-        return results;
-      },
-      none: objs => {
-        const ids = objs.map(x => x.id);
-        const results = [];
-        for (let unit of Object.values(data.units)) {
-          const pd = Reflect.getOwnPropertyDescriptor(unit, 'translations');
-          if (pd) {
-            for (let id of ids) {
-              if (pd.value.includes(id)) {
-                const variant = { eid1: unit.eid1, main: 'eid1' };
-                if (!results.some(x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
-                  results.push(variant);
-                }
-              }
-            }
-          }
-        }
-        return results;
-      },
-    };
-
-    const renderMatches = () => {
-      searchInstance.value.hide();
-      if (typeof autoState['text'] === 'object') {
-        // console.log("do nothing: object", autoState["text"]);
-      } else {
-        const tokenMatches = getMatches(autoState['text']);
-        // console.log("getMatches: result", tokenMatches);
-        const variants = getVariants[autoState['mode']](tokenMatches);
-        // console.log("variants", variants);
-        autoState['matches'] = variants;
-      }
-    };
-
-    const getUnitByTrans = id => {
-      const results = [];
-      for (let unit of Object.values(data.units)) {
-        const pd = Reflect.getOwnPropertyDescriptor(unit, 'translations');
-        if (pd && pd.value.includes(id) && !results.find(x => x['eid1'] === unit.eid1)) {
-          results.push({
-            eid1: unit.eid1,
-            main: 'eid1',
-          });
-        }
-      }
-      return results;
-    };
-
-    const renderSelected = {
-      //  get clicked autocomplete item and render it in search resuts block
-      ru: e => {
-        autoState['matches'] = [getBasicExpr(e.value.eid)];
-      },
-      none: e => {
-        const uns = getUnitByTrans(e.value.id);
-        // console.log("units", uns);
-        autoState['matches'] = uns;
-      },
-    };
-
-    const processInput = {
-      ru: str => {
-        const results = [];
-        const queryChunks = str
-          .toLowerCase()
-          .split(/\s|(?=-)/g)
-          .map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
-
-        autoState['text'] = queryChunks.join(' ').replace(' -', '-');
-        const queries = queryChunks.filter(x => x);
-        const phraseVariants = new Array(queries.length).fill(null).map(() => []);
-
-        const queriesLength = queries.length;
-        const last = queriesLength - 1;
-
-        for (let i = 0; i < data.tokens.values.length; i++) {
-          for (let ii = 0; ii < queriesLength; ii++) {
-            // bad for performance, though not for that amount of data
-            const item = data.tokens.values[i].toLowerCase();
-            if (ii === last ? item.startsWith(queries[ii]) : item === queries[ii]) {
-              phraseVariants[ii].push(data.tokens.keys[i]);
-            }
-          }
-        }
-
-        const phraseVariantsLength = phraseVariants.length;
-        if (phraseVariantsLength) {
-          const phraseVariantsLast = phraseVariantsLength - 1;
-          const [head] = phraseVariants.slice(0, phraseVariantsLast);
-          for (let [key, value] of Object.entries(data.exprs)) {
-            let needToLookHead = false;
-            // if there are more than 1 token in query
-            // must check all that before last
-            // whether all they are in value
-            if (phraseVariantsLast) {
-              if (head.every(v => value.includes(v))) {
-                needToLookHead = true;
-              }
-            } else {
-              needToLookHead = true;
-            }
-            if (needToLookHead) {
-              if (phraseVariants[phraseVariantsLast].some(v => value.includes(v))) {
-                const phrase = value.map(x => data.tokens.values[data.tokens.keys.findIndex(y => y == x)]);
-                // const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
-                // const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
-                results.push({ arr: phrase, eid: key, txt: phrase.join(' ').replace(' -', '-') });
-                // if (!results.some( x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
-                // 		results.push(variant);
-                // 	}
-              }
-            }
-          }
-        }
-        // console.log("results qty", results.length);
-        return results;
-      },
-      none: str => {
-        const results = [];
-        const query = str.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '');
-        autoState['text'] = query;
-        for (let value of Object.values(data.trans)) {
-          if (value.txt.includes(query)) {
-            results.push(value);
-          }
-        }
-        return results;
-      },
-    };
-
-    const getMatches = queryString => {
-      // console.log("input", queryString);
-      return autoState['text'] ? processInput[autoState['mode']](queryString) : [];
-    };
-
-    const clearInput = () => {
-      autoState['matches'] = [];
-      autoState['text'] = '';
-    };
-
-    const autocomplete = e => {
-      searchVariants.value = getMatches(e.query);
-    };
-
+  if (titlesIndexes.length) {
+    const titles = titlesIndexes.map(x => data.titles.eid1[x]);
+    // console.log("tt", titles);
     return {
-      placeholder,
-      autocomplete,
-      renderSelected,
-      data,
-      searchVariants,
-      autoState,
-      handleSwitchState,
-      renderMatches,
-      searchInstance,
-      InputSwitch,
-      clearInput,
-      store,
-      flags,
+      eid1: titles[0],
+      eid: eid,
+      main: !data.exprs[titles[0]].includes(eid) ? 'eid' : 'eid1',
     };
+  }
+};
+
+const getVariants = {
+  native: objs => {
+    // console.log('objs', objs);
+    const eids = objs.map(x => x.eid);
+    const results = [];
+    for (let eid of eids) {
+      const variant = getBasicExpr(eid);
+      // const tt = data.phrases.filter(x => x.phrase.includes(Number(eid))).map(x => x.phrase[0]);
+      // const reducer = (b, x) => { x.phrase.includes(Number(eid))?b.push(x.pid):null; return b;  }
+      // const tt = data.phrases.reduce(reducer, []);
+      // console.log("filtered", eid, tt, variant);
+
+      if (variant && !results.some(x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+        results.push(variant);
+      }
+    }
+    return results;
   },
-  components: {
-    SearchResults,
-    Checkbox,
+  trans: objs => {
+    const ids = objs.map(x => x.id);
+    const results = [];
+    for (let unit of Object.values(data.units)) {
+      const pd = Reflect.getOwnPropertyDescriptor(unit, 'translations');
+      if (pd) {
+        for (let id of ids) {
+          if (pd.value.includes(id)) {
+            const variant = { eid1: unit.eid1, main: 'eid1' };
+            if (!results.some(x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+              results.push(variant);
+            }
+          }
+        }
+      }
+    }
+    return results;
   },
+};
+
+const renderMatches = () => {
+  searchInstance.value.hide();
+  if (typeof autoState['text'] === 'object') {
+    // console.log("do nothing: object", autoState["text"]);
+  } else {
+    const tokenMatches = getMatches(autoState['text']);
+    // console.log("getMatches: result", tokenMatches);
+    const variants = getVariants[autoState['mode']](tokenMatches);
+    // console.log("variants", variants);
+    autoState['matches'] = variants;
+  }
+};
+
+const getUnitByTrans = id => {
+  const results = [];
+  for (let unit of Object.values(data.units)) {
+    const pd = Reflect.getOwnPropertyDescriptor(unit, 'translations');
+    if (pd && pd.value.includes(id) && !results.find(x => x['eid1'] === unit.eid1)) {
+      results.push({
+        eid1: unit.eid1,
+        main: 'eid1',
+      });
+    }
+  }
+  return results;
+};
+
+const renderSelected = {
+  //  get clicked autocomplete item and render it in search resuts block
+  native: e => {
+    autoState['matches'] = [getBasicExpr(e.value.eid)];
+  },
+  trans: e => {
+    const uns = getUnitByTrans(e.value.id);
+    // console.log("units", uns);
+    autoState['matches'] = uns;
+  },
+};
+
+const processInput = {
+  native: str => {
+    const results = [];
+    const queryChunks = str
+      .toLowerCase()
+      .split(/\s|(?=-)/g)
+      .map(x => x.replace(/[.*+?^${}()|[\]\\]/g, ''));
+
+    autoState['text'] = queryChunks.join(' ').replace(' -', '-');
+    const queries = queryChunks.filter(x => x);
+    const phraseVariants = new Array(queries.length).fill(null).map(() => []);
+
+    const queriesLength = queries.length;
+    const last = queriesLength - 1;
+
+    for (let i = 0; i < data.tokens.values.length; i++) {
+      for (let ii = 0; ii < queriesLength; ii++) {
+        // bad for performance, though not for that amount of data
+        const item = data.tokens.values[i].toLowerCase();
+        if (ii === last ? item.startsWith(queries[ii]) : item === queries[ii]) {
+          phraseVariants[ii].push(data.tokens.keys[i]);
+        }
+      }
+    }
+
+    const phraseVariantsLength = phraseVariants.length;
+    if (phraseVariantsLength) {
+      const phraseVariantsLast = phraseVariantsLength - 1;
+      const [head] = phraseVariants.slice(0, phraseVariantsLast);
+      for (let [key, value] of Object.entries(data.exprs)) {
+        let needToLookHead = false;
+        // if there are more than 1 token in query
+        // must check all that before last
+        // whether all they are in value
+        if (phraseVariantsLast) {
+          if (head.every(v => value.includes(v))) {
+            needToLookHead = true;
+          }
+        } else {
+          needToLookHead = true;
+        }
+        if (needToLookHead) {
+          if (phraseVariants[phraseVariantsLast].some(v => value.includes(v))) {
+            const phrase = value.map(x => data.tokens.values[data.tokens.keys.findIndex(y => y == x)]);
+            // const re = new RegExp(`(?=${str})|(?<=${str})`, 'gi');
+            // const res  = queries.map(x => new RegExp(`(?=${x})|(?<=${x})`, 'gi'))
+            results.push({ arr: phrase, eid: key, txt: phrase.join(' ').replace(' -', '-') });
+            // if (!results.some(x => x['eid1'] === variant.eid1 && x['main'] === variant.main)) {
+            //   results.push(variant);
+            // }
+          }
+        }
+      }
+    }
+    // console.log("results qty", results.length);
+    return results;
+  },
+  trans: str => {
+    const results = [];
+    const query = str.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '');
+    autoState['text'] = query;
+    for (let value of Object.values(data.trans)) {
+      if (value.txt.includes(query)) {
+        results.push(value);
+      }
+    }
+    return results;
+  },
+};
+
+const getMatches = queryString => {
+  // console.log("input", queryString);
+  return autoState['text'] ? processInput[autoState['mode']](queryString) : [];
+};
+
+const clearInput = () => {
+  autoState['matches'] = [];
+  autoState['text'] = '';
+};
+
+const autocomplete = e => {
+  searchVariants.value = getMatches(e.query);
 };
 </script>
 
 <style scoped>
-.match {
-  font-weight: bold;
-}
-
 .switcher {
   line-height: 0.3rem;
 }
