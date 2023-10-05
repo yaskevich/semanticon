@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="mr-2">
         <div class="article-title app-title-basic mb-2">
-          <span> {{ title }} </span><span v-if="num"><sup>{{ num }}</sup></span>
+          <span> {{ store.translit(title) }} </span><span v-if="num"><sup>{{ num }}</sup></span>
           <PrimeButton v-if="sound" icon="pi pi-volume-up" class="p-button-text ml-3 audiobutton"
             @click="playClicked()" />
         </div>
@@ -11,22 +11,22 @@
         <transition name="fade">
           <div class="article-body" v-if="display">
             <div class="article-tags mb-2">
-              <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
+              <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][store.lang]">
                 <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }"
                   class="interactive back-3">
-                  {{ data.features[unit['semfunc']][0] }}
+                  {{ data.features[unit['semfunc']][store.lang] }}
                 </router-link>
               </span>
               <span v-for="item in unit['semtone']" :key="item">
                 <!-- <Chip :label="data.features[a]" /> -->
-                <!-- <Tag class="mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
+                <!-- <Tag class="mr-2" severity="warning" :value="data.features[item][store.lang]" rounded></Tag> -->
                 <!-- {{item}} -->
                 <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" class="interactive back-2">
-                  {{ data.features[item][0] }}
+                  {{ data.features[item][store.lang] }}
                 </router-link>
               </span>
-              <span v-if="data.features[unit['style']] && data.features[unit['style']][0]">
-                ({{ data.features[unit['style']][0] }})
+              <span v-if="data.features[unit['style']] && data.features[unit['style']][store.lang]">
+                ({{ data.features[unit['style']][store.lang] }})
               </span>
             </div>
 
@@ -52,45 +52,50 @@
 
 
             <div class="pb-2" v-if="unit?.tags && unit?.tags !== 'N/A'">
-              <span class="article-field">{{ $primevue.config.locale.phrase.tags }}:</span>
-              <Tag class="mr-2" severity="info" :value="data.features?.[item]?.[0]" rounded
-                v-for="item in unit.tags" />
+              <!-- <span class="article-field">{{ $primevue.config.locale.phrase.tags }}:</span> -->
+              <Tag class="mr-2" severity="info" :value="data.features?.[item]?.[store.lang]" rounded
+                v-tooltip="$primevue.config.locale.phrase.tags" v-for="item in unit.tags" />
             </div>
 
             <div class="pb-2" v-if="data.features?.[unit?.struct]?.length">
               <span class="article-field">{{ $primevue.config.locale.phrase.struct }}:</span>
               <Tag v-tooltip="$primevue.config.locale.phrase.struct" class="mr-2" severity="warning"
-                :value="data.features[unit?.struct][0]" rounded></Tag>
+                :value="data.features[unit?.struct][store.lang]" rounded></Tag>
             </div>
 
-            <div class="pb-2" v-if="unit?.challenge && unit?.challenge !== 'N/A'">
-              <!-- <Tag class="mr-2" severity="danger" :value="unit?.challenge" rounded></Tag> -->
-              <span class="article-field">{{ $primevue.config.locale.phrase.challenge }}:</span>
-              <span class="pr-2">{{ unit?.challenge }}</span>
-            </div>
+            <div v-if="unit?.challenge || unit?.action || unit?.pragma || unit?.effect" class="set">
+              <div class="pb-2" v-if="unit?.challenge && unit?.challenge !== 'N/A'">
+                <!-- <Tag class="mr-2" severity="danger" :value="unit?.challenge" rounded></Tag> -->
+                <span class="article-field">{{ $primevue.config.locale.phrase.challenge }}:</span>
+                <!-- <span class="pr-2" v-html="unit?.challenge.replace(/\[(.+?)\:(.+?)\]/g, `<a title='$2' href='/mark/$1'>$1</a>`)"></span> -->
+                <span class="pr-2"
+                  v-html="unit?.challenge.replace(/\[(.+?)\:(.+?)\]/g, `<span class='metatag' title='$2'>$1</span>`)"></span>
+              </div>
 
-            <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
-              <span class="article-field">{{ $primevue.config.locale.phrase.action }}:</span>
-              <Tag v-tooltip="$primevue.config.locale.phrase.action" class="mr-2" severity="success"
-                :value="unit?.action" rounded>
-              </Tag>
-            </div>
+              <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
+                <span class="article-field">{{ $primevue.config.locale.phrase.action }}:</span>
+                <Tag v-tooltip="$primevue.config.locale.phrase.action" class="mr-2" severity="success"
+                  :value="unit?.action" rounded>
+                </Tag>
+              </div>
 
-            <div class="pb-2" v-if="unit?.pragma && unit?.pragma !== 'N/A'">
-              <span class="article-field">{{ $primevue.config.locale.phrase.pragma }}:</span>
-              <Tag class="mr-2" severity="success" :value="data.features?.[item]?.[0]" rounded
-                v-for="item in unit.pragma" />
-            </div>
+              <div class="pb-2" v-if="unit?.pragma && unit?.pragma !== 'N/A'">
+                <span class="article-field">{{ $primevue.config.locale.phrase.pragma }}:</span>
+                <Tag class="mr-2" severity="success" :value="data.features?.[item]?.[store.lang]" rounded
+                  v-for="item in unit.pragma" />
+              </div>
 
-            <div class="pb-2" v-if="unit?.effect && unit?.effect !== 'N/A'">
-              <span class="article-field">{{ $primevue.config.locale.phrase.effect }}:</span>
-              <span class="pr-2">{{ unit?.effect }}</span>
+              <div class="pb-2" v-if="unit?.effect && unit?.effect !== 'N/A'">
+                <span class="article-field">{{ $primevue.config.locale.phrase.effect }}:</span>
+                <span class="pr-2">{{ unit?.effect }}</span>
+              </div>
+
             </div>
 
             <div class="pb-2" v-if="data.features?.[unit?.area]?.length">
               <span class="article-field">{{ $primevue.config.locale.phrase.area }}:</span>
               <Tag v-tooltip="$primevue.config.locale.phrase.area" class="mr-2" severity="danger"
-                :value="data.features[unit?.area][0]" rounded></Tag>
+                :value="data.features[unit?.area][store.lang]" rounded></Tag>
             </div>
 
             <div class="pb-2" v-if="unit?.conditions && unit?.conditions !== 'N/A'">
@@ -112,7 +117,7 @@
                   <span class="article-field">{{ $primevue.config.locale.p1 }}:</span>
                   <span class="pr-2">{{ unit.remarks[1] }}</span>
                   <span v-for="item in unit['act1']" :key="item">
-                    <Tag class="mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+                    <Tag class="mr-2" severity="warning" :value="data.features[item][store.lang]" rounded></Tag>
                   </span>
                 </div>
               </template>
@@ -125,26 +130,26 @@
                 <span class="article-field">{{ $primevue.config.locale.p2 }}:</span>
                 <span class="pr-2">{{ unit?.remarks?.[0] }}</span>
                 <span v-for="item in unit['actclass']" :key="item">
-                  <Tag class="mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag>
+                  <Tag class="mr-2" severity="warning" :value="data.features[item][store.lang]" rounded></Tag>
                 </span>
               </div>
 
               <div class="pb-2">
                 <span class="article-field">{{ $primevue.config.locale.p1 }}:</span>
                 <span class="last-remark pr-2">{{ title }}</span>
-                <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][0]">
+                <span v-if="data.features[unit['semfunc']] && data.features[unit['semfunc']][store.lang]">
                   <router-link :to="{ name: 'List', params: { prop: 'semfunc', id: unit['semfunc'] } }"
                     class="interactive back-3">
-                    {{ data.features[unit['semfunc']][0] }}
+                    {{ data.features[unit['semfunc']][store.lang] }}
                   </router-link>
                 </span>
 
                 <span v-for="item in unit['semtone']" :key="item">
                   <!-- <Chip :label="data.features[a]" /> -->
-                  <!-- <Tag class="mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
+                  <!-- <Tag class="mr-2" severity="warning" :value="data.features[item][store.lang]" rounded></Tag> -->
                   <!-- {{item}} -->
                   <router-link :to="{ name: 'List', params: { prop: 'semtone', id: item } }" class="interactive back-2">
-                    {{ data.features[item][0] }}
+                    {{ data.features[item][store.lang] }}
                   </router-link>
                 </span>
               </div>
@@ -170,9 +175,9 @@
 
             <div v-if="unit['intonation']">
               <span>
-                <span v-if="data.features[unit['intonation']] && data.features[unit['intonation']][0]">
+                <span v-if="data.features[unit['intonation']] && data.features[unit['intonation']][store.lang]">
                   <span class="article-field">{{ $primevue.config.locale.phrase['intonation'] }}: </span>
-                  {{ data.features[unit['intonation']][0] }}
+                  {{ data.features[unit['intonation']][store.lang] }}
                 </span>
               </span>
             </div>
@@ -212,7 +217,7 @@
               <span class="article-field">{{ $primevue.config.locale.phrase['gest'] }}: </span>
               <span class="article-tags mb-2">
                 <span v-for="item in unit['gest']" :key="item" class="interactive back-1">
-                  {{ data.features[item][0] }}</span>
+                  {{ data.features[item][store.lang] }}</span>
               </span>
             </span>
 
@@ -264,8 +269,8 @@
           <span class="article-field">{{ $primevue.config.locale.phrase.extension }}:</span>
           <span v-for="item in unit['extension']" :key="item" class="pr-4">
             <!-- <Chip :label="data.features[a]" /> -->
-            <!-- <Tag class="mr-2" severity="warning" :value="data.features[item][0]" rounded></Tag> -->
-            {{ data.features[item][0] }}
+            <!-- <Tag class="mr-2" severity="warning" :value="data.features[item][store.lang]" rounded></Tag> -->
+            {{ data.features[item][store.lang] }}
           </span>
         </div>
       </Panel>
@@ -273,101 +278,72 @@
     <Divider v-if="!last" type="dashed" />
   </div>
 </template>
-<script>
+
+<script setup>
 import { ref } from 'vue';
 import { usePrimeVue } from 'primevue/config';
 import store from '../store';
 import router from '../router';
 import { useRoute } from 'vue-router';
 import Example from './Example.vue';
-export default {
-  name: 'Unit',
-  props: {
-    uid: String,
-    num: String,
-    data: Object,
-    auth: Boolean,
-    unit: Object,
-    last: Boolean,
-  },
-  setup(props) {
-    const selectedLang = ref({});
-    const primevue = usePrimeVue();
 
-    const vuerouter = useRoute();
-    const id = vuerouter.params.id;
+const props = defineProps(['uid', 'num', 'data', 'auth', 'unit', 'last'])
+const selectedLang = ref({});
+const primevue = usePrimeVue();
+const vuerouter = useRoute();
+const id = vuerouter.params.id;
 
-    const title = props.data.exprs[id]
-      .map(x => props.data.tokens.values[props.data.tokens.keys.indexOf(x)])
-      .join(' ')
-      .replace(' -', '-');
+const title = props.data.exprs[id]
+  .map(x => props.data.tokens.values[props.data.tokens.keys.indexOf(x)])
+  .join(' ').replace(' -', '-');
 
-    let sound;
-    if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length) {
-      sound = new Audio(store.media + '/audio/' + props.data.media[props.unit.audio[0]]);
-    }
+let sound;
+if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length) {
+  sound = new Audio(store.media + '/audio/' + props.data.media[props.unit.audio[0]]);
+}
 
-    const playClicked = () => {
-      sound.play();
-    };
-
-    const doGoToHelp = () => {
-      store.state.about.active = 3;
-      router.push('/about');
-    };
-
-    let langValues = [];
-    if (props.unit['translations']) {
-      const lang2Translations = props.unit['translations']
-        .map(x => props.data.trans[x])
-        .reduce((all, data) => {
-          (all[data.lang] = all[data.lang] || {
-            value: data.lang,
-            name: primevue.config.locale.lang[data.lang],
-            data: [],
-          })['data'].push(data);
-          return all;
-        }, {});
-
-      const langs = Object.keys(lang2Translations);
-      let sel = langs.indexOf('eng');
-      if (sel === -1) {
-        sel = 0;
-      }
-      langValues = Object.values(lang2Translations);
-      selectedLang.value = langs[sel];
-    }
-
-    let display = ref(true);
-
-    const getResource = (type, x) => new URL(`${store.media}/${type}/${props.data.media[x]}`, import.meta.url);
-
-    const getEnding = x => (x?.length > 1 ? primevue.config.locale.plural : '');
-
-    return {
-      getEnding,
-      getResource,
-      store,
-      title,
-      Example,
-      doGoToHelp,
-      playClicked,
-      sound,
-      langValues,
-      selectedLang,
-      display,
-      a: 'А',
-      b: 'Б',
-      // a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>",
-      /// "🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>",
-      // b:  "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>"
-      // "🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>"
-    };
-  },
-  components: {
-    Example,
-  },
+const playClicked = () => {
+  sound.play();
 };
+
+const doGoToHelp = () => {
+  store.state.about.active = 3;
+  router.push('/about');
+};
+
+let langValues = [];
+if (props.unit['translations']) {
+  const lang2Translations = props.unit['translations']
+    .map(x => props.data.trans[x])
+    .reduce((all, data) => {
+      (all[data.lang] = all[data.lang] || {
+        value: data.lang,
+        name: primevue.config.locale.lang[data.lang],
+        data: [],
+      })['data'].push(data);
+      return all;
+    }, {});
+
+  const langs = Object.keys(lang2Translations);
+  let sel = langs.indexOf('eng');
+  if (sel === -1) {
+    sel = 0;
+  }
+  langValues = Object.values(lang2Translations);
+  selectedLang.value = langs[sel];
+}
+
+let display = ref(true);
+
+const getResource = (type, x) => new URL(`${store.media}/${type}/${props.data.media[x]}`, import.meta.url);
+
+const getEnding = x => (x?.length > 1 ? primevue.config.locale.plural : '');
+// a: 'А',
+// b: 'Б',
+// a: "<img class='emoji' title='Первый участник ситуации' alt='Первый участник ситуации' src='/api/icon/1' height='20' width='20' align='absmiddle'>",
+/// "🐱👨👱<i class='pi pi-user-plus' style='color: red;'></i>",
+// b:  "<img class='emoji' title='Второй участник ситуации' alt='Второй участник ситуации' src='/api/icon/2' height='20' width='20' align='absmiddle'>"
+// "🐭👩👯💃<i class='pi pi-user-minus' style='color: magenta;'></i>"
 </script>
 
 <style>
@@ -456,5 +432,24 @@ export default {
   font-family: Courier;
   border: 1px dashed lightgray;
   border-radius: 5px;
+}
+
+.set {
+  background-color: lightgray;
+  padding: .5rem 0rem 0rem .5rem;
+  border-radius: 3px;
+  margin-bottom: .5rem;
+}
+
+.metatag {
+  /* border: 1px solid red; */
+  padding: 5px;
+  border-radius: 10px;
+  background-color: lightpink;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: navy;
+  /* line-height: 1.5; */
+  vertical-align: middle;
 }
 </style>
