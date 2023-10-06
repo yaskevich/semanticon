@@ -15,6 +15,7 @@ import '@fontsource/montserrat/700.css'; // Bold variant.
 import '@fontsource/montserrat/700-italic.css'; // Bold italic variant.
 import '@fontsource/montserrat/900.css'; // Black variant.
 
+import en from '../texts/en.json'; // English locale
 import ru from '../texts/ru.json'; // Russian locale
 
 import SelectButton from 'primevue/selectbutton';
@@ -35,9 +36,10 @@ import Badge from 'primevue/badge';
 import ScrollTop from 'primevue/scrolltop';
 import Tooltip from 'primevue/tooltip';
 
+const locales = { en, ru };
 const app = createApp(App);
 app.provide('store', store);
-app.use(PrimeVue, { locale: ru, });
+app.use(PrimeVue, { locale: locales[store.lang], });
 
 if (import.meta.env.MODE === 'production' && import.meta.env.VITE_GTAG) {
   app.use(VueGtag, {
