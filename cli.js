@@ -23,7 +23,7 @@ if (options.content && options.in) {
   const filePath = path.isAbsolute(options.in) ? options.in : path.join(curDir, options.in);
   if (fs.existsSync(filePath)) {
     const csvContent = fs.readFileSync(filePath, 'utf-8');
-    await db.processCSV(csvContent, options.content);
+    await db.processCSV(csvContent, options.content, path.basename(filePath));
     console.log(`Imported: ${filePath}`);
   } else {
     console.log('Path to CSV file is incorrect!');
