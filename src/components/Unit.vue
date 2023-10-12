@@ -92,7 +92,7 @@
 
             </div>
 
-            <div class="pb-2" v-if="data.features?.[unit?.area]?.length">
+            <div class="pb-2" v-if="data.features?.[unit?.area]?.[store.lang]?.length">
               <span class="article-field">{{ $primevue.config.locale.phrase.area }}:</span>
               <Tag v-tooltip="$primevue.config.locale.phrase.area" class="mr-2" severity="danger"
                 :value="data.features[unit?.area][store.lang]" rounded></Tag>
