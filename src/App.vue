@@ -15,42 +15,45 @@
     <div id="footer1" class="p-component mt-4 back-1">
       <div class="grid p-4">
         <div class="col">
-          <div>Контакты: discourseformulae@gmail.com</div>
+          <div>{{ $primevue.config.locale.contact }}: discourseformulae@gmail.com</div>
           <div class="p-2">
             <img src="./assets/logo_pragmaticon.png" style="max-height: 5rem" />
           </div>
         </div>
         <div class="col">
-          <div><a href="#" @click="doGoToHelp(0)">О проекте</a></div>
-          <div><a href="#" @click="doGoToHelp(3)">Как пользоваться сайтом</a></div>
+          <div><a href="#" @click="doGoToHelp(0)">{{ $primevue.config.locale.about }}</a></div>
+          <div><a href="#" @click="doGoToHelp(3)">{{ $primevue.config.locale.howto }}</a></div>
           <div>
-            <a target="_blank"
-              href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">Обратная
-              связь <i class="pi pi-external-link"></i></a>
+            <a target="_blank" href="https://ling.hse.ru">{{ $primevue.config.locale.hseling }} <i
+                class="pi pi-external-link"></i></a>
           </div>
-          <div><a target="_blank" href="https://constructicon.github.io/russian/">Русский Конструктикон <i
+          <!-- <div>
+            <a target="_blank"
+              href="https://docs.google.com/forms/d/e/1FAIpQLScXa60guVuUqkIN64o8iebBqMsAC-CdLhAJTRrbNfsav9QfOA/viewform">{{ $primevue.config.locale.feedback }} <i class="pi pi-external-link"></i></a>
+          </div> -->
+          <div><a target="_blank" href="https://constructicon.github.io/russian/">{{ $primevue.config.locale.rc }} <i
                 class="pi pi-external-link"></i></a></div>
         </div>
+
       </div>
     </div>
     <ScrollTop />
     <div id="footer2" class="p-component back-1">
       <div class="grid pr-4 pl-4">
-        <div class="col">2021, Прагматикон
-          <button type="button" v-tooltip="(new Date(store.state.config.settings.updated)).toLocaleString()"> {{
-              store?.version
-          }}</button>
+        <div class="col">{{ $primevue.config.locale.appver }}: {{ store?.version }}
+          <a target="_blank" href="https://github.com/yaskevich/pragmaticon-ui"> <i class="pi pi-github"></i></a>
           <span></span>
         </div>
         <div class="col">
-          <a target="_blank" href="https://ling.hse.ru">Школа лингвистики НИУ ВШЭ <i
-              class="pi pi-external-link"></i></a>
+          {{ $primevue.config.locale.upd }}: <span
+            v-tooltip="(new Date(store.state.config.settings.updated)).toLocaleString()">{{ (new
+                Date(store.state.config.settings.updated)).toLocaleDateString()
+            }}
+          </span>
         </div>
       </div>
-      <div class="grid p-4">
-        <div class="col">
-          Работа над ресурсом поддержана Министерством науки и высшего образования в рамках Соглашения № 075-15-2020-793
-        </div>
+      <div class="grid p-4" v-if="store?.credits">
+        <div class="col">{{ store.credits }}</div>
       </div>
     </div>
   </div>
