@@ -111,12 +111,11 @@ if (routerInfo.params.id) {
     searchState[param] = Array.isArray(searchState[param]) ? [] : null;
   }
 
-  const routedProp = data.features[routerInfo.params.id][1];
+  const routedProp = data.features[routerInfo.params.id]['class'];
   // const routedName = data.features[routerInfo.params.id][0];
   // const paramValue = { value: Number(routerInfo.params.id), name: routedName, prop: routedProp };
   const paramValue = Number(routerInfo.params.id);
-
-  console.log("route IN", paramValue);
+  // console.log("route IN", paramValue);
   if (['semfunc', 'intonation', 'style', 'struct', 'area'].includes(routedProp)) {
     searchState[routedProp] = paramValue;
   } else if (['semtone', 'pragma', 'tags'].includes(routedProp)) {
@@ -182,12 +181,10 @@ const updateRoute = () => {
         }
 
         if (['tags', 'pragma', 'semtone', 'actclass', 'organ'].includes(key)) {
-          // array
           if (!value.every(y => unit[key].includes(y))) {
             isOkay = false;
           }
         } else if (['struct', 'area', 'semfunc', 'intonation'].includes(key)) {
-          // console.log('yes');
           if (unit[key] !== value) {
             isOkay = false;
           }
