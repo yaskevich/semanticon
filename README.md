@@ -1,14 +1,16 @@
 # Pragmaticon Backend
-#### Pragmaticon is a Database of Russian Discourse Formulae &amp; Routines
+
+#### Pragmaticon is a Platform for Presenting Discourse Formulae &amp; Conversational Routines
+
 ---
 
 This is a regular NodeJS/ExpressJS application with PostgreSQL storage.
 
 `npm install`
 
-`node parser.js <filename.csv>` &ndash; to import data into the database
+`node cli.js --in=./data/data.csv --out=./data/data.json` &ndash; to import data into the database and export as JSON at the same time
 
-`node export.js` &ndash; to export data from the database and store it in `data` subdirectory
+`node cli.js --help` &ndash; to get more info about the command-line tool
 
 `node index.js` (or other proper way to deploy) &ndash; to make data available to users
 
@@ -31,14 +33,19 @@ PGPORT=5432
 # Default value is 8080
 PORT=8080
 ```
+
 ---
+
+
+**Available datasets**: Russian Discourse Formulae ([JSON](/data/pragmaticon.json)/[SQL](/data/pragmaticon.psql)), Russian Conversational Routines
+
 
 ## I. Deploying a static build
 
 - set up the application locally, as it is described in the section II below
-- generate JSON file via `export.js`
+- generate JSON file via `cli.js`
 - host the [mediafiles](https://github.com/yaskevich/pragmaticon-media) somewhere
-- build the [client app](https://github.com/yaskevich/pragmaticon-ui), putting the ***link to the host with mediafiles*** and the ***path to the generated JSON*** in environment variables
+- build the [client app](https://github.com/yaskevich/pragmaticon-ui), putting the **_link to the host with mediafiles_** and the **_path to the generated JSON_** in environment variables
 - upload the build to any hosting platform for static files
 - stop (or delete) the database
 
