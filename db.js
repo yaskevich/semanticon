@@ -153,7 +153,7 @@ const exprsInsert = 'INSERT INTO exprs (expr) VALUES($1) RETURNING eid';
 const phrasesInsert = 'INSERT INTO phrases (phrase) VALUES($1) RETURNING pid';
 const tokensInsert = 'INSERT INTO tokens (token) VALUES($1) RETURNING id';
 const transInsert = 'INSERT INTO translations (txt, lang) VALUES($1, $2) RETURNING id';
-const featuresInsert = 'INSERT INTO features (groupid, ru) VALUES($1, $2) RETURNING id';
+const featuresInsert = 'INSERT INTO features (groupid, ru, en) VALUES($1, $2, $3) RETURNING id';
 const settingsInsert = 'INSERT INTO settings (filename, mode, updated) VALUES($1, $2, NOW())';
 
 async function checkMedia(fld, content) {
@@ -195,6 +195,9 @@ async function checkMedia(fld, content) {
   return JSON.stringify(thisIdsArr);
 }
 
+// const fakeTranslit = (str) => String.fromCharCode(...[...str].map((c, i) => str.charCodeAt(i)).map((x) => (x > 1000 ? (x - 1000) : x))).toLowerCase();
+const fakeTranslit = (str) => `#${str}#`;
+
 async function checkFeature(fld, content) {
   // select semantics1, semantics2->0 from units;
   // if (["semantics1", "semantics2"].includes(fld)){
@@ -203,7 +206,7 @@ async function checkFeature(fld, content) {
   const uuid = fld + content;
   if (!Reflect.getOwnPropertyDescriptor(featureIds, uuid)) {
     try {
-      const result = await pool.query(featuresInsert, [fld, content]);
+      const result = await pool.query(featuresInsert, [fld, content, fakeTranslit(content)]);
       featureIds[uuid] = result.rows[0].id;
     } catch (e) {
       console.error(rowNumber, e.detail);
@@ -667,7 +670,7 @@ const getMedia = async () => formatSQL('SELECT * FROM media', 'id', (x) => (x.fi
 
 const getExprs = async () => formatSQL('SELECT * FROM exprs', 'eid', (x) => (x.expr));
 
-const getFeatures = async () => formatSQL('SELECT id, ru, groupid AS class FROM features', 'id', (x) => ([x.ru, x.class]));
+const getFeatures = async () => formatSQL('SELECT id, ru, en, groupid AS class FROM features', 'id', (x) => (x));
 
 const getPhrases = async () => {
   const res = await pool.query('SELECT * FROM phrases');
