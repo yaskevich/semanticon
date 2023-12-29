@@ -112,7 +112,7 @@ const ruen = {
 };
 
 const translit = (content) => {
-  if (lang !== 'ru') { // temporary
+  if (!import.meta.env.VITE_TRANSLIT) {
     return content;
   }
   var res = '';
