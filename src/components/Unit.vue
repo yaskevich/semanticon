@@ -57,8 +57,8 @@
                 v-tooltip="$primevue.config.locale.phrase.tags" v-for="item in unit.tags" />
             </div>
 
-            <div class="pb-2" v-if="data.features?.[unit?.struct]?.length">
-              <span class="article-field">{{ $primevue.config.locale.phrase.struct }}:</span>
+            <div class="pb-2" v-if="data.features?.[unit?.struct]">
+              <!-- <span class="article-field">{{ $primevue.config.locale.phrase.struct }}:</span> -->
               <Tag v-tooltip="$primevue.config.locale.phrase.struct" class="mr-2" severity="warning"
                 :value="data.features[unit?.struct][store.lang]" rounded></Tag>
             </div>
@@ -246,12 +246,11 @@
         </div>
       </div>
     </div>
-    <div class="article-notes mt-4" v-if="
-      (unit.hasOwnProperty('extrequired') && unit['extrequired']) ||
+    <div class="article-notes mt-4" v-if="(unit.hasOwnProperty('extrequired') && unit['extrequired']) ||
       unit.hasOwnProperty('extension') ||
       unit.hasOwnProperty('comment') ||
       unit.hasOwnProperty('mods')
-    ">
+      ">
       <Panel :header="$primevue.config.locale.phrase.comment" :toggleable="true" :collapsed="true" v-if="display"
         class="comment">
         <div v-if="unit['comment']">
