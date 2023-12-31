@@ -1,23 +1,28 @@
 {
   "name": "pragmaticon-ui",
-  "version": "1.0.2",
-  "private": true,
+  "version": "2.0.0",
+  "author": "Alyaxey Yaskevich",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yaskevich/pragmaticon-ui.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/montserrat": "^5.0.5",
+    "@fontsource/montserrat": "^5.0.16",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
-    "primevue": "^3.31.0",
-    "vue": "^3.3.4",
+    "primevue": "^3.45.0",
+    "vue": "^3.4.3",
     "vue-gtag": "^2.0.1",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
-    "vite": "^4.4.7"
+    "@vitejs/plugin-vue": "^5.0.2",
+    "vite": "^5.0.10"
   }
 }
