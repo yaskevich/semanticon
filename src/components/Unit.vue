@@ -68,8 +68,9 @@
                 <!-- <Tag class="mr-2" severity="danger" :value="unit?.challenge" rounded></Tag> -->
                 <span class="article-field">{{ $primevue.config.locale.phrase.challenge }}:</span>
                 <!-- <span class="pr-2" v-html="unit?.challenge.replace(/\[(.+?)\:(.+?)\]/g, `<a title='$2' href='/mark/$1'>$1</a>`)"></span> -->
-                <span class="pr-2"
-                  v-html="unit?.challenge.replace(/\[(.+?)\:(.+?)\]/g, `<span class='metatag' title='$2'>$1</span>`)"></span>
+                <span class="pr-2" v-if="isNaN(unit.challenge)" v-html="highlightKey(unit.challenge)"></span>
+                <span v-else class="pr-2">
+                  <router-link :to="'/exp/'+unit.challenge"><span class="font-bold text-white">LINK</span></router-link></span>
               </div>
 
               <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
@@ -87,7 +88,7 @@
 
               <div class="pb-2" v-if="unit?.effect && unit?.effect !== 'N/A'">
                 <span class="article-field">{{ $primevue.config.locale.phrase.effect }}:</span>
-                <span class="pr-2">{{ unit?.effect }}</span>
+                <span class="pr-2" v-html="highlightKey(unit.effect)"></span>
               </div>
 
             </div>
@@ -98,14 +99,14 @@
                 :value="data.features[unit?.area][store.lang]" rounded></Tag>
             </div>
 
-            <div class="pb-2" v-if="unit?.conditions && unit?.conditions !== 'N/A'">
+            <div v-if="unit?.conditions && unit?.conditions !== 'N/A'">
               <span class="article-field">{{ $primevue.config.locale.phrase.conditions }}:</span>
-              <span class="pr-2">{{ unit?.conditions }}</span>
+              <span class="pr-2" v-html="makeList(unit.conditions)"></span>
             </div>
 
-            <div class="pb-2" v-if="unit?.description && unit?.description !== 'N/A'">
+            <div v-if="unit?.description && unit?.description !== 'N/A'">
               <span class="article-field">{{ $primevue.config.locale.phrase.description }}:</span>
-              <span class="pr-2">{{ unit?.description }}</span>
+              <span class="pr-2" v-html="makeList(unit.description)"></span>
             </div>
 
             <div class="article-parts mb-2" v-if="unit?.semfunc">
@@ -295,6 +296,10 @@ const id = vuerouter.params.id;
 const title = props.data.exprs[id]
   .map(x => props.data.tokens.values[props.data.tokens.keys.indexOf(x)])
   .join(' ').replace(' -', '-');
+
+const highlightKey = (str) => str.replace(/\[(.+?)\:(.+?)\]/g, `<span class='metatag' title='$2'>$1</span>`);
+
+const makeList = (str) => '<ul>' + str.split('\n').map(x => '<li>' + x + '</li>').join('') + '</ul>';
 
 let sound;
 if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length) {
