@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="mr-2">
         <div class="article-title app-title-basic mb-2">
-          <span> {{ store.translit(title) }} </span><span v-if="num"><sup>{{ num }}</sup></span>
+          <span> {{ title }} </span><span v-if="num"><sup>{{ num }}</sup></span>
           <PrimeButton v-if="sound" icon="pi pi-volume-up" class="p-button-text ml-3 audiobutton"
             @click="playClicked()" />
         </div>
@@ -70,7 +70,8 @@
                 <!-- <span class="pr-2" v-html="unit?.challenge.replace(/\[(.+?)\:(.+?)\]/g, `<a title='$2' href='/mark/$1'>$1</a>`)"></span> -->
                 <span class="pr-2" v-if="isNaN(unit.challenge)" v-html="highlightKey(unit.challenge)"></span>
                 <span v-else class="pr-2">
-                  <router-link :to="'/exp/'+unit.challenge"><span class="font-bold text-white">LINK</span></router-link></span>
+                  <router-link :to="'/exp/' + unit.challenge"><span class="font-bold text-white">{{
+                    getTitle(unit.challenge) }}</span></router-link></span>
               </div>
 
               <div class="pb-2" v-if="unit?.action && unit?.action !== 'N/A'">
@@ -293,13 +294,19 @@ const primevue = usePrimeVue();
 const vuerouter = useRoute();
 const id = vuerouter.params.id;
 
-const title = props.data.exprs[id]
-  .map(x => props.data.tokens.values[props.data.tokens.keys.indexOf(x)])
-  .join(' ').replace(' -', '-');
+const getTitle = (expId) =>
+  store.translit(
+    props.data.exprs[expId]
+      .map(x => props.data.tokens.values[props.data.tokens.keys.indexOf(x)])
+      .join(' ').replace(' -', '-'));
+
+const title = getTitle(id);
 
 const highlightKey = (str) => str.replace(/\[(.+?)\:(.+?)\]/g, `<span class='metatag' title='$2'>$1</span>`);
 
 const makeList = (str) => '<ul>' + str.split('\n').map(x => '<li>' + x + '</li>').join('') + '</ul>';
+
+
 
 let sound;
 if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length) {
