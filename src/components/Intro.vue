@@ -87,11 +87,11 @@
             <div class="explain-header">Principles of the Description</div>
             <div class="ml-4">
                 <div>
-                    The present project is a natural extension of the Russian Constructicon <a
+                    Conceptually, Routinicon is a natural extension of such projects as the Russian Constructicon <a
                         href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i
                             class="pi pi-external-link"></i></a> and Pragmaticon <a
                         href="https://pragmaticon.ruscorpora.ru/" target="_blank"><i
-                            class="pi pi-external-link"></i></a> projects. It inherits their approach to the
+                            class="pi pi-external-link"></i></a>. It inherits their approach to the
                     systematization of phraseological units as well as their methods of data collection; the analysis
                     draws upon the material of the Russian National Corpus. At the same time, the current project
                     focuses on a fundamentally different domain and hence offers a radically new structure of linguistic
