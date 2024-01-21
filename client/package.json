@@ -1,11 +1,11 @@
 {
-  "name": "pragmaticon-ui",
+  "name": "semanticon-client",
   "version": "2.0.0",
   "author": "Alyaxey Yaskevich",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git://github.com/yaskevich/pragmaticon-ui.git"
+    "url": "git://github.com/yaskevich/semanticon.git"
   },
   "scripts": {
     "dev": "vite",
@@ -16,13 +16,13 @@
     "@fontsource/montserrat": "^5.0.16",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
-    "primevue": "^3.45.0",
-    "vue": "^3.4.3",
+    "primevue": "^3.46.0",
+    "vue": "^3.4.15",
     "vue-gtag": "^2.0.1",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.2",
-    "vite": "^5.0.10"
+    "@vitejs/plugin-vue": "^5.0.3",
+    "vite": "^5.0.12"
   }
 }
