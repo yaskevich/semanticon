@@ -57,13 +57,13 @@
                 v-tooltip="$primevue.config.locale.phrase.tags" v-for="item in unit.tags" />
             </div>
 
-            <div class="pb-2" v-if="data.features?.[unit?.struct]">
-              <!-- <span class="article-field">{{ $primevue.config.locale.phrase.struct }}:</span> -->
-              <Tag v-tooltip="$primevue.config.locale.phrase.struct" class="mr-2" severity="warning"
-                :value="data.features[unit?.struct][store.lang]" rounded></Tag>
-            </div>
-
-            <div v-if="unit?.challenge || unit?.action || unit?.pragma || unit?.effect" class="set">
+            <div v-if="unit?.struct || unit?.challenge || unit?.action || unit?.pragma || unit?.effect"
+              class="set shadow-4">
+              <div class="pb-2" v-if="data.features?.[unit?.struct]">
+                <!-- <span class="article-field">{{ $primevue.config.locale.phrase.struct }}:</span> -->
+                <Tag v-tooltip="$primevue.config.locale.phrase.struct" class="mr-2" severity="warning"
+                  :value="data.features[unit?.struct][store.lang]" rounded></Tag>
+              </div>
               <div class="pb-2" v-if="unit?.challenge && unit?.challenge !== 'N/A'">
                 <!-- <Tag class="mr-2" severity="danger" :value="unit?.challenge" rounded></Tag> -->
                 <span class="article-field">{{ $primevue.config.locale.phrase.challenge }}:</span>
@@ -94,7 +94,9 @@
 
             </div>
 
-            <div class="pb-2" v-if="data.features?.[unit?.area]?.[store.lang]?.length">
+            <!-- hide N/A -->
+            <div class="pb-2"
+              v-if="data.features?.[unit?.area]?.[store.lang]?.length && data.features[unit?.area][store.lang] !== 'N/A'">
               <span class="article-field">{{ $primevue.config.locale.phrase.area }}:</span>
               <Tag v-tooltip="$primevue.config.locale.phrase.area" class="mr-2" severity="danger"
                 :value="data.features[unit?.area][store.lang]" rounded></Tag>
@@ -102,9 +104,8 @@
 
             <div v-if="unit?.conditions && unit?.conditions !== 'N/A'">
               <span class="article-field">{{ $primevue.config.locale.phrase.conditions }}:</span>
-              <span class="pr-2" v-html="makeList(unit.conditions)"></span>
+              <span class="pr-2" v-html="makeList(highlightKey(unit.conditions))"></span>
             </div>
-
             <div v-if="unit?.description && unit?.description !== 'N/A'">
               <span class="article-field">{{ $primevue.config.locale.phrase.description }}:</span>
               <span class="pr-2" v-html="makeList(unit.description)"></span>
@@ -302,11 +303,9 @@ const getTitle = (expId) =>
 
 const title = getTitle(id);
 
-const highlightKey = (str) => str.replace(/\[(.+?)\:(.+?)\]/g, `<span class='metatag' title='$2'>$1</span>`);
+const highlightKey = (str) => str.replace(/\[([^|]+?)\:([^|]+?)\]/g, `<span class='metatag' title='$2'>$1</span>`).replace(/\[([^|]+?)\]/g, `<span class='metatag' title='$2'>$1</span>`);
 
-const makeList = (str) => '<ul>' + str.split('\n').map(x => '<li>' + x + '</li>').join('') + '</ul>';
-
-
+const makeList = (str) => '<ul>' + str.split(/\n|\|/).map(x => '<li>' + x + '</li>').join('') + '</ul>';
 
 let sound;
 if (Object.prototype.hasOwnProperty.call(props.unit, 'audio') && props.unit.audio.length) {
@@ -446,7 +445,7 @@ const getEnding = x => (x?.length > 1 ? primevue.config.locale.plural : '');
 }
 
 .set {
-  background-color: lightgray;
+  /* background-color: lightgray; */
   padding: .5rem 0rem 0rem .5rem;
   border-radius: 3px;
   margin-bottom: .5rem;
