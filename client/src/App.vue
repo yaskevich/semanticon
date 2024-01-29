@@ -2,9 +2,10 @@
   <div id="main" v-if="dataReady">
     <div id="nav" class="p-component flex p-3 card">
       <router-link to="/"><span class="app-title app-title-basic">{{ store.title }}</span></router-link>
-      <router-link to="/about" class="ml-auto mr-4 page"><span class="nowrap">{{ $primevue.config.locale.about }}</span>
-      </router-link>
-      <router-link to="/filters" class="page">{{ $primevue.config.locale.filtering }}</router-link>
+      <!-- <router-link to="/about" class="ml-auto mr-4 page"><span class="nowrap">{{ $primevue.config.locale.about }}</span>
+      </router-link> 
+      <router-link to="/filters" class="page">{{ $primevue.config.locale.filtering }}</router-link> -->
+      <router-link to="/filters" class="ml-auto mr-4 page">{{ $primevue.config.locale.filtering }}</router-link>
     </div>
     <div class="p-component pl-3 subtitle" v-if="store?.sub">
       {{ store.sub }}
@@ -21,7 +22,7 @@
           </div>
         </div>
         <div class="col">
-          <div><a href="#" @click="doGoToHelp(0)">{{ $primevue.config.locale.about }}</a></div>
+          <!-- <div><a href="#" @click="doGoToHelp(0)">{{ $primevue.config.locale.about }}</a></div> -->
           <div><a href="#" @click="doGoToHelp(3)">{{ $primevue.config.locale.howto }}</a></div>
           <div>
             <a target="_blank" href="https://ling.hse.ru">{{ $primevue.config.locale.hseling }} <i
@@ -41,15 +42,17 @@
     <div id="footer2" class="p-component back-1">
       <div class="grid pr-4 pl-4">
         <div class="col">{{ $primevue.config.locale.appver }}: {{ store?.version }}
-          <a target="_blank" href="https://github.com/yaskevich/pragmaticon-ui"> <i class="pi pi-github"></i></a>
+          <a target="_blank" href="https://github.com/yaskevich/semanticon"> <i class="pi pi-github"></i></a>
           <span></span>
         </div>
         <div class="col">
           {{ $primevue.config.locale.upd }}: <span
             v-tooltip="(new Date(store.state.config.settings.updated)).toLocaleString()">{{ (new
-                Date(store.state.config.settings.updated)).toLocaleDateString()
+              Date(store.state.config.settings.updated)).toLocaleDateString()
             }}
           </span>
+          <a target="_blank" href="#" @click="downloadFile()" title="Click to download the full dataset in JSON format"><i
+              class="ml-1 pi pi-download" style="color:red;"></i></a>
         </div>
       </div>
       <div class="grid p-4" v-if="store?.credits">
@@ -82,6 +85,20 @@ const doGoToHelp = tab => {
   store.state.about.active = tab || 0;
   router.push('/about');
 };
+
+
+const downloadFile = () => {
+
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(store.state.config));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "routinicon.json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+
+
+}
 
 </script>
 
