@@ -1,9 +1,17 @@
 import path from 'path';
+import fs from 'fs';
 import csv from 'async-csv';
 import pg from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
+// format key:value
+let translations = {};
+try {
+  translations = JSON.parse(fs.readFileSync('translations.json', 'utf8'));
+} catch (error) {
+  console.log(error);
+}
 
 const { Pool } = pg;
 const pool = new Pool();
@@ -196,7 +204,10 @@ async function checkMedia(fld, content) {
 }
 
 // const fakeTranslit = (str) => String.fromCharCode(...[...str].map((c, i) => str.charCodeAt(i)).map((x) => (x > 1000 ? (x - 1000) : x))).toLowerCase();
-const fakeTranslit = (str) => `#${str}#`;
+const fakeTranslit = (str) => {
+  const chunk = str.trim();
+  return chunk === 'N/A' ? chunk : translations?.[chunk] || `#${chunk}#`;
+};
 
 async function checkFeature(fld, content) {
   // select semantics1, semantics2->0 from units;
@@ -416,7 +427,7 @@ async function processCSV(csvContent, contentCode, csvName) {
   // 'ДФ', 'структура', 'активный орган', 'речевой акт 1 (для трехчастных)', 'тип речевого акта (собеседник)', 'дополнительная семантика', 'основная семантика', 'о ситуации', 'жестикуляция', 'Комментарий', 'Примеры'
   const contentTypes = {
     f: ['pid', null, 'extrequired', 'semfunc', 'semtone', 'act1', 'remark1', 'actclass', 'remark2', 'situation', 'parts', 'intonation', 'extension', 'mods', 'gest', 'organ', 'translations', 'examples', 'audio', 'video', 'style', 'comment', 'construction',],
-    r: ['pid', 'struct', 'action', 'challenge', 'effect', 'pragma', 'area', 'conditions', 'tags', 'description', 'examples', null]
+    r: [null, 'pid', 'struct', 'action', 'challenge', 'effect', 'pragma', 'area', 'conditions', 'tags', 'description', 'examples', null]
   };
   const columns = contentTypes[contentCode];
   try {
