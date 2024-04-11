@@ -42,8 +42,8 @@ PORT=8080
 
 - set up the application locally, as it is described in the section II below
 - generate JSON file via `cli.js`
-- host the [mediafiles](https://github.com/yaskevich/pragmaticon-media) somewhere
-- build the [client app](./client), putting the **_link to the host with mediafiles_** and the **_path to the generated JSON_** in environment variables
+- host the mediafiles somewhere. You have to provide URL for mediafiles root. E.g. [those](https://github.com/yaskevich/pragmaticon-media) for Pragmaticon dataset.
+- build the [client app](../client), putting the **_link to the host with mediafiles_** and the **_path to the generated JSON_** in environment variables
 - upload the build to any hosting platform for static files
 - stop (or delete) the database
 
@@ -56,7 +56,7 @@ Requirements:
 - PostgreSQL: create an empty **database** (e.g. _db_semanticon_) and a **user** (e.g. _semanticon_user_) with access rights allowing to change the database
 - NodeJS v12+
 
-You can find the commands listed below in [deploy.sh](/deploy.sh). Some sections are commented out, since loading dump into a database requires special setup. In Ubuntu/PostgreSQL default environment it usually requires switching user to **postgres**.
+You can find the commands listed below in [deploy.sh](../deploy.sh). Some sections are commented out, since loading dump into a database requires special setup. In Ubuntu/PostgreSQL default environment it usually requires switching user to **postgres**.
 
 There is an instruction to set up _Russian Pragmaticon_ as an example.
 
