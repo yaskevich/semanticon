@@ -2,7 +2,7 @@ import fs from 'fs';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-function dataLoader() {
+function dataLoader(variables) {
   const virtualModuleId = 'vite:data';
   const resolvedVirtualModuleId = '\0' + virtualModuleId;
 
@@ -15,9 +15,15 @@ function dataLoader() {
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        const jsonPath = loadEnv('', process.cwd(), 'VITE_DATA')?.['VITE_DATA'];
-        const data = fs.existsSync(jsonPath) ? fs.readFileSync(jsonPath) : '{}';
-        return `export const data = ${data}`;
+        let chunks = [];
+        for (let envvar of variables) {
+          const name = envvar.toLowerCase().split('_')?.[1];
+          console.log(envvar, name);
+          const jsonPath = loadEnv('', process.cwd(), envvar)?.[envvar];
+          const data = fs.existsSync(jsonPath) ? fs.readFileSync(jsonPath) : '{}';
+          chunks.push(`"${name}":${data}`);
+        }
+        return `export const data = {${chunks.join(',')}}`;
       }
     },
   };
@@ -35,5 +41,5 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue(), dataLoader()],
+  plugins: [vue(), dataLoader(['VITE_CONTENT', 'VITE_META'])],
 });
