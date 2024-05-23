@@ -16,8 +16,14 @@
             </div>
         </template>
         <template v-if="contentCode === 'r'">
-            <div class="explain-header">What are routines?</div>
-            <div class="ml-4">
+            <div class="explain-header">{{lang === 'ru' ? 'Что такое рутины?' : 'What are routines?'}}</div>
+            <div class="ml-4" v-if="lang === 'ru'">
+                Рутины, по определению Aijmer и Coulmas, это конвенциональные формульные выражения, которые носители языка используют в стандартных экстралингвистических ситуациях.
+                <div>
+                    Например, говорят <span class="cite">Будьте здоровы!</span>, когда кто-то чихает, или спрашивают <span class="cite">Кто там?</span>, когда слышат стук в дверь.
+                </div>
+            </div>
+            <div class="ml-4" v-if="lang === 'en'">
                 Conversational routines (Aijmer, Coulmas) are conventional formulaic expressions that language
                 speakers use in standard extralinguistic situations.
                 <div>
@@ -50,8 +56,11 @@
     </template>
     <template v-if="contentCode === 'r'">
         <div class="p-component back-2 p-4 info">
-            <div class="explain-header">The Routinicon’s goal</div>
-            <div class="ml-4">
+            <div class="explain-header">{{lang === 'ru' ? 'В чем задача Рутиникона?' : 'The Routinicon’s goal'}}</div>
+            <div class="ml-4" v-if="lang === 'ru'">
+                <div> В рамках данного проекта мы собираем рутины, которые формируют инвентарь конвенциональных выражений в русском языке, и систематически описываем их. Благодаря этому становится возможным сравнительно-языковое исследование этой важной части повседневной коммуникации.</div>
+            </div>
+            <div class="ml-4" v-if="lang === 'en'">
                 <div> is to accumulate routines that constitute the inventory of conventional expressions in Russian
                     language and systematize them in a way that would enable their cross-linguistic comparison.</div>
             </div>
@@ -84,8 +93,17 @@
             </div>
         </template>
         <template v-if="contentCode === 'r'">
-            <div class="explain-header">Principles of the Description</div>
-            <div class="ml-4">
+            <div class="explain-header">{{lang === 'ru' ? 'Принципы описания' : 'Principles of the Description'}}</div>
+            <div class="ml-4" v-if="lang === 'ru'">
+                <div>
+                    Содержательно Routinicon является продолжением таких проектов, как <em>Русский конструктикон</em> <a
+                        href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i
+                            class="pi pi-external-link"></i></a> и <em>Pragmaticon</em> <a
+                        href="https://pragmaticon.ruscorpora.ru/" target="_blank"><i
+                            class="pi pi-external-link"></i></a>. В нем используется тот же подход систематического описания фразеологических единиц, а также те же методы сбора данных. Исследование ведётся на материале Национального корпуса русского языка. В то же время в фокусе именно данного проекта находится принципиально иной тип языковых единиц. И рутины, соответственно, описываются с помощью лингвистической аннотации, которая призвана наиболее полноценно отразить именно их структуру.
+                </div>
+            </div>
+            <div class="ml-4" v-if="lang === 'en'">
                 <div>
                     Conceptually, Routinicon is a natural extension of such projects as the Russian Constructicon <a
                         href="https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng" target="_blank"><i
@@ -100,12 +118,13 @@
             </div>
         </template>
     </div>
-    <div class="p-component p-4 info text-center">
+    <!-- <div class="p-component p-4 info text-center">
         <img src="../assets/logo_hse.png" style="max-height: 8rem" />
-    </div>
+    </div> -->
 </template>
 <script setup>
 import { ref } from 'vue';
 import store from '../store';
 const contentCode = store.state.config.settings.mode;
+const lang = store.lang;
 </script>
