@@ -2,6 +2,25 @@ import fs from 'fs';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
+const chunks = ['VITE_META', 'VITE_CONTENT'].map(envvar => {
+  const jsonPath = loadEnv('', process.cwd(), envvar)?.[envvar];
+  const text = fs.existsSync(jsonPath) && fs.readFileSync(jsonPath, 'utf8');
+  return `"${envvar.toLowerCase().split('_')?.[1]}":${text}`;
+});
+const data = chunks?.[0] && JSON.parse(`{${chunks[0]}}`);
+
+function htmlPlugin() {
+  return {
+    name: 'html-transform',
+    transformIndexHtml(html) {
+      return data?.meta?.project?.name ? html.replace(
+        /(?<=<title>)(.*?)(?=<\/title>)/,
+        data.meta.project.name,
+      ) : html
+    },
+  }
+}
+
 function dataLoader(variables) {
   const virtualModuleId = 'vite:data';
   const resolvedVirtualModuleId = '\0' + virtualModuleId;
@@ -15,14 +34,6 @@ function dataLoader(variables) {
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        let chunks = [];
-        for (let envvar of variables) {
-          const name = envvar.toLowerCase().split('_')?.[1];
-          console.log(envvar, name);
-          const jsonPath = loadEnv('', process.cwd(), envvar)?.[envvar];
-          const data = fs.existsSync(jsonPath) ? fs.readFileSync(jsonPath) : '{}';
-          chunks.push(`"${name}":${data}`);
-        }
         return `export const data = {${chunks.join(',')}}`;
       }
     },
@@ -30,6 +41,9 @@ function dataLoader(variables) {
 }
 
 export default defineConfig({
+  // define: {
+  //   "import.meta.env.VITE_NAME":JSON.stringify("test")
+  // },
   server: {
     port: loadEnv('', process.cwd(), 'VITE_PORT')?.['VITE_PORT'] || 8080,
     proxy: {
@@ -41,5 +55,5 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue(), dataLoader(['VITE_CONTENT', 'VITE_META'])],
+  plugins: [vue(), dataLoader(), htmlPlugin()],
 });
