@@ -14,15 +14,35 @@ Providing environment variables is required for successful build (via `.env` fil
 
 | Variable| Function|
 | ------------- |-------------|
-|`VITE_DATA`| the path to the JSON file containing the dataset. It will be hard-coded into application. If not, the [server](../server) providing API is required|
-|`VITE_MEDIA`| the URL where [mediafiles](https://github.com/yaskevich/pragmaticon-media) are served. If not, the [server](../server) serving files is required|
-|`VITE_NAME`|application title|
-|`VITE_TITLE`|application heading|
-|`VITE_GTAG`|Google Analytics Tag ID|
-|`VITE_LANG`|UI language locale (default one is _ru_)|
-|`VITE_TRANSLIT`|Flag of the content transliteration status (if not set, no captions are transliterated)|
+|`VITE_CONTENT`| the path to the JSON file containing the dataset. It will be hard-coded into application. If not, the [server](../server) providing API is required|
+|`VITE_META`| the path to the metadata JSON config file
 |`VITE_PORT`|Vite development server port (_not important for building_)|
 |`VITE_PROXY`|backend server and port where API requests should be proxied via Vite development server (_not important for building_)|
+
+## Setting up the UI content via the metadata JSON config
+
+```javascript
+ "project": {
+        "lang": "", // UI language locale (default one is _ru_)
+        "name": "Semanticon", // application title
+        "title": "Semanticon", // application heading
+        "sub": "Semantic words", // aplication subheading
+        "credits": "", // info about the authors
+        "translit": false, //  whether to transliterate non-English characters
+        "gtag": "", // Google Analytics Tag ID
+        "media": "" // URL where [mediafiles](https://github.com/yaskevich/pragmaticon-media) are served. If not, the [server](../server) serving files is required
+    },
+"intro":   [
+     {
+            "header": "What is that project about?",
+            "body": "It is about semantic words. Completely new previsously not studied kind of words.",
+            "class": "back-1" // back-1, back-2 and back-3 classes are available
+    },
+    {
+            "image": "src/assets/image.png"
+    }
+    ] // those two kinds of blocks can be repeated in any order in this section. They will be rendered as a home page content (component Intro)
+```
 
 ## Project setup
 
