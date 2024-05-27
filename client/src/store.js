@@ -2,10 +2,10 @@ import { reactive } from 'vue';
 import project from '../package.json';
 import { data } from 'vite:data';
 
-const lang = import.meta.env.VITE_LANG || 'ru';
+const lang = data?.meta?.project?.lang || 'ru';
 
-const media = import.meta.env.VITE_MEDIA
-  ? location.protocol + '//' + import.meta.env.VITE_MEDIA
+const media = data?.meta?.app?.media 
+  ? location.protocol + '//' + data.meta.app.media
   : document.location.origin + '/api/media';
 
 const similarity = { f: ['semfunc', 'semtone'], r: [null, 'pragma'] };
@@ -36,8 +36,8 @@ const state = reactive({
   },
 });
 
-if (import.meta.env.VITE_DATA && Object.keys(data).length) {
-  state.config = data;
+if (import.meta.env.VITE_CONTENT && Object.keys(data?.content).length) {
+  state.config = data.content;
 }
 
 const ruen = {
@@ -112,7 +112,7 @@ const ruen = {
 };
 
 const translit = (content) => {
-  if (!import.meta.env.VITE_TRANSLIT) {
+  if (!data?.meta?.project?.translit) {
     return content;
   }
   var res = '';
@@ -145,16 +145,17 @@ const italic = (x) => x.replace('{', '<strong>').replace('}', '</strong>').repla
 export default {
   translit,
   similarity,
-  title: import.meta.env.VITE_TITLE || project?.name || 'App Title',
-  name: import.meta.env.VITE_NAME || project?.name || 'App Name',
-  sub: import.meta.env.VITE_SUB,
-  credits: import.meta.env.VITE_CREDITS,
+  title: data.meta.project.title || project?.name || 'App Title',
+  name: data.meta.project.name || project?.name || 'App Name',
+  sub: data.meta.project.sub,
+  credits: data.meta.project.credits,
   lang,
   italic,
   getData,
   version: project.version,
   state,
   media,
+  meta: data.meta,
   actions: {
     isAuth() {
       return Boolean(Object.keys(state.config.user).length);
