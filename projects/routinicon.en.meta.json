@@ -1,0 +1,36 @@
+{
+    "project": {
+        "lang": "en",
+        "name": "Routinicon",
+        "title": "Routinicon",
+        "sub": "Conversational routines",
+        "credits": "",
+        "translit": true,
+        "gtag": "",
+        "media": "media.congram.org"
+    },
+    "intro": [
+        {
+            "header": "What are routines",
+            "body": "Conversational routines (Aijmer, Coulmas) are conventional formulaic expressions that language speakers use in standard extralinguistic situations. <br/> Cf. <span class= 'cite '>Bless you!</span> as a reaction to sneezing or <span class= 'cite '>Who&apos;s there?</span> as a typical answer to knocking on the door",
+            "class": "back-1"
+        },
+        {
+            "image": "src/assets/logo_pragmaticon.png"
+        },
+        {
+            "header": "The Routinicon’s goal",
+            "body": "is to accumulate routines that constitute the inventory of conventional expressions in Russian language and systematize them in a way that would enable their cross-linguistic comparison.",
+            "class": "back-2"
+        },
+        {
+            "image": "src/assets/logo_constructicon.png",
+            "height": "5rem"
+        },
+        {
+            "header": "Principles of the Description",
+            "body": "Conceptually, Routinicon is a natural extension of such projects as the Russian Constructicon <a href='https://spraakbanken.gu.se/karp/#?mode=konstruktikon-rus&lang=eng' target='_blank'><i class= 'pi pi-external-link '></i></a> and Pragmaticon <a href= 'https://pragmaticon.ruscorpora.ru/ ' target= '_blank '><i class= 'pi pi-external-link '></i></a>. It inherits their approach to the systematization of phraseological units as well as their methods of data collection; the analysis draws upon the material of the Russian National Corpus. At the same time, the current project focuses on a fundamentally different domain and hence offers a radically new structure of linguistic annotation.",
+            "class": "back-3"
+        }
+    ]
+}
